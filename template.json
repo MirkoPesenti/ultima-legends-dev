@@ -1,0 +1,23 @@
+{
+	"Actor": {
+		"types": ["character", "npc"]
+	},
+	"Item": {
+		"types": [
+			"accessory",
+			"armor",
+			"basic",
+			"class",
+			"classFeature",
+			"consumable",
+			"heroic",
+			"project",
+			"ritual",
+			"rule",
+			"shield",
+			"skill",
+			"spell",
+			"weapon"
+		]
+	}
+}

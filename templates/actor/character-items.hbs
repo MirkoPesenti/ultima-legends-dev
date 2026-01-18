@@ -1,0 +1,56 @@
+<section class="tab {{tabs.items.id}} {{tabs.items.cssClass}} scrollable" id="items" data-tab="{{tabs.items.id}}" data-group="{{tabs.items.group}}">
+    <fieldset>
+        <legend>Equipaggiamento</legend>
+        <div class="form-group">
+            <label for="system.equip.armor">Armatura</label>
+            <div class="form-fields">
+                <input type="text" name="system.equip.armor" id="system.equip.armor" value="{{system.equip.armor}}" readonly>
+                <a class="button">Apri oggetto</a>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="system.equip.mainHand">Mano Principale</label>
+            <div class="form-fields">
+                <input type="text" name="system.equip.mainHand" id="system.equip.mainHand" value="{{system.equip.mainHand}}" readonly>
+                <a class="button">Apri oggetto</a>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="system.equip.offHand">Mano Secondaria</label>
+            <div class="form-fields">
+                <input type="text" name="system.equip.offHand" id="system.equip.offHand" value="{{system.equip.offHand}}" readonly>
+                <a class="button">Apri oggetto</a>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="system.equip.accessory">Accessorio</label>
+            <div class="form-fields">
+                <input type="text" name="system.equip.accessory" id="system.equip.accessory" value="{{system.equip.accessory}}" readonly>
+                <a class="button">Apri oggetto</a>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Inventario</legend>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Tipologia</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each actor.items}}
+                    <tr>
+                        <td>{{this.name}}</td>
+                        <td>{{localize (concat "TYPES.Item." this.type)}}</td>
+                        <td>
+                            <a class="button" data-uuid="{{this.uuid}}" data-link>Apri</a>
+                        </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </fieldset>
+</section>

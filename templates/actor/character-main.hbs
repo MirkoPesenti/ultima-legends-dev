@@ -1,0 +1,98 @@
+<section class="tab {{tabs.character.id}} {{tabs.character.cssClass}} scrollable" id="character" data-tab="{{tabs.character.id}}" data-group="{{tabs.character.group}}">
+    <fieldset>
+        <legend>Generale</legend>
+        <div class="form-group">
+            <label for="system.level.exp">EXP</label>
+            <input type="number" name="system.level.exp" id="system.level.exp" value="{{system.level.exp}}">
+        </div>
+        <div class="form-group stacked">
+            <label for="system.description">Descrizione</label>
+            <prose-mirror name="system.description" id="system.description" value="{{system.description}}">
+                {{{enrichedHTML.description}}}
+            </prose-mirror>
+        </div>
+    </fieldset>
+
+    <div class="form-group">
+        <fieldset>
+            <legend>Attributi</legend>
+            <div class="form-group">
+                <label for="system.attributes.dex.base">DEX</label>
+                <select name="system.attributes.dex.base" id="system.attributes.dex.base">
+                    {{selectOptions ULTIMA.attributesDice selected=system.attributes.dex.base localize=true}}
+                </select>
+                <span style="flex:0 0 30px">{{system.attributes.dex.current}}</span>
+            </div>
+            <div class="form-group">
+                <label for="system.attributes.ins.base">INS</label>
+                <select name="system.attributes.ins.base" id="system.attributes.ins.base">
+                    {{selectOptions ULTIMA.attributesDice selected=system.attributes.ins.base localize=true}}
+                </select>
+                <span style="flex:0 0 30px">{{system.attributes.ins.current}}</span>
+            </div>
+            <div class="form-group">
+                <label for="system.attributes.mig.base">MIG</label>
+                <select name="system.attributes.mig.base" id="system.attributes.mig.base">
+                    {{selectOptions ULTIMA.attributesDice selected=system.attributes.mig.base localize=true}}
+                </select>
+                <span style="flex:0 0 30px">{{system.attributes.mig.current}}</span>
+            </div>
+            <div class="form-group">
+                <label for="system.attributes.wlp.base">WLP</label>
+                <select name="system.attributes.wlp.base" id="system.attributes.wlp.base">
+                    {{selectOptions ULTIMA.attributesDice selected=system.attributes.wlp.base localize=true}}
+                </select>
+                <span style="flex:0 0 30px">{{system.attributes.wlp.current}}</span>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Risorse</legend>
+            <div class="form-group">
+                <label for="system.resources.hp.current">HP {{#unless (gt system.resources.hp.current system.resources.hp.crisis)}}(Crisi){{/unless}}</label>
+                <input type="number" name="system.resources.hp.current" id="system.resources.hp.current" value="{{system.resources.hp.current}}" min="0" max="{{system.resources.hp.max}}">
+                <span style="flex:0 0 30px">/ {{system.resources.hp.max}}</span>
+            </div>
+            <div class="form-group">
+                <label for="system.resources.mp.current">MP</label>
+                <input type="number" name="system.resources.mp.current" id="system.resources.mp.current" value="{{system.resources.mp.current}}" min="0" max="{{system.resources.mp.max}}">
+                <span style="flex:0 0 30px">/ {{system.resources.mp.max}}</span>
+            </div>
+            <div class="form-group">
+                <label for="system.resources.ip.current">IP</label>
+                <input type="number" name="system.resources.ip.current" id="system.resources.ip.current" value="{{system.resources.ip.current}}" min="0" max="{{system.resources.ip.max}}">
+                <span style="flex:0 0 30px">/ {{system.resources.ip.max}}</span>
+            </div>
+            <div class="form-group slim">
+                <div class="form-fields">
+                    <label for="system.resources.fp">PF</label>
+                    <input type="number" name="system.resources.fp" id="system.resources.fp" value="{{system.resources.fp}}" min="0">
+                </div>
+                <div class="form-fields">
+                    <label for="system.resources.zenit">Zenit</label>
+                    <input type="number" name="system.resources.zenit" id="system.resources.zenit" value="{{system.resources.zenit}}" min="0">
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <div class="form-group">
+        <fieldset>
+            <legend>Parametri</legend>
+            <div class="form-group">
+                <div class="form-fields">
+                    <label for="system.params.def.total">Def</label>
+                    <input type="number" name="system.params.def.total" id="system.params.def.total" value="{{system.params.def.total}}" readonly>
+                </div>
+                <div class="form-fields">
+                    <label for="system.params.mdef.total">M. Def</label>
+                    <input type="number" name="system.params.mdef.total" id="system.params.mdef.total" value="{{system.params.mdef.total}}" readonly>
+                </div>
+                <div class="form-fields">
+                    <label for="system.params.init.total">Init</label>
+                    <input type="number" name="system.params.init.total" id="system.params.init.total" value="{{system.params.init.total}}" readonly>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</section>

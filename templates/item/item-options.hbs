@@ -1,0 +1,20 @@
+<section class="tab {{tabs.options.id}} {{tabs.options.cssClass}} scrollable" id="options" data-tab="{{tabs.options.id}}" data-group="{{tabs.options.group}}">
+    <fieldset>
+        <legend>Opzioni</legend>
+        <div class="form-group">
+            <label for="system.ultimaID">Ultima ID</label>
+            <div class="form-fields">
+                <input type="text" name="system.ultimaID" id="system.ultimaID" value="{{system.ultimaID}}" readonly>
+                <a class="button" data-action="regenerateUltimaID" data-tooltip="Rigenera Ultima ID">
+                    <i class="fa fa-rotate"></i>
+                </a>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="system.source">Fonte</label>
+            <select name="system.source" id="system.source">
+                {{selectOptions ULTIMA.sourceBooks selected=system.source localize=true}}
+            </select>
+        </div>
+    </fieldset>
+</section>

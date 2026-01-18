@@ -1,0 +1,72 @@
+{
+  "id": "ultima-legends",
+  "title": "Ultima Legends DEV",
+  "description": "An Unofficial system for playing Fabula Ultima in the Foundry Virtual Tabletop environment.",
+  "version": "0.1.2b",
+  "authors": [
+    {
+      "name": "OmegaPrime",
+      "discord": "0mega_prime",
+      "url": "https://github.com/MirkoPesenti"
+    },
+    {
+      "name": "Marco Bertolini",
+      "discord": "devberto",
+      "url": "https://github.com/bertolinimarco"
+    }
+  ],
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13"
+  },
+  "esmodules": ["module/ultima-legends.mjs"],
+  "styles": ["assets/css/ultima-legends.css"],
+  "languages": [
+    {
+      "lang": "it",
+      "name": "Italiano",
+      "path": "lang/it.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/it.json"
+    }
+  ],
+  "relationships": {
+    "requires": [
+      {
+        "id": "socketlib",
+        "type": "module",
+        "compatibility": {}
+      }
+    ]
+  },
+  "flags": {
+    "hotReload": {
+      "extensions": ["css", "hbs", "json"],
+      "paths": ["css", "lang", "templates"]
+    }
+  },
+  "media": [
+    {
+      "type": "cover",
+      "loop": false,
+      "flags": {}
+    },
+    {
+      "type": "setup",
+      "url": "systems/ultima-legends/assets/img/ui/fabula-repo.jpg",
+      "thumbnail": "systems/ultima-legends/assets/img/ui/fabula-thumbnail.jpg",
+      "loop": false,
+      "flags": {}
+    }
+  ],
+  "background": "systems/ultima-legends/assets/img/ui/fabula-background.webp",
+  "socket": true,
+  "readme": "README.md",
+  "license": "LICENSE.md",
+  "url": "https://github.com/MirkoPesenti/FoundryVTT-Ultima-Legends",
+  "manifest": "https://raw.githubusercontent.com/MirkoPesenti/FoundryVTT-Ultima-Legends/master/system.json",
+  "download": "https://github.com/MirkoPesenti/FoundryVTT-Ultima-Legends/archive/master.zip"
+}

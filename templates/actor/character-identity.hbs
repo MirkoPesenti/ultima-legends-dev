@@ -1,0 +1,62 @@
+<section class="tab {{tabs.identity.id}} {{tabs.identity.cssClass}} scrollable" id="identity" data-tab="{{tabs.identity.id}}" data-group="{{tabs.identity.group}}">
+    <fieldset>
+        <legend>Personaggio</legend>
+        <div class="form-group">
+            <label for="system.features.pronouns">Genere</label>
+            <input type="text" name="system.features.pronouns" id="system.features.pronouns" value="{{system.features.pronouns}}">
+        </div>
+        <div class="form-group">
+            <label for="system.features.identity">Identità</label>
+            <input type="text" name="system.features.identity" id="system.features.identity" value="{{system.features.identity}}">
+        </div>
+        <div class="form-group">
+            <label for="system.features.theme">Tema</label>
+            <input type="text" name="system.features.theme" id="system.features.theme" value="{{system.features.theme}}">
+        </div>
+        <div class="form-group">
+            <label for="system.features.origin">Origine</label>
+            <input type="text" name="system.features.origin" id="system.features.origin" value="{{system.features.origin}}">
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend class="form-group">
+            Legami
+            <a class="button" data-action="addBond">Aggiungi</a>
+        </legend>
+        {{#each system.bonds as |bond index|}}
+        <div class="form-fields flexcol">
+            <div class="form-group" style="width: 100%;">
+                <a class="button" data-action="removeBond" data-index="{{index}}">Rimuovi</a>
+                <label for="system.bonds.{{index}}.name">Nome</label>
+                <input type="text" name="system.bonds.{{index}}.name" id="system.bonds.{{index}}.name" value="{{bond.name}}">
+                <span>
+                    <strong>Forza: {{bond.str}}</strong>
+                </span>
+            </div>
+            <div class="form-group" style="width: 100%;">
+                <div class="form-fields">
+                    <label for="system.bonds.{{index}}.bond1">Legame 1</label>
+                    <select name="system.bonds.{{index}}.bond1" id="system.bonds.{{index}}.bond1">
+                        <option value="" {{#unless bond.bond1}}selected{{/unless}}>Nessun legame</option>
+                        {{selectOptions @root.ULTIMA.bondTypes1 selected=bond.bond1 localize=true}}
+                    </select>
+                </div>
+                <div class="form-fields">
+                    <label for="system.bonds.{{index}}.bond2">Legame 2</label>
+                    <select name="system.bonds.{{index}}.bond2" id="system.bonds.{{index}}.bond2">
+                        <option value="" {{#unless bond.bond2}}selected{{/unless}}>Nessun legame</option>
+                        {{selectOptions @root.ULTIMA.bondTypes2 selected=bond.bond2 localize=true}}
+                    </select>
+                </div>
+                <div class="form-fields">
+                    <label for="system.bonds.{{index}}.bond3">Legame 3</label>
+                    <select name="system.bonds.{{index}}.bond3" id="system.bonds.{{index}}.bond3">
+                        <option value="" {{#unless bond.bond3}}selected{{/unless}}>Nessun legame</option>
+                        {{selectOptions @root.ULTIMA.bondTypes3 selected=bond.bond3 localize=true}}
+                    </select>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </fieldset>
+</section>

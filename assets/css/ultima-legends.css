@@ -1,0 +1,156 @@
+/* 
+------------------------------------------
+Typography
+------------------------------------------
+*/
+
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=PT+Sans+Caption:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P:wght@400;700&display=swap");
+
+@font-face {
+	font-family: "Yanone Kaffeesatz";
+	src: url("../fonts/yanone-kafffeesatz/YanoneKaffeesatz-VariableFont_wght.ttf") format("truetype");
+	font-optical-sizing: auto;
+	font-weight: 200 700;
+	font-style: normal;
+}
+@font-face {
+	font-family: "Fabula Ultima icons";
+	src: url("../fonts/fabula-ultima/FabulaUltimaIcons-Regular.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: "CreditValley";
+	src: url("../fonts/credit-valley/CreditValley.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: "FnT_BasicShapes1";
+	src: url("../fonts/fnt-bs/FNT_BS.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+@counter-style diamonds {
+	system: cyclic;
+	suffix: " ";
+	symbols: "◆";
+}
+
+/* 
+------------------------------------------
+End Typography
+------------------------------------------
+*/
+
+/* Variables */
+body {
+	/* Fabula */
+	--fu-font-primary: "PT Sans Narrow", sans-serif;
+	--fu-font-secondary: "Yanone Kaffeesatz", sans-serif;
+
+	--fu-color-white: #FFFFFF;
+	--fu-color-red: #B82315;
+	--fu-text-color: #2A3331;
+	--fu-color-primary: #2B4A42;
+	--fu-color-primary-rgb: 43,74,66;
+	--fu-color-gradient-bg-rgb: 227,240,228;
+	--fu-color-brown-rgb: 139,92,0;
+	--fu-color-azure-rgb: 0,89,149;
+	--fu-color-green-rgb: 47,106,41;
+	--fu-color-red-rgb: 135,25,6;
+	--fu-color-purple-rgb: 87,45,87;
+
+	--fu-color-hp: #CD171A;
+	--fu-color-mp: #019EE4;
+	--fu-color-ip: var(--fu-color-primary);
+
+	--fu-window-bg: #fff;
+	--fu-color-text: #191813;
+
+	/* Sheets */
+	--fu-sheet-text-color: #6D9187;
+	--fu-sheet-header-bg: url(../img/bg-class-header.png);
+	--fu-sheet-body-bg-left: url(../img/bg-class-body-left.png);
+	--fu-sheet-body-bg-right: url(../img/bg-class-body-right.png);
+	--fu-input-background-color: transparent;
+	--fu-color-shadow-primary: var(--fu-color-primary);
+	--fu-input-border-color: var(--fu-color-primary);
+	--fu-box-bg: #fff;
+
+	--fu-affinity-color: #CE1719;
+
+	--fu-input-bg: #ffffff;
+	--fu-input-bg-hover: #ffffff;
+	--fu-input-placeholder: #909090;
+	--fu-input-text: #191813;
+
+	/* Actions */
+	--fu-action-delete-bg: #ffe0e0;
+	--fu-action-delete-color: red;
+	--fu-action-delete-border: #ffe0e0;
+}
+
+.theme-dark {
+	--fu-color-white: #fff;
+	--fu-color-red: #B82315;
+	--fu-text-color: #2A3331;
+	--fu-color-primary: #387062;
+	--fu-color-primary-rgb: 56,112,98;
+	--fu-color-gradient-bg-rgb: 44,90,48;
+	--fu-color-brown-rgb: 139,92,0;
+	--fu-color-azure-rgb: 0,89,149;
+	--fu-color-green-rgb: 47,106,41;
+	--fu-color-red-rgb: 135,25,6;
+	--fu-color-purple-rgb: 87,45,87;
+
+	--fu-color-hp: #CD171A;
+	--fu-color-mp: #019EE4;
+	--fu-color-ip: var(--fu-color-primary);
+
+	--fu-window-bg: #1a1a1a;
+	--fu-color-text: #fff;
+
+	/* Sheets */
+	--fu-sheet-text-color: #6D9187;
+	--fu-sheet-header-bg: url(../img/bg-class-header.png);
+	--fu-sheet-body-bg-left: url(../img/bg-class-body-left.png);
+	--fu-sheet-body-bg-right: url(../img/bg-class-body-right.png);
+	--fu-input-background-color: transparent;
+	--fu-color-shadow-primary: var(--fu-color-primary);
+	--fu-input-border-color: var(--fu-color-primary);
+	--fu-box-bg: #484848;
+
+	--fu-affinity-color: #ff686a;
+
+	--fu-input-bg: #484848;
+	--fu-input-bg-hover: #555;
+	--fu-input-placeholder: #909090;
+	--fu-input-text: #fff;
+
+	/* Actions */
+	--fu-action-delete-bg: #6e1919;
+	--fu-action-delete-color: #f8abab;
+	--fu-action-delete-border: #6e1919;
+}
+
+/* UI > Pause */
+#pause.ultima-legends {gap:0;animation:pauseAnimation 4s infinite ease-in-out;}
+#pause.ultima-legends img {animation:none;}
+#pause.ultima-legends figcaption {text-shadow:0px 0px 13px rgba(255, 255, 255, 0.2);font-weight:700;padding:0;margin:0;font-family:CreditValley;font-size:50px;background:linear-gradient(0deg, rgba(0,109,155,1) 0%, rgba(0,109,155,1) 30%, rgba(7,86,166,1) 45%, rgba(146,213,247,1) 60%, rgba(146,213,247,1) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:0;line-height:1;}
+@keyframes pauseAnimation {
+	0% {filter:drop-shadow(0 0 0 rgba(255, 255, 255, 0));}
+	50% {filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.5));}
+	100% {filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0));}
+}
+@-webkit-keyframes pauseAnimation {
+	0% {filter:drop-shadow(0 0 0 rgba(255, 255, 255, 0));}
+	50% {filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.5));}
+	100% {filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0));}
+}

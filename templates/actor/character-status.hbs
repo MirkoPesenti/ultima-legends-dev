@@ -1,0 +1,110 @@
+<section class="tab {{tabs.status.id}} {{tabs.status.cssClass}} scrollable" id="status" data-tab="{{tabs.status.id}}" data-group="{{tabs.status.group}}">
+    <fieldset>
+        <legend>Immunità</legend>
+        <div class="form-group">
+            <div class="form-fields">
+                <label for="system.immunity.poisoned">Avvelenato</label>
+                <input type="checkbox" name="system.immunity.poisoned" id="system.immunity.poisoned" {{#if system.immunity.poisoned}}checked{{/if}}>
+            </div>
+
+            <div class="form-fields">
+                <label for="system.immunity.dazed">Confuso</label>
+                <input type="checkbox" name="system.immunity.dazed" id="system.immunity.dazed" {{#if system.immunity.dazed}}checked{{/if}}>
+            </div>
+            
+            <div class="form-fields">
+                <label for="system.immunity.weak">Debole</label>
+                <input type="checkbox" name="system.immunity.weak" id="system.immunity.weak" {{#if system.immunity.weak}}checked{{/if}}>
+            </div>
+            
+            <div class="form-fields">
+                <label for="system.immunity.enraged">Furente</label>
+                <input type="checkbox" name="system.immunity.enraged" id="system.immunity.enraged" {{#if system.immunity.enraged}}checked{{/if}}>
+            </div>
+            
+            <div class="form-fields">
+                <label for="system.immunity.slow">Lento</label>
+                <input type="checkbox" name="system.immunity.slow" id="system.immunity.slow" {{#if system.immunity.slow}}checked{{/if}}>
+            </div>
+            
+            <div class="form-fields">
+                <label for="system.immunity.shaken">Scosso</label>
+                <input type="checkbox" name="system.immunity.shaken" id="system.immunity.shaken" {{#if system.immunity.shaken}}checked{{/if}}>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Affinità</legend>
+        <div class="form-group">
+            <label for="system.affinity.physical">Fisico</label>
+            <select name="system.affinity.physical" id="system.affinity.physical">
+                <option value="" {{#unless system.affinity.physical}}selected{{/unless}}>Neutrale</option>
+                {{selectOptions ULTIMA.affinities selected=system.affinity.physical localize=true}}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="system.affinity.air">Aria</label>
+            <select name="system.affinity.air" id="system.affinity.air">
+                <option value="" {{#unless system.affinity.air}}selected{{/unless}}>Neutrale</option>
+                {{selectOptions ULTIMA.affinities selected=system.affinity.air localize=true}}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="system.affinity.bolt">Fulmine</label>
+            <select name="system.affinity.bolt" id="system.affinity.bolt">
+                <option value="" {{#unless system.affinity.bolt}}selected{{/unless}}>Neutrale</option>
+                {{selectOptions ULTIMA.affinities selected=system.affinity.bolt localize=true}}
+            </select>
+        </div>
+            
+        <div class="form-group">
+            <label for="system.affinity.fire">Fuoco</label>
+            <select name="system.affinity.fire" id="system.affinity.fire">
+                <option value="" {{#unless system.affinity.fire}}selected{{/unless}}>Neutrale</option>
+                {{selectOptions ULTIMA.affinities selected=system.affinity.fire localize=true}}
+            </select>
+        </div>
+            
+        <div class="form-group">
+            <label for="system.affinity.ice">Ghiaccio</label>
+            <select name="system.affinity.ice" id="system.affinity.ice">
+                <option value="" {{#unless system.affinity.ice}}selected{{/unless}}>Neutrale</option>
+                {{selectOptions ULTIMA.affinities selected=system.affinity.ice localize=true}}
+            </select>
+        </div>
+            
+        <div class="form-group">
+            <label for="system.affinity.light">Luce</label>
+            <select name="system.affinity.light" id="system.affinity.light">
+                <option value="" {{#unless system.affinity.light}}selected{{/unless}}>Neutrale</option>
+                {{selectOptions ULTIMA.affinities selected=system.affinity.light localize=true}}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="system.affinity.dark">Ombra</label>
+            <select name="system.affinity.dark" id="system.affinity.dark">
+                <option value="" {{#unless system.affinity.dark}}selected{{/unless}}>Neutrale</option>
+                {{selectOptions ULTIMA.affinities selected=system.affinity.dark localize=true}}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="system.affinity.earth">Terra</label>
+            <select name="system.affinity.earth" id="system.affinity.earth">
+                <option value="" {{#unless system.affinity.earth}}selected{{/unless}}>Neutrale</option>
+                {{selectOptions ULTIMA.affinities selected=system.affinity.earth localize=true}}
+            </select>
+        </div>
+            
+        <div class="form-group">
+            <label for="system.affinity.poison">Veleno</label>
+            <select name="system.affinity.poison" id="system.affinity.poison">
+                <option value="" {{#unless system.affinity.poison}}selected{{/unless}}>Neutrale</option>
+                {{selectOptions ULTIMA.affinities selected=system.affinity.poison localize=true}}
+            </select>
+        </div>
+    </fieldset>
+</section>
