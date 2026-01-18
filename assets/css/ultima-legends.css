@@ -154,3 +154,22 @@ body {
 	50% {filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.5));}
 	100% {filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0));}
 }
+
+/* Icons */
+.fu-offensive {font-family:'Fabula Ultima icons';color:#d1232a !important;}
+.fu-offensive::before {content:'o';}
+
+.fu-martial {font-family:'Fabula Ultima icons';color:#d1232a !important;}
+.fu-martial::before {content:'w';}
+
+.fu-melee {font-family:'Fabula Ultima icons';}
+.fu-melee::before {content:'m';}
+
+.fu-ranged {font-family:'Fabula Ultima icons';}
+.fu-ranged::before {content:'r';}
+
+.fu-spell {font-family:'Fabula Ultima icons';}
+.fu-spell::before {content:'c';}
+
+.fu-skill {font-family:'Fabula Ultima icons';}
+.fu-skill::before {content:'s';}

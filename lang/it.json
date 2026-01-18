@@ -71,16 +71,22 @@
       "necromancer": "Necromante"
     },
     "attributes": {
-      "dex": "Destrezza",
-      "ins": "Intuito",
-      "mig": "Vigore",
-      "wlp": "Volontà"
-    },
-    "attributesAbbr": {
-      "dex": "DES",
-      "ins": "INT",
-      "mig": "VIG",
-      "wlp": "VOL"
+      "dex": {
+        "long": "Destrezza",
+        "short": "DES"
+      },
+      "ins": {
+        "long": "Intelligenza",
+        "short": "INT"
+      },
+      "mig": {
+        "long": "Vigore",
+        "short": "VIG"
+      },
+      "wlp": {
+        "long": "Volontà",
+        "short": "VOL"
+      }
     },
     "fabulaID": {
       "regenerate": "Rigenera Fabula ID",
@@ -140,7 +146,7 @@
     "magisphere": "Magisfera",
     "SheetModePlay": "Gioca",
     "SheetModeEdit": "Modifica",
-    "DamageTypes": {
+    "damageTypes": {
       "physical": "Fisico",
       "air": "Aria",
       "bolt": "Fulmine",
@@ -219,7 +225,7 @@
       "arcanum": "Arcano",
       "martial": "Marziale"
     },
-    "weaponCategories": {
+    "weapons": {
       "arcane": "Arcano",
       "arcanePL": "Arcane",
       "bow": "Arco",
@@ -246,7 +252,7 @@
       "melee": "Mischia",
       "ranged": "Distanza"
     },
-    "rarityList": {
+    "rarities": {
       "base": "Base",
       "rare": "Raro"
     },

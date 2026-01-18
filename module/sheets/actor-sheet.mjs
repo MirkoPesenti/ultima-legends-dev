@@ -19,6 +19,7 @@ export class UltimaLegendsActorSheet extends HandlebarsApplicationMixin( ActorSh
 		actions: {
 			addBond: this.#handleAddBond,
 			removeBond: this.#handleRemoveBond,
+			equipItem: this.#handleEquipItem,
 		},
 	};
 
@@ -188,6 +189,17 @@ export class UltimaLegendsActorSheet extends HandlebarsApplicationMixin( ActorSh
 			bonds.splice( index, 1 );
 			await this.document.update({ 'system.bonds': bonds });
 		}
+
+	}
+
+	static async #handleEquipItem( event, target ) {
+
+		event.preventDefault();
+		const uuid = target.dataset.uuid;
+		const item = await fromUuid( uuid );
+		if ( !item ) return;
+
+		await this.document.updateEquippedItem( item );
 
 	}
 

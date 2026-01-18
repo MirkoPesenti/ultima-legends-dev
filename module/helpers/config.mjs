@@ -70,3 +70,38 @@ ULTIMA.npcRanks = {
 	elite: 'ULTIMA.npcRanks.elite',
 	champion: 'ULTIMA.npcRanks.champion',
 };
+
+ULTIMA.itemRarities = {
+	base: 'ULTIMA.rarities.base',
+	rare: 'ULTIMA.rarities.rare',
+};
+
+ULTIMA.attackRanges = {
+	melee: 'ULTIMA.attackRanges.melee',
+	ranged: 'ULTIMA.attackRanges.ranged',
+};
+
+ULTIMA.weaponCategories = {
+	arcane: 'ULTIMA.weapons.arcane',
+	bow: 'ULTIMA.weapons.bow',
+	flail: 'ULTIMA.weapons.flail',
+	firearm: 'ULTIMA.weapons.firearm',
+	spear: 'ULTIMA.weapons.spear',
+	thrown: 'ULTIMA.weapons.thrown',
+	heavy: 'ULTIMA.weapons.heavy',
+	dagger: 'ULTIMA.weapons.dagger',
+	brawling: 'ULTIMA.weapons.brawling',
+	sword: 'ULTIMA.weapons.sword',
+};
+
+ULTIMA.damageTypes = {
+	physical: 'ULTIMA.damageTypes.physical',
+	air: 'ULTIMA.damageTypes.air',
+	bolt: 'ULTIMA.damageTypes.bolt',
+	fire: 'ULTIMA.damageTypes.fire',
+	ice: 'ULTIMA.damageTypes.ice',
+	light: 'ULTIMA.damageTypes.light',
+	dark: 'ULTIMA.damageTypes.dark',
+	earth: 'ULTIMA.damageTypes.earth',
+	poison: 'ULTIMA.damageTypes.poison',
+};

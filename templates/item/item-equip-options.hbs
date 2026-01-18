@@ -1,0 +1,55 @@
+<section class="tab {{tabs.options.id}} {{tabs.options.cssClass}} scrollable" id="options" data-tab="{{tabs.options.id}}" data-group="{{tabs.options.group}}">
+    <fieldset>
+        <legend>Opzioni</legend>
+        <div class="form-group">
+            <label for="system.ultimaID">Ultima ID</label>
+            <div class="form-fields">
+                <input type="text" name="system.ultimaID" id="system.ultimaID" value="{{system.ultimaID}}" readonly />
+                <a class="button" data-action="regenerateUltimaID" data-tooltip="Rigenera Ultima ID">
+                    <i class="fa fa-rotate"></i>
+                </a>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="system.source">Fonte</label>
+            <select name="system.source" id="system.source">
+                {{selectOptions ULTIMA.sourceBooks selected=system.source localize=true}}
+            </select>
+        </div>
+        {{#unless (eq item.type "accessory")}}
+            <div class="form-group">
+                <label for="system.martial">Marziale (<span class="fu-martial"></span>)</label>
+                <input type="checkbox" name="system.martial" id="system.martial" {{#if system.martial}}checked{{/if}} />
+            </div>
+        {{/unless}}
+    </fieldset>
+
+    {{#if (eq item.type "weapon")}}
+        <fieldset>
+            <legend>Arma</legend>
+            <div class="form-group">
+                <label for="system.category">Categoria</label>
+                <select name="system.category" id="system.category">
+                    {{selectOptions ULTIMA.weaponCategories selected=system.category localize=true}}
+                </select>
+            </div>
+            <div class="form-group">
+                <span class="label">Portata</span>
+                <div class="form-fields">
+                    <div class="form-fields">
+                        <label for="system.range-melee">Mischia ( <span class="fu-melee"></span> )</label>
+                        <input type="radio" name="system.range" id="system.range-melee" value="melee" {{#if (eq system.range "melee")}}checked{{/if}} />
+                    </div>
+                    <div class="form-fields">
+                        <label for="system.range-ranged">A distanza ( <span class="fu-ranged"></span> )</label>
+                        <input type="radio" name="system.range" id="system.range-ranged" value="ranged" {{#if (eq system.range "ranged")}}checked{{/if}} />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="system.twoHanded">A due mani</label>
+                <input type="checkbox" name="system.twoHanded" id="system.twoHanded" {{#if system.twoHanded}}checked{{/if}} />
+            </div>
+        </fieldset>
+    {{/if}}
+</section>

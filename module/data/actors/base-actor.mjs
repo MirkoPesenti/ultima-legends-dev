@@ -51,6 +51,12 @@ export default class UltimaLegendsActorBase extends UltimaLegendsDataModel {
 				offHand: new fields.StringField( equipEmpty ),
 				accessory: new fields.StringField( equipEmpty ),
 			}),
+			martial: new fields.SchemaField({
+				melee: new fields.BooleanField({ initial: false }),
+				ranged: new fields.BooleanField({ initial: false }),
+				armor: new fields.BooleanField({ initial: false }),
+				shield: new fields.BooleanField({ initial: false }),
+			}),
 			affinity: new fields.SchemaField({
 				physical: new fields.StringField( affinityEmpty ),
 				air: new fields.StringField( affinityEmpty ),
@@ -108,16 +114,49 @@ export default class UltimaLegendsActorBase extends UltimaLegendsDataModel {
 
 		const attributes = this.attributes;
 		const params = this.params;
+		let defFixed = false;
+		let mdefFixed = false;
+		let attributeDef = 'dex';
+		let attributeMDef = 'ins';
 		let equipDefBonus = 0;
 		let equipMDefBonus = 0;
 
-		// TODO: Calculate equipment bonuses here
+		// Calculate equipment bonuses here
+		const equippedItems = this.parent.items.filter( i => i.system.equipped );
+		for ( const item of equippedItems ) {
+			if ( item.type === 'armor' ) {
+				
+				// Check for fixed bonuses
+				if ( item.system.bonus?.fixed?.def ) {
+					defFixed = true;
+					equipDefBonus = item.system.bonus?.def ?? 0;
+				} else {
+					equipDefBonus += item.system.bonus?.def ?? 0;
+				} 
+
+				// Check for fixed bonuses
+				if ( item.system.bonus?.fixed?.mdef ) {
+					mdefFixed = true;
+					equipMDefBonus = item.system.bonus?.mdef ?? 0;
+				} else {
+					equipMDefBonus += item.system.bonus?.mdef ?? 0;
+				}
+
+				// Check for attribute-based bonuses
+				if ( item.system.bonus?.attributes?.def ) attributeDef = item.system.bonus.attributes.def;
+				if ( item.system.bonus?.attributes?.mdef ) attributeMDef = item.system.bonus.attributes.mdef;
+
+			} else if ( item.type === 'shield' ) {
+				equipDefBonus += item.system.bonus?.def ?? 0;
+				equipMDefBonus += item.system.bonus?.mdef ?? 0;
+			}
+		}
 
 		// Define dynamic total values for defences
 		Object.defineProperty( this.params.def, 'total', {
 			configurable: true,
 			enumerable: true,
-			get: () => attributes.dex.current + params.def.bonus + equipDefBonus,
+			get: () => defFixed ? equipDefBonus : ( attributes[attributeDef].current + params.def.bonus + equipDefBonus ),
 			set( newVal ) {
 				delete this.params.def.total;
 				this.params.def.total = newVal;
@@ -128,7 +167,7 @@ export default class UltimaLegendsActorBase extends UltimaLegendsDataModel {
 		Object.defineProperty( this.params.mdef, 'total', {
 			configurable: true,
 			enumerable: true,
-			get: () => attributes.ins.current + params.mdef.bonus + equipMDefBonus,
+			get: () => mdefFixed ? equipMDefBonus : ( attributes[attributeMDef].current + params.mdef.bonus + equipMDefBonus ),
 			set( newVal ) {
 				delete this.params.mdef.total;
 				this.params.mdef.total = newVal;
@@ -144,7 +183,13 @@ export default class UltimaLegendsActorBase extends UltimaLegendsDataModel {
 		const params = this.params;
 		let initBonus = 0;
 
-		// TODO: Calculate equipment bonuses here
+		// Calculate equipment bonuses here
+		const equippedItems = this.parent.items.filter( i => i.system.equipped );
+		for ( const item of equippedItems ) {
+			if ( item.type === 'armor' ) {
+				initBonus += item.system.bonus?.init ?? 0;
+			}
+		}
 
 		// Define dynamic total values for initiative
 		Object.defineProperty( this.params.init, 'total', {

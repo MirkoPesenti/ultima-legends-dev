@@ -1,0 +1,100 @@
+<section class="tab {{tabs.item.id}} {{tabs.item.cssClass}} scrollable" id="item" data-tab="{{tabs.item.id}}" data-group="{{tabs.item.group}}">
+    <fieldset>
+        <legend>Descrizione</legend>
+        <prose-mirror name="system.description" id="system.description" value="{{system.description}}">
+            {{{enrichedHTML.description}}}
+        </prose-mirror>
+    </fieldset>
+
+    <fieldset>
+        <legend>Dettagli</legend>
+        <div class="form-group">
+            <label for="system.cost">Costo</label>
+            <input type="number" name="system.cost" id="system.cost" value="{{system.cost}}" min="0" />
+        </div>
+        <div class="form-group">
+            <label for="system.rarity">Rarità</label>
+            <select name="system.rarity" id="system.rarity" value="{{system.rarity}}">
+                {{selectOptions ULTIMA.itemRarities selected=system.rarity localize=true}}
+            </select>
+        </div>
+    </fieldset>
+
+    {{#if (or (eq item.type "armor") (eq item.type "shield"))}}
+        <fieldset>
+            <legend>Bonus</legend>
+            <div class="form-group">
+                <label for="system.bonus.def">Def</label>
+                <div class="form-fields">
+                    {{#if (and (eq item.type "armor") (not system.bonus.fixed.def))}}
+                        <select name="system.bonus.attributes.def" id="system.bonus.attributes.def">
+                            {{selectOptions ULTIMA.attributesAbbr selected=system.bonus.attributes.def localize=true}}
+                        </select>
+                        <span style="flex:0 0 30px;text-align:center;">+</span>
+                    {{/if}}
+                    <input type="number" name="system.bonus.def" id="system.bonus.def" value="{{system.bonus.def}}" min="0" />
+                    {{#if (eq item.type "armor")}}
+                        <div class="form-fields">
+                            <label for="system.bonus.fixed.def">Fisso</label>
+                            <input type="checkbox" name="system.bonus.fixed.def" id="system.bonus.fixed.def" {{#if system.bonus.fixed.def}}checked{{/if}} />
+                        </div>
+                    {{/if}}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="system.bonus.mdef">M. Def</label>
+                <div class="form-fields">
+                    {{#if (and (eq item.type "armor") (not system.bonus.fixed.mdef))}}
+                        <select name="system.bonus.attributes.mdef" id="system.bonus.attributes.mdef">
+                            {{selectOptions ULTIMA.attributesAbbr selected=system.bonus.attributes.mdef localize=true}}
+                        </select>
+                        <span style="flex:0 0 30px;text-align:center;">+</span>
+                    {{/if}}
+                    <input type="number" name="system.bonus.mdef" id="system.bonus.mdef" value="{{system.bonus.mdef}}" min="0" />
+                    {{#if (eq item.type "armor")}}
+                        <div class="form-fields">
+                            <label for="system.bonus.fixed.mdef">Fisso</label>
+                            <input type="checkbox" name="system.bonus.fixed.mdef" id="system.bonus.fixed.mdef" {{#if system.bonus.fixed.mdef}}checked{{/if}} />
+                        </div>
+                    {{/if}}
+                </div>
+            </div>
+            {{#if (eq item.type "armor")}}
+                <div class="form-group">
+                    <label for="system.bonus.init">Init</label>
+                    <input type="number" name="system.bonus.init" id="system.bonus.init" value="{{system.bonus.init}}" />
+                </div>
+            {{/if}}
+        </fieldset>
+    {{/if}}
+
+    {{#if (eq item.type "weapon")}}
+        <fieldset>
+            <legend>Attacco</legend>
+            <div class="form-group">
+                <label for="system.accuracy.bonus">Precisione</label>
+                <div class="form-fields">
+                    <select name="system.accuracy.primary" id="system.accuracy.primary">
+                        {{selectOptions ULTIMA.attributesAbbr selected=system.accuracy.primary localize=true}}
+                    </select>
+                    <span style="flex:0 0 30px;text-align:center;">+</span>
+                    <select name="system.accuracy.secondary" id="system.accuracy.secondary">
+                        {{selectOptions ULTIMA.attributesAbbr selected=system.accuracy.secondary localize=true}}
+                    </select>
+                    <span style="flex:0 0 30px;text-align:center;">+</span>
+                    <input type="number" name="system.accuracy.bonus" id="system.accuracy.bonus" value="{{system.accuracy.bonus}}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="system.damage.value">Danno</label>
+                <div class="form-fields">
+                    <span style="flex:0 0 30px;" data-tooltip="Tiro Maggiore">TM +</span>
+                    <input type="number" name="system.damage.value" id="system.damage.value" value="{{system.damage.value}}" />
+                    <select name="system.damage.type" id="system.damage.type">
+                        {{selectOptions ULTIMA.damageTypes selected=system.damage.type localize=true}}
+                    </select>
+                </div>
+            </div>
+        </fieldset>
+    {{/if}}
+</section>

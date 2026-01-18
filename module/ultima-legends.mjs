@@ -5,6 +5,7 @@ import { UltimaLegendsItem } from './documents/item.mjs';
 // Sheets
 import { UltimaLegendsActorSheet } from './sheets/actor-sheet.mjs';
 import { UltimaLegendsItemSheet } from './sheets/item-sheet.mjs';
+import { UltimaLegendsEquippableSheet } from './sheets/item-equippable-sheet.mjs';
 
 // Import DataModels
 import * as models from './data/module.mjs';
@@ -41,8 +42,8 @@ Hooks.once('init', async () => {
 	// Define custom item classes
 	CONFIG.Item.documentClass = UltimaLegendsItem;
 	CONFIG.Item.dataModels = {
-		// accessory
-		// armor
+		accessory: models.UltimaLegendsAccessory,
+		armor: models.UltimaLegendsArmor,
 		basic: models.UltimaLegendsItemBase,
 		// class
 		// classFeature
@@ -51,10 +52,10 @@ Hooks.once('init', async () => {
 		// project
 		// ritual
 		// rule
-		// shield
+		shield: models.UltimaLegendsShield,
 		// skill
 		// spell
-		// weapon
+		weapon: models.UltimaLegendsWeapon,
 	};
 
 	// Active Effects are never copied to the Actor,
@@ -72,7 +73,10 @@ Hooks.once('init', async () => {
 	foundry.documents.collections.Items.unregisterSheet('core', foundry.appv1.sheets.ItemSheet);
 	foundry.documents.collections.Items.registerSheet(SYSTEM, UltimaLegendsItemSheet, {
 		makeDefault: true,
-		label: 'lorem ipsum',
+	});
+	foundry.documents.collections.Items.registerSheet(SYSTEM, UltimaLegendsEquippableSheet, {
+		makeDefault: true,
+		types: ['accessory', 'armor', 'weapon', 'shield'],
 	});
 
 	// Setup configuration settings

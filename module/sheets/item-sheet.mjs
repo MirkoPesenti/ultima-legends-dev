@@ -100,11 +100,17 @@ export class UltimaLegendsItemSheet extends HandlebarsApplicationMixin( ItemShee
         
         super._onRender(context, options);
 
+        // Handle item type CSS class
         const typeClass = `item-${this.document.type}`;
         this.element.classList.toggle( typeClass, true );
 
-        // TODO: remove other source classes before adding new one
+        // Handle source book CSS classes
+        for ( const source of Object.keys( ULTIMA.sourceBooks ) ) {
+            const cssClass = `source-${source}`;
+            this.element.classList.toggle( cssClass, false );
+        }
 
+        // Apply the current source book class
         if ( this.document.system.source ) {
             const sourceClass = `source-${this.document.system.source}`;
             this.element.classList.toggle( sourceClass, true );
