@@ -66,7 +66,7 @@
   "socket": true,
   "readme": "README.md",
   "license": "LICENSE.md",
-  "url": "https://github.com/MirkoPesenti/FoundryVTT-Ultima-Legends",
-  "manifest": "https://raw.githubusercontent.com/MirkoPesenti/FoundryVTT-Ultima-Legends/master/system.json",
-  "download": "https://github.com/MirkoPesenti/FoundryVTT-Ultima-Legends/archive/master.zip"
+  "url": "https://github.com/MirkoPesenti/ultima-legends-dev",
+  "manifest": "https://raw.githubusercontent.com/MirkoPesenti/ultima-legends-dev/master/system.json",
+  "download": "https://github.com/MirkoPesenti/ultima-legends-dev/archive/master.zip"
 }
