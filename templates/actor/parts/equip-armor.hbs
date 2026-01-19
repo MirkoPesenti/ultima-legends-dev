@@ -1,0 +1,42 @@
+{{!-- <span>
+	<img src="{{item.img}}" alt="{{item.name}}" style="width:35px;" />
+</span> --}}
+<span>
+	{{item.name}}
+	{{#if item.system.martial}}
+		<span class="fu-martial" data-tooltip="Marziale"></span>
+	{{/if}}
+</span>
+<span>
+	{{localize (concat "ULTIMA.rarities." item.system.rarity)}}
+</span>
+<span>
+	{{#if (eq item.system.bonus.def 0)}}
+	-
+	{{else}}
+		{{localize (concat "ULTIMA.attributes." item.system.bonus.attributes.def ".short")}} 
+		{{#if item.system.bonus.def}}+ {{/if}}
+		{{item.system.bonus.def}}
+	{{/if}}
+</span>
+<span>
+	{{#if (eq item.system.bonus.mdef 0)}}
+	-
+	{{else}}
+		{{localize (concat "ULTIMA.attributes." item.system.bonus.attributes.mdef ".short")}} 
+		{{#if item.system.bonus.mdef}}+ {{/if}}
+		{{item.system.bonus.mdef}}
+	{{/if}}
+</span>
+<span>
+	{{#unless (eq item.system.bonus.init 0)}}
+		{{item.system.bonus.init}}
+	{{else}}
+	-
+	{{/unless}}
+</span>
+
+<a class="button" data-action="equipItem" data-uuid="{{item.uuid}}" data-tooltip="Disequipaggia">
+	<i class="fa fa-shield-halved"></i>
+</a>
+<a class="button" data-uuid="{{item.uuid}}" data-link>Apri</a>

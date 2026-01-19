@@ -3,8 +3,13 @@ import { enrichHTML } from "../utils/utilities.mjs";
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
+const { DragDrop, TextEditor } = foundry.applications.ux;
 
 export class UltimaLegendsItemSheet extends HandlebarsApplicationMixin( ItemSheetV2 ) {
+    
+    // Private field for drag and drop handlers
+    #dragDrop;
+    #dragDropBoundElement;
 
     // Define default options
     static DEFAULT_OPTIONS = {
@@ -15,8 +20,13 @@ export class UltimaLegendsItemSheet extends HandlebarsApplicationMixin( ItemShee
         window: {
             contentClasses: ["standard-form"]
         },
+        dragDrop: [{
+            dragSelector: null,
+            dropSelector: '.dropzone',
+        }],
         actions: {
             regenerateUltimaID: this.#handleRegenerateUltimaID,
+            removeGrantedSkill: this.#handleRemoveGrantedSkill,
         },
     };
 
@@ -57,6 +67,8 @@ export class UltimaLegendsItemSheet extends HandlebarsApplicationMixin( ItemShee
     // Define constructor
 	constructor ( options = {} ) {
 		super( options );
+
+        this.#dragDrop = this.#createDragDropHandlers();
 	}
 
     /** @inheritDoc */
@@ -116,6 +128,75 @@ export class UltimaLegendsItemSheet extends HandlebarsApplicationMixin( ItemShee
             this.element.classList.toggle( sourceClass, true );
         }
 
+        // Bind drag and drop handlers if not already bound
+        if ( this.#dragDropBoundElement !== this.element ) {
+            for ( const dd of (this.#dragDrop ?? []) ) dd.bind( this.element );
+            this.#dragDropBoundElement = this.element;
+        }
+
+    }
+
+    // Create drag and drop handlers
+    #createDragDropHandlers() {
+        return this.options.dragDrop.map((d) => {
+            d.permissions = {
+                dragstart: this._canDragStart.bind(this),
+                drop: this._canDragDrop.bind(this),
+            };
+            d.callbacks = {
+                dragstart: this._onDragStart.bind(this),
+                dragover: this._onDragOver.bind(this),
+                drop: this._onDrop.bind(this),
+            };
+            return new DragDrop(d);
+        });
+    }
+
+    // Determine if dragging can start
+    _canDragStart( selector ) {
+        return this.isEditable;
+    }
+
+    // Determine if dropping is allowed
+    _canDragDrop( selector ) {
+        return this.isEditable;
+    }
+
+    // Handle drag start event
+    _onDragStart( event ) {}
+
+    // Handle drag over event
+    _onDragOver( event ) {}
+
+    // Handle drop event
+    async _onDrop( event ) {
+
+        const data = TextEditor.getDragEventData( event );
+
+        if ( data?.uuid ) {
+            // Only handle drops for class items
+            if ( this.document.type === 'class' ) {
+
+                const item = await fromUuid( data.uuid );
+                //TODO: if ( item?.type === 'skill' ) {
+                if ( item?.type === 'basic' ) {
+
+                    const skills = this.document.system.grants.skills ?? [];
+                    // Check for duplicate skill
+                    if ( skills.includes( item.uuid ) ) {
+                        ui.notifications.warn( `La skill "${item.name}" è già concessa da questa classe.` );
+                    } else {
+                        skills.push( item.uuid );
+                        await this.document.update({ 'system.grants.skills': skills });
+                    }
+
+                }
+
+            }
+        }
+
+        return super._onDrop?.( event );
+
     }
 
     // Handle Ultima ID regeneration
@@ -136,5 +217,19 @@ export class UltimaLegendsItemSheet extends HandlebarsApplicationMixin( ItemShee
         await this.document.regenerateUltimaID();
 
     }
+
+    // Handle removal of granted skill
+    static async #handleRemoveGrantedSkill( event, target ) {
+
+		event.preventDefault();
+		const index = parseInt( target.dataset.index );
+		const skills = this.document.system.grants.skills ?? [];
+		
+		if ( index >= 0 && index < skills.length ) {
+			skills.splice( index, 1 );
+			await this.document.update({ 'system.grants.skills': skills });
+		}
+
+	}
 
 }

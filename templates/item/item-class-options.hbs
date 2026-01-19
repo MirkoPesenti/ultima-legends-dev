@@ -1,0 +1,41 @@
+<section class="tab {{tabs.options.id}} {{tabs.options.cssClass}} scrollable" id="options" data-tab="{{tabs.options.id}}" data-group="{{tabs.options.group}}">
+    <fieldset>
+        <legend>Opzioni</legend>
+        <div class="form-group">
+            <label for="system.ultimaID">Ultima ID</label>
+            <div class="form-fields">
+                <input type="text" name="system.ultimaID" id="system.ultimaID" value="{{system.ultimaID}}" readonly>
+                <a class="button" data-action="regenerateUltimaID" data-tooltip="Rigenera Ultima ID">
+                    <i class="fa fa-rotate"></i>
+                </a>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="system.source">Fonte</label>
+            <select name="system.source" id="system.source">
+                {{selectOptions ULTIMA.sourceBooks selected=system.source localize=true}}
+            </select>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>Bonus</legend>
+        <div class="form-group">
+            <span class="label">Attributi</span>
+            <div class="form-fields">
+                <div class="form-fields">
+                    <label for="system.grants.resources.hp">PV</label>
+                    <input type="checkbox" name="system.grants.resources.hp" id="system.grants.resources.hp" {{#if system.grants.resources.hp}}checked{{/if}} />
+                </div>
+                <div class="form-fields">
+                    <label for="system.grants.resources.mp">PM</label>
+                    <input type="checkbox" name="system.grants.resources.mp" id="system.grants.resources.mp" {{#if system.grants.resources.mp}}checked{{/if}} />
+                </div>
+                <div class="form-fields">
+                    <label for="system.grants.resources.ip">PI</label>
+                    <input type="checkbox" name="system.grants.resources.ip" id="system.grants.resources.ip" {{#if system.grants.resources.ip}}checked{{/if}} />
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</section>

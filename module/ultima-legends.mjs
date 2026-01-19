@@ -6,6 +6,7 @@ import { UltimaLegendsItem } from './documents/item.mjs';
 import { UltimaLegendsActorSheet } from './sheets/actor-sheet.mjs';
 import { UltimaLegendsItemSheet } from './sheets/item-sheet.mjs';
 import { UltimaLegendsEquippableSheet } from './sheets/item-equippable-sheet.mjs';
+import { UltimaLegendsClassSheet } from './sheets/item-class-sheet.mjs';
 
 // Import DataModels
 import * as models from './data/module.mjs';
@@ -45,7 +46,7 @@ Hooks.once('init', async () => {
 		accessory: models.UltimaLegendsAccessory,
 		armor: models.UltimaLegendsArmor,
 		basic: models.UltimaLegendsItemBase,
-		// class
+		class: models.UltimaLegendsClass,
 		// classFeature
 		// consumable
 		// heroic
@@ -78,6 +79,10 @@ Hooks.once('init', async () => {
 		makeDefault: true,
 		types: ['accessory', 'armor', 'weapon', 'shield'],
 	});
+	foundry.documents.collections.Items.registerSheet(SYSTEM, UltimaLegendsClassSheet, {
+		makeDefault: true,
+		types: ['class'],
+	});
 
 	// Setup configuration settings
 	setupConfiguration();
@@ -99,4 +104,12 @@ Hooks.on('renderGamePause', (application, element, context, options) => {
 	image.src = 'systems/ultima-legends/assets/icons/icon-fabula.svg';
 
 });
+//#endregion
+
+//#region Handlebar Helpers
+
+Handlebars.registerHelper('getItemByUUID', function( items, itemUUID ) {
+	return items.find( i => i.uuid === itemUUID );
+});
+
 //#endregion

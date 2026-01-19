@@ -23,28 +23,31 @@
             </div>
         </div>
     </fieldset>
+
     <fieldset>
         <legend>Equipaggiamento</legend>
         <div class="form-group">
             <label for="system.equip.armor">Armatura</label>
             <div class="form-fields">
-                <input type="text" name="system.equip.armor" id="system.equip.armor" value="{{system.equip.armor}}" readonly />
-                <a class="button" data-action="equipItem" data-uuid="{{system.equip.armor}}" data-tooltip="Disequipaggia" {{#unless system.equip.armor}}disabled{{/unless}}>
-                    <i class="fa fa-shield-halved"></i>
-                </a>
-                <a class="button" data-uuid="{{system.equip.armor}}" data-link {{#unless system.equip.armor}}disabled{{/unless}}>Apri</a>
+                {{#if system.equip.armor}}
+                    {{> systems/ultima-legends/templates/actor/parts/equip-armor.hbs item=(getItemByUUID actor.items system.equip.armor) actor=actor}}
+                {{else}}
+                    <span>Nessuna armatura equipaggiata.</span>
+                {{/if}}
             </div>
         </div>
+
         <div class="form-group">
             <label for="system.equip.mainHand">Mano Principale</label>
             <div class="form-fields">
-                <input type="text" name="system.equip.mainHand" id="system.equip.mainHand" value="{{system.equip.mainHand}}" readonly />
-                <a class="button" data-action="equipItem" data-uuid="{{system.equip.mainHand}}" data-tooltip="Disequipaggia" {{#unless system.equip.mainHand}}disabled{{/unless}}>
-                    <i class="fa fa-shield-halved"></i>
-                </a>
-                <a class="button" data-uuid="{{system.equip.mainHand}}" data-link {{#unless system.equip.mainHand}}disabled{{/unless}}>Apri</a>
+                {{#if system.equip.mainHand}}
+                    {{> systems/ultima-legends/templates/actor/parts/equip-weapon.hbs item=(getItemByUUID actor.items system.equip.mainHand) actor=actor}}
+                {{else}}
+                    <span>Nessuna arma equipaggiata.</span>
+                {{/if}}
             </div>
         </div>
+
         <div class="form-group">
             <label for="system.equip.offHand">
                 Mano Secondaria
@@ -53,37 +56,36 @@
                 {{/if}}
             </label>
             <div class="form-fields">
-                <input type="text" name="system.equip.offHand" id="system.equip.offHand" value="{{system.equip.offHand}}" readonly />
-                <a 
-                    class="button" 
-                    data-action="equipItem" 
-                    data-uuid="{{system.equip.offHand}}" 
-                    data-tooltip="Disequipaggia" 
-                    {{#if (or (not system.equip.offHand) (eq system.equip.mainHand system.equip.offHand))}}disabled{{/if}}
-                >
-                    <i class="fa fa-shield-halved"></i>
-                </a>
-                <a 
-                    class="button" 
-                    data-uuid="{{system.equip.offHand}}" 
-                    data-link
-                    {{#if (or (not system.equip.offHand) (eq system.equip.mainHand system.equip.offHand))}}disabled{{/if}}
-                >
-                    Apri
-                </a>
+                {{#if system.equip.offHand}}
+                    {{#if (and system.equip.offHand (eq system.equip.mainHand system.equip.offHand))}}
+                        <i class="fa fa-circle-up"></i>
+                    {{else}}
+                        {{#if (eq (lookup (getItemByUUID actor.items system.equip.offHand) "type") "weapon")}}
+                            {{> systems/ultima-legends/templates/actor/parts/equip-weapon.hbs item=(getItemByUUID actor.items system.equip.offHand) actor=actor}}
+                        {{/if}}
+
+                        {{#if (eq (lookup (getItemByUUID actor.items system.equip.offHand) "type") "shield")}}
+                            {{> systems/ultima-legends/templates/actor/parts/equip-shield.hbs item=(getItemByUUID actor.items system.equip.offHand) actor=actor}}
+                        {{/if}}
+                    {{/if}}
+                {{else}}
+                    <span>Nussuno scudo equipaggiata.</span>
+                {{/if}}
             </div>
         </div>
+
         <div class="form-group">
             <label for="system.equip.accessory">Accessorio</label>
             <div class="form-fields">
-                <input type="text" name="system.equip.accessory" id="system.equip.accessory" value="{{system.equip.accessory}}" readonly />
-                <a class="button" data-action="equipItem" data-uuid="{{system.equip.accessory}}" data-tooltip="Disequipaggia" {{#unless system.equip.accessory}}disabled{{/unless}}>
-                    <i class="fa fa-shield-halved"></i>
-                </a>
-                <a class="button" data-uuid="{{system.equip.accessory}}" data-link {{#unless system.equip.accessory}}disabled{{/unless}}>Apri</a>
+                {{#if system.equip.accessory}}
+                    {{> systems/ultima-legends/templates/actor/parts/equip-accessory.hbs item=(getItemByUUID actor.items system.equip.accessory) actor=actor}}
+                {{else}}
+                    <span>Nessun accessorio equipaggiata.</span>
+                {{/if}}
             </div>
         </div>
     </fieldset>
+
     <fieldset>
         <legend>Inventario</legend>
         {{!-- Armi --}}
@@ -123,7 +125,9 @@
                         </td>
                         <td>
                             TM 
-                            {{#if this.system.damage.value}}+ {{/if}}{{this.system.damage.value}}
+                            {{#unless (eq this.system.damage.value 0)}}
+                                {{#if this.system.damage.value}}+ {{/if}}{{this.system.damage.value}}
+                            {{/unless}}
                             {{localize (concat "ULTIMA.damageTypes." this.system.damage.type)}}
                         </td>
                         <td>

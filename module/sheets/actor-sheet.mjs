@@ -100,8 +100,6 @@ export class UltimaLegendsActorSheet extends HandlebarsApplicationMixin( ActorSh
 	// Prepare items
 	_prepareItems() {
 
-		// TODO: Equip items
-
 		const accessories = [];
 		const armors = [];
 		const basics = [];

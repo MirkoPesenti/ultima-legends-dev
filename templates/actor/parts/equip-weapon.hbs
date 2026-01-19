@@ -1,0 +1,32 @@
+{{!-- <span>
+	<img src="{{item.img}}" alt="{{item.name}}" style="width:35px;" />
+</span> --}}
+<span>
+	{{#if (eq item.system.range "melee")}}( <span class="fu-melee" data-tooltip="Mischia"></span> ){{/if}}
+	{{#if (eq item.system.range "ranged")}}( <span class="fu-ranged" data-tooltip="A distanza"></span> ){{/if}}
+	{{item.name}} 
+	{{#if item.system.martial}}<span class="fu-martial" data-tooltip="Marziale"></span>{{/if}}
+</span>
+<span>
+	{{localize (concat "ULTIMA.rarities." item.system.rarity)}}
+</span>
+<span>
+	{{localize (concat "ULTIMA.attributes." item.system.accuracy.primary ".short")}} 
+	+
+	{{localize (concat "ULTIMA.attributes." item.system.accuracy.secondary ".short")}}
+	{{#unless (eq item.system.accuracy.bonus 0)}}
+		{{#if item.system.accuracy.bonus}}+ {{/if}}{{item.system.accuracy.bonus}} 
+	{{/unless}}
+</span>
+<span>
+	TM 
+	{{#unless (eq item.system.damage.value 0)}}
+		{{#if item.system.damage.value}}+ {{/if}}{{item.system.damage.value}}
+	{{/unless}}
+	{{localize (concat "ULTIMA.damageTypes." item.system.damage.type)}}
+</span>
+
+<a class="button" data-action="equipItem" data-uuid="{{item.uuid}}" data-tooltip="Disequipaggia">
+	<i class="fa fa-shield-halved"></i>
+</a>
+<a class="button" data-uuid="{{item.uuid}}" data-link>Apri</a>

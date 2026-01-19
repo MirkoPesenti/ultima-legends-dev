@@ -1,0 +1,23 @@
+<section class="tab {{tabs.item.id}} {{tabs.item.cssClass}} scrollable" id="item" data-tab="{{tabs.item.id}}" data-group="{{tabs.item.group}}">
+    <fieldset>
+        <legend>Descrizione</legend>
+        <prose-mirror name="system.description" id="system.description" value="{{system.description}}" toggled>
+            {{{enrichedHTML.description}}}
+        </prose-mirror>
+    </fieldset>
+
+    <fieldset class="dropzone">
+        <legend>Abilità</legend>
+        {{#each system.grants.skills as |skill index|}}
+            <div class="form-fields">
+                <input type="text" name="system.grants.skills.{{index}}" value="{{skill}}" readonly />
+                <a class="button" data-uuid="{{skill}}" data-link>
+                    Apri
+                </a>
+                <a class="button" data-action="removeGrantedSkill" data-index="{{index}}">
+                    <i class="fa fa-trash"></i>
+                </a>
+            </div>
+        {{/each}}
+    </fieldset>
+</section>

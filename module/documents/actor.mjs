@@ -76,8 +76,6 @@ export class UltimaLegendsActor extends Actor {
 		let slot = null;
 		let isTwoHanded = ( itemType === 'weapon' && item.system?.twoHanded === true ) ? true : false;
 
-		// TODO: Check two-handed conflicts with shields
-
 		// Determine slot based on item type
 		switch ( itemType ) {
 			case 'armor':
@@ -100,27 +98,48 @@ export class UltimaLegendsActor extends Actor {
 		// If no valid slot, exit
 		if ( slot === null ) return;
 
+		let slot2 = ( slot === 'mainHand' ) ? 'offHand' : 'mainHand';
 		const equippedItem = await fromUuid( equip[slot] );
 
-		if ( equippedItem && equippedItem.uuid === itemUuid ) {
-			
-			// Unequip if already equipped
-			await this.update({ [`system.equip.${slot}`]: null });
-			if ( isTwoHanded ) {
-				await this.update({ 'system.equip.offHand': null });
+		// If equipping a two-handed weapon, unequip off-hand item
+		if ( isTwoHanded ) {
+			const equippedItem2 = await fromUuid( equip[slot2] );
+			if ( equippedItem2 && equippedItem2?.uuid !== itemUuid ) {
+				ui.notifications.info(`Disequipaggiato ${equippedItem2.name} per equipaggiare un'arma a due mani.`);
+				await equippedItem2.update({ 'system.equipped': false });
+				await this.update({ [`system.equip.${slot2}`]: null });
 			}
+		}
+
+		if ( equippedItem ) {
+
 			await equippedItem.update({ 'system.equipped': false });
-			
+
+			// Check if the item is already equipped
+			if ( equippedItem.uuid === itemUuid ) {
+
+				await this.update({ [`system.equip.${slot}`]: null });
+				if ( equippedItem.system?.twoHanded === true ) {
+					await this.update({ [`system.equip.${slot2}`]: null });
+				}
+
+			} else {
+
+				await this.update({ [`system.equip.${slot}`]: itemUuid });
+				if ( equippedItem.system?.twoHanded === true ) {
+					let slot2Id = isTwoHanded ? itemUuid : null;
+					await this.update({ [`system.equip.${slot2}`]: slot2Id });
+				}
+				await item.update({ 'system.equipped': true });
+
+			}
+
 		} else {
 
-			// Unequip previous item if exists
-			if ( equippedItem ) {
-				await equippedItem.update({ 'system.equipped': false });
-			}
 			// Equip new item
 			await this.update({ [`system.equip.${slot}`]: itemUuid });
 			if ( isTwoHanded ) {
-				await this.update({ 'system.equip.offHand': itemUuid });
+				await this.update({ [`system.equip.${slot2}`]: itemUuid });
 			}
 			await item.update({ 'system.equipped': true });
 

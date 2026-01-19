@@ -1,0 +1,11 @@
+{{!-- <span>
+	<img src="{{item.img}}" alt="{{item.name}}" style="width:35px;" />
+</span> --}}
+<span>
+	{{item.name}}
+</span>
+
+<a class="button" data-action="equipItem" data-uuid="{{item.uuid}}" data-tooltip="Disequipaggia">
+	<i class="fa fa-shield-halved"></i>
+</a>
+<a class="button" data-uuid="{{item.uuid}}" data-link>Apri</a>
