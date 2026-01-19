@@ -35,7 +35,10 @@ export default class UltimaLegendsClass extends UltimaLegendsItemBase {
 	prepareDerivedData() {
 		super.prepareDerivedData();
 
+        // Ensure level does not exceed max level of 10
         this.level.max = 10;
+		if ( this.level.current > this.level.max ) 
+            this.level.current = this.level.max;
     }
 
 }

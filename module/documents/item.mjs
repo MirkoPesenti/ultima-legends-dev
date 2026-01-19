@@ -1,3 +1,5 @@
+import { UltimaLegendsActor } from "./actor.mjs";
+
 export class UltimaLegendsItem extends Item {
 
 	// Default options for the Item sheet
@@ -116,3 +118,69 @@ export class UltimaLegendsItem extends Item {
 	}
 
 }
+
+Hooks.on('preCreateItem', ( item, options, userId ) => {
+
+    // Generate an Ultima ID if it does not exist
+    if ( !item.system.ultimaID && item.name ) {
+        const id = game.ultimaLegends.util.slugify( item.name );
+        if ( id ) {
+            item.updateSource({ 'system.ultimaID': id });
+        } else {
+            ui.notifications.error(`${SYSTEM_NAME} | Could not generate Ultima ID for item with name '${item.name}'`);
+        }
+    }
+
+    if ( item.type === 'class' && item.parent instanceof UltimaLegendsActor ) {
+
+        // Check if actor already has this class
+        const existingClass = item.parent.items.find( i => i.type === 'class' && i.system.ultimaID === item.system.ultimaID );
+        if ( existingClass ) {
+            ui.notifications.warn(`L'attore '${item.parent.name}' possiede già la classe '${item.name}'`);
+            return false;
+        }
+
+        // Check for multiple resource benefits
+        const benefits = item.system.grants.resources;
+        const hasBenefits = Object.keys(benefits).filter(k => benefits[k]);
+        if ( hasBenefits.length > 1 ) {
+
+            // Reset all resource benefits
+            item.updateSource({ 
+                'system.grants.resources.hp': false, 
+                'system.grants.resources.mp': false, 
+                'system.grants.resources.ip': false, 
+            });
+
+            // Prompt user to choose one benefit
+            new DialogV2({
+                window: { title: 'Scegli il beneficio della classe' },
+                content: `<p>La classe <strong>${item.name}</strong> offre più benefici. Scegli quale desideri applicare:</p>`,
+                buttons: hasBenefits.map(resource => ({
+                    action: resource,
+                    label: resource.toUpperCase(),
+                    callback: async () => {
+                        const updates = {};
+                        updates[`system.grants.resources.${resource}`] = true;
+                        await item.update(updates);
+                    },
+                })),
+                default: hasBenefits[0]
+            }).render(true);
+
+        }
+
+		// Automatically add granted skills to the actor
+		const skills = item.system.grants.skills.map( skillId => {
+			return game.items.filter( i => i.type === 'skill' && i.system.ultimaID === skillId )[0];
+		});
+		skills.forEach( async skillItem => {
+			const existingSkill = item.parent.items.find( i => i.type === 'skill' && i.system.ultimaID === skillItem.system.ultimaID );
+			if ( existingSkill ) return;
+
+			await item.parent.createEmbeddedDocuments( 'Item', [ skillItem.toObject() ] );
+		});
+
+    }
+
+});

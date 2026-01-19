@@ -20,6 +20,7 @@ export class UltimaLegendsActorSheet extends HandlebarsApplicationMixin( ActorSh
 			addBond: this.#handleAddBond,
 			removeBond: this.#handleRemoveBond,
 			equipItem: this.#handleEquipItem,
+			levelUpClass: this.#handleLevelUpClass,
 		},
 	};
 
@@ -36,6 +37,11 @@ export class UltimaLegendsActorSheet extends HandlebarsApplicationMixin( ActorSh
 		character: {
 			id: 'character',
 			template: `systems/${SYSTEM}/templates/actor/character-main.hbs`,
+			scrollable: [''],
+		},
+		classes: {
+			id: 'classes',
+			template: `systems/${SYSTEM}/templates/actor/character-classes.hbs`,
 			scrollable: [''],
 		},
 		items: {
@@ -61,6 +67,7 @@ export class UltimaLegendsActorSheet extends HandlebarsApplicationMixin( ActorSh
             tabs:
                 [
                     { id: 'character', group: 'sheet', label: 'Generale' },
+                    { id: 'classes', group: 'sheet', label: 'Classi' },
                     { id: 'items', group: 'sheet', label: 'Equipaggiamento' },
                     { id: 'status', group: 'sheet', label: 'Status' },
                     { id: 'identity', group: 'sheet', label: 'Personaggio' },
@@ -104,7 +111,6 @@ export class UltimaLegendsActorSheet extends HandlebarsApplicationMixin( ActorSh
 		const armors = [];
 		const basics = [];
 		const classes = [];
-		const classFeatures = [];
 		const consumables = [];
 		const heroics = [];
 		const projects = [];
@@ -124,7 +130,6 @@ export class UltimaLegendsActorSheet extends HandlebarsApplicationMixin( ActorSh
 				case 'armor': armors.push( i ); break;
 				case 'basic': basics.push( i ); break;
 				case 'class': classes.push( i ); break;
-				case 'classFeature': classFeatures.push( i ); break;
 				case 'consumable': consumables.push( i ); break;
 				case 'heroic': heroics.push( i ); break;
 				case 'project': projects.push( i ); break;
@@ -142,7 +147,6 @@ export class UltimaLegendsActorSheet extends HandlebarsApplicationMixin( ActorSh
 			armors,
 			basics,
 			classes,
-			classFeatures,
 			consumables,
 			heroics,
 			projects,
@@ -190,6 +194,7 @@ export class UltimaLegendsActorSheet extends HandlebarsApplicationMixin( ActorSh
 
 	}
 
+	// Handle equipping an item
 	static async #handleEquipItem( event, target ) {
 
 		event.preventDefault();
@@ -198,6 +203,18 @@ export class UltimaLegendsActorSheet extends HandlebarsApplicationMixin( ActorSh
 		if ( !item ) return;
 
 		await this.document.updateEquippedItem( item );
+
+	}
+
+	static async #handleLevelUpClass( event, target ) {
+
+		event.preventDefault();
+		const classId = target.dataset.id;
+		const classItem = this.document.items.find( i => i.type === 'class' && i.system.ultimaID === classId );
+		if ( !classItem ) return;
+
+		const newLevel = Math.min( classItem.system.level.current + 1, classItem.system.level.max );
+		await classItem.update({ 'system.level.current': newLevel });
 
 	}
 

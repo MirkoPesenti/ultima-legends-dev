@@ -19,7 +19,7 @@
     </fieldset>
 
     <fieldset>
-        <legend>Bonus</legend>
+        <legend>Benefici</legend>
         <div class="form-group">
             <span class="label">Attributi</span>
             <div class="form-fields">
@@ -35,6 +35,31 @@
                     <label for="system.grants.resources.ip">PI</label>
                     <input type="checkbox" name="system.grants.resources.ip" id="system.grants.resources.ip" {{#if system.grants.resources.ip}}checked{{/if}} />
                 </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>Competenze marziali ( <span class="fu-martial"></span> )</legend>
+        <div class="form-group">
+            <div class="form-fields" style="flex-grow:3;">
+                <label for="system.grants.martial.melee">Mischia ( <span class="fu-melee"></span> )</label>
+                <input type="checkbox" name="system.grants.martial.melee" id="system.grants.martial.melee" {{#if system.grants.martial.melee}}checked{{/if}} />
+            </div>
+
+            <div class="form-fields" style="flex-grow:3;">
+                <label for="system.grants.martial.ranged">A distanza ( <span class="fu-ranged"></span> )</label>
+                <input type="checkbox" name="system.grants.martial.ranged" id="system.grants.martial.ranged" {{#if system.grants.martial.ranged}}checked{{/if}} />
+            </div>
+            
+            <div class="form-fields">
+                <label for="system.grants.martial.armor">Armature</label>
+                <input type="checkbox" name="system.grants.martial.armor" id="system.grants.martial.armor" {{#if system.grants.martial.armor}}checked{{/if}} />
+            </div>
+            
+            <div class="form-fields">
+                <label for="system.grants.martial.shield">Scudi</label>
+                <input type="checkbox" name="system.grants.martial.shield" id="system.grants.martial.shield" {{#if system.grants.martial.shield}}checked{{/if}} />
             </div>
         </div>
     </fieldset>

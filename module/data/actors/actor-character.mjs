@@ -44,6 +44,7 @@ export default class UltimaLegendsCharacter extends UltimaLegendsActorBase {
 		
 		this.#prepareLevel();
 		this.#prepareResources();
+		this.#prepareMartial();
 		this.#prepareBondsStrength();
 	}
 
@@ -80,9 +81,9 @@ export default class UltimaLegendsCharacter extends UltimaLegendsActorBase {
 		const classes = this.parent.items.filter( c => c.type === 'class' ) ?? [];
 		const benefits = classes.reduce(
 			( sum, cls ) => {
-				if ( cls.system.bonus.hp ) sum.hp += 5;
-				if ( cls.system.bonus.mp ) sum.mp += 5;
-				if ( cls.system.bonus.ip ) sum.ip += 2;
+				if ( cls.system.grants.resources.hp ) sum.hp += 5;
+				if ( cls.system.grants.resources.mp ) sum.mp += 5;
+				if ( cls.system.grants.resources.ip ) sum.ip += 2;
 				return sum;
 			}, { hp: 0, mp: 0, ip: 0 }
 		);
@@ -133,6 +134,21 @@ export default class UltimaLegendsCharacter extends UltimaLegendsActorBase {
 		});
 		// Ensure current IP does not exceed max
 		if ( resources.ip.current > resources.ip.max ) resources.ip.current = resources.ip.max;
+
+	}
+
+	// Prepare Martial Proficiencies
+	#prepareMartial() {
+
+		const martial = this.martial;
+		const classes = this.parent.items.filter( c => c.type === 'class' ) ?? [];
+
+		classes.forEach( cls => {
+			if ( cls.system.grants.martial.melee ) martial.melee = true;
+			if ( cls.system.grants.martial.ranged ) martial.ranged = true;
+			if ( cls.system.grants.martial.armor ) martial.armor = true;
+			if ( cls.system.grants.martial.shield ) martial.shield = true;
+		});
 
 	}
 

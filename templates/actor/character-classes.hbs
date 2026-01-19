@@ -1,0 +1,80 @@
+<section class="tab {{tabs.classes.id}} {{tabs.classes.cssClass}} scrollable" id="classes" data-tab="{{tabs.classes.id}}" data-group="{{tabs.classes.group}}">
+
+    {{#each classes as |class|}}
+
+        <fieldset>
+            <legend class="form-group">
+                {{class.name}}
+                <a class="button" data-uuid="{{class.uuid}}" data-link>Apri</a>
+                {{#unless (eq class.system.level.current class.system.level.max)}}
+                    <a class="button" data-action="levelUpClass" data-id="{{class.system.ultimaID}}" data-tooltip="Sali di livello">
+                        <i class="fa fa-regular fa-circle-up"></i>
+                    </a>
+                {{/unless}}
+            </legend>
+            <div class="form-group">
+                <span class="label">Livello:</span>
+                <div class="form-fields">
+                    <input type="number" value="{{class.system.level.current}}" readonly />
+                    <span style="flex:0 0 20px; text-align: center;">/</span>
+                    <input type="number" value="{{class.system.level.max}}" readonly />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <span class="label">Benefici gratuiti</span>
+                <div class="form-fields">
+                    {{#if class.system.grants.resources.hp}}
+                        <input type="checkbox" {{#if class.system.grants.resources.hp}}checked{{/if}} disabled />
+                        <span class="label">Punti Vita + 5</span>
+                    {{/if}}
+
+                    {{#if class.system.grants.resources.mp}}
+                        <input type="checkbox" {{#if class.system.grants.resources.mp}}checked{{/if}} disabled />
+                        <span class="label">Punti Mente + 5</span>
+                    {{/if}}
+
+                    {{#if class.system.grants.resources.ip}}
+                        <input type="checkbox" {{#if class.system.grants.resources.ip}}checked{{/if}} disabled />
+                        <span class="label">Punti Inventario + 2</span>
+                    {{/if}}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <span class="label">Competenze marziali ( <span class="fu-martial"></span> )</span>
+                <div class="form-fields">
+                    {{#if class.system.grants.martial.melee}}
+                        <div class="form-fields">
+                            <input type="checkbox" {{#if class.system.grants.martial.melee}}checked{{/if}} disabled />
+                            <span class="label">Armi da mischia</span>
+                        </div>
+                    {{/if}}
+
+                    {{#if class.system.grants.martial.ranged}}
+                        <div class="form-fields">
+                            <input type="checkbox" {{#if class.system.grants.martial.ranged}}checked{{/if}} disabled />
+                            <span class="label">Armi a distanza</span>
+                        </div>
+                    {{/if}}
+
+                    {{#if class.system.grants.martial.armor}}
+                        <div class="form-fields">
+                            <input type="checkbox" {{#if class.system.grants.martial.armor}}checked{{/if}} disabled />
+                            <span class="label">Armature</span>
+                        </div>
+                    {{/if}}
+
+                    {{#if class.system.grants.martial.shield}}
+                        <div class="form-fields">
+                            <input type="checkbox" {{#if class.system.grants.martial.shield}}checked{{/if}} disabled />
+                            <span class="label">Scudi</span>
+                        </div>
+                    {{/if}}
+                </div>
+            </div>
+        </fieldset>
+
+    {{/each}}
+    
+</section>

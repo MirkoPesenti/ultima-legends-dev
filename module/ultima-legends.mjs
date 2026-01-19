@@ -47,14 +47,13 @@ Hooks.once('init', async () => {
 		armor: models.UltimaLegendsArmor,
 		basic: models.UltimaLegendsItemBase,
 		class: models.UltimaLegendsClass,
-		// classFeature
 		// consumable
 		// heroic
 		// project
 		// ritual
 		// rule
 		shield: models.UltimaLegendsShield,
-		// skill
+		skill: models.UltimaLegendsSkill,
 		// spell
 		weapon: models.UltimaLegendsWeapon,
 	};
@@ -110,6 +109,10 @@ Hooks.on('renderGamePause', (application, element, context, options) => {
 
 Handlebars.registerHelper('getItemByUUID', function( items, itemUUID ) {
 	return items.find( i => i.uuid === itemUUID );
+});
+
+Handlebars.registerHelper('getGlobalItemFromUltimaID', function( itemUltimaID ) {
+	return game.items.filter( i => i.system.ultimaID === itemUltimaID )[0];
 });
 
 //#endregion

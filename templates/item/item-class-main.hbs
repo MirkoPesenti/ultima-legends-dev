@@ -9,15 +9,7 @@
     <fieldset class="dropzone">
         <legend>Abilità</legend>
         {{#each system.grants.skills as |skill index|}}
-            <div class="form-fields">
-                <input type="text" name="system.grants.skills.{{index}}" value="{{skill}}" readonly />
-                <a class="button" data-uuid="{{skill}}" data-link>
-                    Apri
-                </a>
-                <a class="button" data-action="removeGrantedSkill" data-index="{{index}}">
-                    <i class="fa fa-trash"></i>
-                </a>
-            </div>
+            {{> systems/ultima-legends/templates/item/parts/class-skill.hbs item=(getGlobalItemFromUltimaID skill) index=index}}
         {{/each}}
     </fieldset>
 </section>

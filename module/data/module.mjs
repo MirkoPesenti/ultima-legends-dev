@@ -10,3 +10,4 @@ export { default as UltimaLegendsShield } from "./items/item-shield.mjs";
 export { default as UltimaLegendsArmor } from "./items/item-armor.mjs";
 export { default as UltimaLegendsWeapon } from "./items/item-weapon.mjs";
 export { default as UltimaLegendsClass } from "./items/item-class.mjs";
+export { default as UltimaLegendsSkill } from "./items/item-skill.mjs";

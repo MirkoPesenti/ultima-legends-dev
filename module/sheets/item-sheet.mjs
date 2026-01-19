@@ -4,6 +4,7 @@ import { enrichHTML } from "../utils/utilities.mjs";
 const { ItemSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { DragDrop, TextEditor } = foundry.applications.ux;
+const { DialogV2 } = foundry.applications.api;
 
 export class UltimaLegendsItemSheet extends HandlebarsApplicationMixin( ItemSheetV2 ) {
     
@@ -128,11 +129,11 @@ export class UltimaLegendsItemSheet extends HandlebarsApplicationMixin( ItemShee
             this.element.classList.toggle( sourceClass, true );
         }
 
-        // Bind drag and drop handlers if not already bound
-        if ( this.#dragDropBoundElement !== this.element ) {
-            for ( const dd of (this.#dragDrop ?? []) ) dd.bind( this.element );
-            this.#dragDropBoundElement = this.element;
+        // Always unbind and rebind drag and drop handlers on render
+        for ( const dd of (this.#dragDrop ?? []) ) {
+            dd.bind( this.element );
         }
+        this.#dragDropBoundElement = this.element;
 
     }
 
@@ -170,7 +171,7 @@ export class UltimaLegendsItemSheet extends HandlebarsApplicationMixin( ItemShee
 
     // Handle drop event
     async _onDrop( event ) {
-
+        
         const data = TextEditor.getDragEventData( event );
 
         if ( data?.uuid ) {
@@ -178,18 +179,30 @@ export class UltimaLegendsItemSheet extends HandlebarsApplicationMixin( ItemShee
             if ( this.document.type === 'class' ) {
 
                 const item = await fromUuid( data.uuid );
-                //TODO: if ( item?.type === 'skill' ) {
-                if ( item?.type === 'basic' ) {
+                if ( item?.type === 'skill' ) {
+
+                    // Prevent default behavior immediately
+                    event.preventDefault();
+                    event.stopPropagation();
 
                     const skills = this.document.system.grants.skills ?? [];
                     // Check for duplicate skill
-                    if ( skills.includes( item.uuid ) ) {
+                    if ( skills.includes( item.system.ultimaID ) ) {
                         ui.notifications.warn( `La skill "${item.name}" è già concessa da questa classe.` );
                     } else {
-                        skills.push( item.uuid );
+                        skills.push( item.system.ultimaID );
                         await this.document.update({ 'system.grants.skills': skills });
                     }
 
+                    await item.update({ 'system.origin': this.document.system.ultimaID });
+
+                    return false;
+
+                } else {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    ui.notifications.warn( `Puoi aggiungere solo oggetti di tipo "Abilità" a questa classe.` );
+                    return false;
                 }
 
             }
@@ -203,7 +216,7 @@ export class UltimaLegendsItemSheet extends HandlebarsApplicationMixin( ItemShee
     static async #handleRegenerateUltimaID( event, target ) {
 
         // Confirm action
-        const confirmed = await foundry.applications.api.DialogV2.confirm({
+        const confirmed = await DialogV2.confirm({
             window: {
                 title: 'Conferma Rigenerazione Ultima ID'
             },
