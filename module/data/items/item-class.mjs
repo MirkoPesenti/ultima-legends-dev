@@ -7,7 +7,9 @@ export default class UltimaLegendsClass extends UltimaLegendsItemBase {
 		const fields = foundry.data.fields;
 		const schema = super.defineSchema();
 
-        schema.level = new fields.NumberField({ initial: 1, max: 10, integer: true, nullable: false });
+        schema.level = new fields.SchemaField({
+            current: new fields.NumberField({ initial: 1, min: 1, integer: true, nullable: false }),
+        })
         schema.grants = new fields.SchemaField({
             resources: new fields.SchemaField({
                 hp: new fields.BooleanField({ initial: false }),
@@ -27,6 +29,13 @@ export default class UltimaLegendsClass extends UltimaLegendsItemBase {
         });
         
         return schema;
+    }
+
+    // Prepare Derived Data
+	prepareDerivedData() {
+		super.prepareDerivedData();
+
+        this.level.max = 10;
     }
 
 }

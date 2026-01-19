@@ -58,7 +58,7 @@ export default class UltimaLegendsCharacter extends UltimaLegendsActorBase {
 			configurable: true,
 			enumerable: true,
 			get() {
-				const total = classes.reduce( ( sum, cls ) => sum + ( cls.system.level ?? 0 ), 0 );
+				const total = classes.reduce( ( sum, cls ) => sum + ( cls.system.level.current ?? 0 ), 0 );
 				return total;
 			},
 			set( newVal ) {
