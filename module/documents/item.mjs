@@ -10,6 +10,19 @@ export class UltimaLegendsItem extends Item {
 		super.prepareData();
 	}
 
+	// Handle pre-update logic
+	async _preUpdate(changed, options, user) {
+		await super._preUpdate(changed, options, user);
+
+		// If spell is not offensive, reset damage and opportunity
+		if (this.type === 'spell' && changed.system?.offensive === false) {
+			changed.system.damage = changed.system.damage || {};
+			changed.system.damage.value = 0;
+			changed.system.damage.type = 'physical';
+			changed.system.opportunity = null;
+		}
+	}
+
 	// Create a new UltimaLegendsItem with default image based on type
 	static async create( data, options={} ) {
 

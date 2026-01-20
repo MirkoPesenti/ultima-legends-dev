@@ -12,3 +12,4 @@ export { default as UltimaLegendsWeapon } from "./items/item-weapon.mjs";
 export { default as UltimaLegendsClass } from "./items/item-class.mjs";
 export { default as UltimaLegendsSkill } from "./items/item-skill.mjs";
 export { default as UltimaLegendsConsumable } from "./items/item-consumable.mjs";
+export { default as UltimaLegendsSpell } from "./items/item-spell.mjs";

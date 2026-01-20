@@ -7,6 +7,7 @@ import { UltimaLegendsActorSheet } from './sheets/actor-sheet.mjs';
 import { UltimaLegendsItemSheet } from './sheets/item-sheet.mjs';
 import { UltimaLegendsEquippableSheet } from './sheets/item-equippable-sheet.mjs';
 import { UltimaLegendsClassSheet } from './sheets/item-class-sheet.mjs';
+import { UltimaLegendsSpellSheet } from './sheets/item-spell-sheet.mjs';
 
 // Import DataModels
 import * as models from './data/module.mjs';
@@ -54,7 +55,7 @@ Hooks.once('init', async () => {
 		// rule
 		shield: models.UltimaLegendsShield,
 		skill: models.UltimaLegendsSkill,
-		// spell
+		spell: models.UltimaLegendsSpell,
 		weapon: models.UltimaLegendsWeapon,
 	};
 
@@ -81,6 +82,10 @@ Hooks.once('init', async () => {
 	foundry.documents.collections.Items.registerSheet(SYSTEM, UltimaLegendsClassSheet, {
 		makeDefault: true,
 		types: ['class', 'skill'],
+	});
+	foundry.documents.collections.Items.registerSheet(SYSTEM, UltimaLegendsSpellSheet, {
+		makeDefault: true,
+		types: ['spell'],
 	});
 
 	// Setup configuration settings

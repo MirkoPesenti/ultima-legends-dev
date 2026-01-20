@@ -94,6 +94,20 @@ ULTIMA.weaponCategories = {
 	sword: 'ULTIMA.weapons.sword',
 };
 
+ULTIMA.spellDisciplines = {
+	arcanism: 'ULTIMA.disciplines.arcanism',
+	chimerism: 'ULTIMA.disciplines.chimerism',
+	elementalism: 'ULTIMA.disciplines.elementalism',
+	entropism: 'ULTIMA.disciplines.entropism',
+	ritualism: 'ULTIMA.disciplines.ritualism',
+	spiritism: 'ULTIMA.disciplines.spiritism',
+};
+
+ULTIMA.spellDurations = {
+	instantaneous: 'ULTIMA.spellDurations.instantaneous',
+	scene: 'ULTIMA.spellDurations.scene',
+};
+
 ULTIMA.damageTypes = {
 	physical: 'ULTIMA.damageTypes.physical',
 	air: 'ULTIMA.damageTypes.air',

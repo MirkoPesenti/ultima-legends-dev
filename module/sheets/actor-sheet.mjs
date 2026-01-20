@@ -1,3 +1,4 @@
+import { UltimaLegendsApp } from "../data/apps/base-app.mjs";
 import { UltimaLegendsItem } from "../documents/item.mjs";
 import { SYSTEM, SYSTEM_NAME, ULTIMA } from "../helpers/config.mjs";
 import { enrichHTML } from "../utils/utilities.mjs";
@@ -16,7 +17,15 @@ export class UltimaLegendsActorSheet extends HandlebarsApplicationMixin( ActorSh
 		form: { submitOnChange: true },
 		actor: { type: 'character' },
 		window: {
-			contentClasses: ["standard-form"]
+			contentClasses: ["standard-form"],
+			// icon: 'fa fa-user',
+			controls: [
+				{
+					icon: "fa fa-dice-d20",
+					label: "Charactermancer",
+					action: "charactermancer",
+				}
+			],
 		},
 		actions: {
 			addBond: this.#handleAddBond,
@@ -25,6 +34,7 @@ export class UltimaLegendsActorSheet extends HandlebarsApplicationMixin( ActorSh
 			levelUpClass: this.#handleLevelUpClass,
 			levelUpSkill: this.#handleLevelUpSkill,
 			createItem: this.#handleCreateItem,
+			charactermancer: this.#handleCharactermancer,
 		},
 	};
 
@@ -143,11 +153,11 @@ export class UltimaLegendsActorSheet extends HandlebarsApplicationMixin( ActorSh
 					i.checkLevelUp( i.system.level.current );
 					classes.push( i ); 
 					break;
-				case 'consumable': consumables.push( i ); break;
-				case 'heroic': heroics.push( i ); break;
-				case 'project': projects.push( i ); break;
-				case 'ritual': rituals.push( i ); break;
-				case 'rule': rules.push( i ); break;
+				// case 'consumable': consumables.push( i ); break;
+				// case 'heroic': heroics.push( i ); break;
+				// case 'project': projects.push( i ); break;
+				// case 'ritual': rituals.push( i ); break;
+				// case 'rule': rules.push( i ); break;
 				case 'shield': shields.push( i ); break;
 				case 'skill': skills.push( i ); break;
 				case 'spell': spells.push( i ); break;
@@ -167,7 +177,7 @@ export class UltimaLegendsActorSheet extends HandlebarsApplicationMixin( ActorSh
 			// rules,
 			shields,
 			skills,
-			// spells,
+			spells,
 			weapons
 		};
 
@@ -330,6 +340,15 @@ export class UltimaLegendsActorSheet extends HandlebarsApplicationMixin( ActorSh
 		// Create the item
 		const newItem = await UltimaLegendsItem.create( itemData, { parent: this.document } );
 		await newItem.sheet.render(true);
+
+	}
+
+	// Handle custom action
+	static async #handleCharactermancer( event, target ) {
+		
+		event.preventDefault();
+		const charactermancerApp = new UltimaLegendsApp();
+		await charactermancerApp.render( true );
 
 	}
 

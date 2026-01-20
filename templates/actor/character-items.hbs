@@ -1,6 +1,60 @@
 <section class="tab {{tabs.items.id}} {{tabs.items.cssClass}} scrollable" id="items" data-tab="{{tabs.items.id}}" data-group="{{tabs.items.group}}">
 
     <fieldset>
+        <legend>Incantesimi</legend>
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Disciplina</th>
+                    <th>Costo</th>
+                    <th>Bersaglio</th>
+                    <th>Danno</th>
+                    <th>Durata</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each spells}}
+                    <tr>
+                        {{!-- <td style="width: 60px;"><img src="{{this.img}}" alt="{{this.name}}"></td> --}}
+                        <td>
+                            {{this.name}} 
+                            {{#if this.system.offensive}}<span class="fu-offensive" data-tooltip="Offensivo"></span>{{/if}}
+                        </td>
+                        <td>{{localize (concat "ULTIMA.disciplines." this.system.discipline)}}</td>
+                        <td>
+                            {{this.system.cost}}
+                            {{#if this.system.target.multi}}
+                            x B
+                            {{/if}}
+                            PM
+                        </td>
+                        <td>{{this.system.target.type}}</td>
+                        <td>
+                            {{#if this.system.offensive}}
+                                TM 
+                                {{#unless (eq this.system.damage.value 0)}}
+                                    {{#if this.system.damage.value}}+ {{/if}}{{this.system.damage.value}}
+                                {{/unless}}
+                                {{localize (concat "ULTIMA.damageTypes." this.system.damage.type)}}
+                            {{else}}
+                                -
+                            {{/if}}
+                        </td>
+                        <td>{{localize (concat "ULTIMA.spellDurations." this.system.duration)}}</td>
+                        <td>
+                            <div class="form-fields">
+                                <a class="button" data-uuid="{{this.uuid}}" data-link>Apri</a>
+                            </div>
+                        </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </fieldset>
+
+    <fieldset>
         <legend class="form-group">
             Oggetti
             <div class="form-fields">

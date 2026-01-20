@@ -1,4 +1,5 @@
 import { ULTIMA } from "../../helpers/config.mjs";
+import UltimaLegendsDamageDataModel from "./common/base-damage.mjs";
 import UltimaLegendsItemEquippable from "./item-equippable.mjs";
 
 export default class UltimaLegendsWeapon extends UltimaLegendsItemEquippable {
@@ -16,10 +17,7 @@ export default class UltimaLegendsWeapon extends UltimaLegendsItemEquippable {
             secondary: new fields.StringField({ initial: 'mig', nullable: false, choices: Object.keys(ULTIMA.attributes) }),
             bonus: new fields.NumberField({ initial: 0, integer: true, nullable: false }),
         });
-        schema.damage = new fields.SchemaField({
-            value: new fields.NumberField({ initial: 0, integer: true, nullable: false }),
-            type: new fields.StringField({ initial: 'physical', nullable: false, choices: Object.keys(ULTIMA.damageTypes) }),
-        });
+        schema.damage = new fields.EmbeddedDataField(UltimaLegendsDamageDataModel, {});
         
         return schema;
     }

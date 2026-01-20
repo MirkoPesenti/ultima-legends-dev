@@ -183,7 +183,7 @@
       "consumable": "Consumabile",
       "consumablePL": "Consumabili"
     },
-    "MagicDisciplines": {
+    "disciplines": {
       "arcanism": "Arcanismo",
       "chimerism": "Chimerismo",
       "elementalism": "Elementalismo",
@@ -191,7 +191,7 @@
       "ritualism": "Ritualismo",
       "spiritism": "Spiritismo"
     },
-    "SpellDurations": {
+    "spellDurations": {
       "instantaneous": "Istantanea",
       "scene": "Scena"
     },
