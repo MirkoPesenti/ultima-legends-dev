@@ -28,6 +28,7 @@ export class UltimaLegendsItemSheet extends HandlebarsApplicationMixin( ItemShee
         actions: {
             regenerateUltimaID: this.#handleRegenerateUltimaID,
             removeGrantedSkill: this.#handleRemoveGrantedSkill,
+            openItemByUltimaID: this.#handleOpenItemByUltimaID,
         },
     };
 
@@ -91,11 +92,11 @@ export class UltimaLegendsItemSheet extends HandlebarsApplicationMixin( ItemShee
     // Prepare context data for template rendering
     async _prepareContext( options ) {
         const context = await super._prepareContext( options );
-        const actor = this.document.toPlainObject();
+        const item = this.document.toPlainObject();
 
         context.ULTIMA = ULTIMA;
-        context.system = actor.system;
-        context.flags = actor.flags;
+        context.system = item.system;
+        context.flags = item.flags;
         context.item = this.document;
         
         // Enrich description HTML
@@ -239,10 +240,33 @@ export class UltimaLegendsItemSheet extends HandlebarsApplicationMixin( ItemShee
 		const skills = this.document.system.grants.skills ?? [];
 		
 		if ( index >= 0 && index < skills.length ) {
-			skills.splice( index, 1 );
+			const removed = skills.splice( index, 1 );
 			await this.document.update({ 'system.grants.skills': skills });
+            
+            // Also clear the origin field on the removed skill item
+            const removedSkill = game.items.find( i => i.system.ultimaID === removed[0] );
+            if ( removedSkill ) {
+                await removedSkill.update({ 'system.origin': null });
+            }
+
+            // Check for level up after skill removal
+            this.document.checkLevelUp( this.document.system.level.current );
 		}
 
 	}
+
+    // Handle opening item by Ultima ID
+    static #handleOpenItemByUltimaID( event, target ) {
+
+        event.preventDefault();
+        const ultimaID = target.dataset.id;
+        const item = game.items.find( i => i.system.ultimaID === ultimaID );
+        if ( item ) {
+            item.sheet.render(true);
+        } else {
+            ui.notifications.warn( `Nessun oggetto trovato con Ultima ID: ${ultimaID}` );
+        }
+
+    }
 
 }

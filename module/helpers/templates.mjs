@@ -9,6 +9,7 @@ export const preloadPartialTemplates = async function () {
 		`systems/${SYSTEM}/templates/actor/character-header.hbs`,
 		`systems/${SYSTEM}/templates/actor/character-main.hbs`,
 		`systems/${SYSTEM}/templates/actor/character-classes.hbs`,
+		`systems/${SYSTEM}/templates/actor/character-equip.hbs`,
 		`systems/${SYSTEM}/templates/actor/character-items.hbs`,
 		`systems/${SYSTEM}/templates/actor/character-status.hbs`,
 		`systems/${SYSTEM}/templates/actor/character-identity.hbs`,
@@ -18,6 +19,7 @@ export const preloadPartialTemplates = async function () {
 		`systems/${SYSTEM}/templates/actor/parts/equip-weapon.hbs`,
 		`systems/${SYSTEM}/templates/actor/parts/equip-shield.hbs`,
 		`systems/${SYSTEM}/templates/actor/parts/equip-accessory.hbs`,
+		`systems/${SYSTEM}/templates/actor/parts/class-skills.hbs`,
 
 		// Item
 		`systems/${SYSTEM}/templates/item/item-header.hbs`,

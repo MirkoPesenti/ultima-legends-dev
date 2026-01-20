@@ -1,4 +1,3 @@
-import { ULTIMA } from "../../helpers/config.mjs";
 import UltimaLegendsItemBase from "./base-item.mjs";
 
 export default class UltimaLegendsSkill extends UltimaLegendsItemBase {

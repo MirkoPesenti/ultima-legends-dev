@@ -5,4 +5,14 @@
             {{{enrichedHTML.description}}}
         </prose-mirror>
     </fieldset>
+
+    {{#if (eq item.type "consumable")}}
+        <fieldset>
+            <legend>Consumabile</legend>
+            <div class="form-group">
+                <label for="system.cost">Costo in PI</label>
+                <input type="number" name="system.cost" id="system.cost" value="{{system.cost}}" min="0" />
+            </div>
+        </fieldset>
+    {{/if}}
 </section>

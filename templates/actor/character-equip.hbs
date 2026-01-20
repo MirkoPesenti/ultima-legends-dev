@@ -1,0 +1,279 @@
+<section class="tab {{tabs.equip.id}} {{tabs.equip.cssClass}} scrollable" id="equip" data-tab="{{tabs.equip.id}}" data-group="{{tabs.equip.group}}">
+    <fieldset>
+        <legend>Competenze marziali ( <span class="fu-martial"></span> )</legend>
+        <div class="form-group">
+            <div class="form-fields">
+                <label for="system.martial.melee">Armi da mischia ( <span class="fu-melee"></span> )</label>
+                <input type="checkbox" name="system.martial.melee" id="system.martial.melee" {{#if system.martial.melee}}checked{{/if}} disabled />
+            </div>
+
+            <div class="form-fields">
+                <label for="system.martial.ranged">Armi a distanza ( <span class="fu-ranged"></span> )</label>
+                <input type="checkbox" name="system.martial.ranged" id="system.martial.ranged" {{#if system.martial.ranged}}checked{{/if}} disabled />
+            </div>
+            
+            <div class="form-fields">
+                <label for="system.martial.armor">Armature</label>
+                <input type="checkbox" name="system.martial.armor" id="system.martial.armor" {{#if system.martial.armor}}checked{{/if}} disabled />
+            </div>
+            
+            <div class="form-fields">
+                <label for="system.martial.shield">Scudi</label>
+                <input type="checkbox" name="system.martial.shield" id="system.martial.shield" {{#if system.martial.shield}}checked{{/if}} disabled />
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>Equipaggiamento</legend>
+        <div class="form-group">
+            <label for="system.equip.armor">Armatura</label>
+            <div class="form-fields">
+                {{#if system.equip.armor}}
+                    {{> systems/ultima-legends/templates/actor/parts/equip-armor.hbs item=(getItemByUUID actor.items system.equip.armor) actor=actor}}
+                {{else}}
+                    <span>Nessuna armatura equipaggiata.</span>
+                {{/if}}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="system.equip.mainHand">Mano Principale</label>
+            <div class="form-fields">
+                {{#if system.equip.mainHand}}
+                    {{> systems/ultima-legends/templates/actor/parts/equip-weapon.hbs item=(getItemByUUID actor.items system.equip.mainHand) actor=actor}}
+                {{else}}
+                    <span>Nessuna arma equipaggiata.</span>
+                {{/if}}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="system.equip.offHand">
+                Mano Secondaria
+                {{#if (and system.equip.offHand (eq system.equip.mainHand system.equip.offHand))}}
+                    ( Due Mani )
+                {{/if}}
+            </label>
+            <div class="form-fields">
+                {{#if system.equip.offHand}}
+                    {{#if (and system.equip.offHand (eq system.equip.mainHand system.equip.offHand))}}
+                        <i class="fa fa-circle-up"></i>
+                    {{else}}
+                        {{#if (eq (lookup (getItemByUUID actor.items system.equip.offHand) "type") "weapon")}}
+                            {{> systems/ultima-legends/templates/actor/parts/equip-weapon.hbs item=(getItemByUUID actor.items system.equip.offHand) actor=actor}}
+                        {{/if}}
+
+                        {{#if (eq (lookup (getItemByUUID actor.items system.equip.offHand) "type") "shield")}}
+                            {{> systems/ultima-legends/templates/actor/parts/equip-shield.hbs item=(getItemByUUID actor.items system.equip.offHand) actor=actor}}
+                        {{/if}}
+                    {{/if}}
+                {{else}}
+                    <span>Nussuno scudo equipaggiata.</span>
+                {{/if}}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="system.equip.accessory">Accessorio</label>
+            <div class="form-fields">
+                {{#if system.equip.accessory}}
+                    {{> systems/ultima-legends/templates/actor/parts/equip-accessory.hbs item=(getItemByUUID actor.items system.equip.accessory) actor=actor}}
+                {{else}}
+                    <span>Nessun accessorio equipaggiata.</span>
+                {{/if}}
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>Inventario</legend>
+        {{!-- Armi --}}
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="2">Armi</th>
+                    <th>2 Mani</th>
+                    <th>Rarità</th>
+                    <th>Precisione</th>
+                    <th>Danno</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each weapons}}
+                    {{#unless this.system.equipped}}
+                    <tr>
+                        <td style="width: 60px;"><img src="{{this.img}}" alt="{{this.name}}"></td>
+                        <td>
+                            {{#if (eq this.system.range "melee")}}( <span class="fu-melee" data-tooltip="Mischia"></span> ){{/if}}
+                            {{#if (eq this.system.range "ranged")}}( <span class="fu-ranged" data-tooltip="A distanza"></span> ){{/if}}
+                            {{this.name}} 
+                            {{#if this.system.martial}}<span class="fu-martial" data-tooltip="Marziale"></span>{{/if}}
+                        </td>
+                        <td>
+                            {{#if this.system.twoHanded}}Sì{{else}}No{{/if}}
+                        </td>
+                        <td>{{localize (concat "ULTIMA.rarities." this.system.rarity)}}</td>
+                        <td>
+                            {{localize (concat "ULTIMA.attributes." this.system.accuracy.primary ".short")}} 
+                            +
+                            {{localize (concat "ULTIMA.attributes." this.system.accuracy.secondary ".short")}}
+                            {{#unless (eq this.system.accuracy.bonus 0)}}
+                                {{#if this.system.accuracy.bonus}}+ {{/if}}{{this.system.accuracy.bonus}} 
+                            {{/unless}}
+                        </td>
+                        <td>
+                            TM 
+                            {{#unless (eq this.system.damage.value 0)}}
+                                {{#if this.system.damage.value}}+ {{/if}}{{this.system.damage.value}}
+                            {{/unless}}
+                            {{localize (concat "ULTIMA.damageTypes." this.system.damage.type)}}
+                        </td>
+                        <td>
+                            <div class="form-fields">
+                                <a
+                                    class="button" 
+                                    data-action="equipItem" 
+                                    data-uuid="{{this.uuid}}" 
+                                    data-tooltip="Equipaggia" 
+                                    {{#if (and this.system.martial (or (and (eq this.system.range "melee") (not @root.system.martial.melee)) (and (eq this.system.range "ranged") (not @root.system.martial.ranged))))}}disabled{{/if}}
+                                >
+                                    <i class="fa fa-shield-halved"></i>
+                                </a>
+                                <a class="button" data-uuid="{{this.uuid}}" data-link>Apri</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {{/unless}}
+                {{/each}}
+            </tbody>
+        </table>
+
+        {{!-- Armature --}}
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="2">Armature</th>
+                    <th>Rarità</th>
+                    <th>DEF</th>
+                    <th>M. DEF</th>
+                    <th>INIT</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each armors}}
+                    {{#unless this.system.equipped}}
+                    <tr>
+                        <td style="width: 60px;"><img src="{{this.img}}" alt="{{this.name}}"></td>
+                        <td>{{this.name}} {{#if this.system.martial}}<span class="fu-martial" data-tooltip="Marziale"></span>{{/if}}</td>
+                        <td>{{localize (concat "ULTIMA.rarities." this.system.rarity)}}</td>
+                        <td>
+                            {{#if (eq this.system.bonus.def 0)}}
+                            -
+                            {{else}}
+                                {{localize (concat "ULTIMA.attributes." this.system.bonus.attributes.def ".short")}} 
+                                {{#if this.system.bonus.def}}+ {{/if}}{{this.system.bonus.def}}
+                            {{/if}}
+                        </td>
+                        <td>
+                            {{#if (eq this.system.bonus.mdef 0)}}
+                            -
+                            {{else}}
+                                {{localize (concat "ULTIMA.attributes." this.system.bonus.attributes.mdef ".short")}} 
+                                {{#if this.system.bonus.mdef}}+ {{/if}}{{this.system.bonus.mdef}}
+                            {{/if}}
+                        </td>
+                        <td>{{#unless (eq this.system.bonus.init 0)}}{{this.system.bonus.init}} {{else}} - {{/unless}}</td>
+                        <td>
+                            <div class="form-fields">
+                                <a
+                                    class="button" 
+                                    data-action="equipItem" 
+                                    data-uuid="{{this.uuid}}" 
+                                    data-tooltip="Equipaggia" 
+                                    {{#if (and this.system.martial (not @root.system.martial.armor))}}disabled{{/if}}
+                                >
+                                    <i class="fa fa-shield-halved"></i>
+                                </a>
+                                <a class="button" data-uuid="{{this.uuid}}" data-link>Apri</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {{/unless}}
+                {{/each}}
+            </tbody>
+        </table>
+        
+        {{!-- Scudi --}}
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="2">Scudi</th>
+                    <th>Rarità</th>
+                    <th>DEF</th>
+                    <th>M. DEF</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each shields}}
+                    {{#unless this.system.equipped}}
+                    <tr>
+                        <td style="width: 60px;"><img src="{{this.img}}" alt="{{this.name}}"></td>
+                        <td>{{this.name}} {{#if this.system.martial}}<span class="fu-martial" data-tooltip="Marziale"></span>{{/if}}</td>
+                        <td>{{localize (concat "ULTIMA.rarities." this.system.rarity)}}</td>
+                        <td>Def: {{#if this.system.bonus.def}}+ {{this.system.bonus.def}} {{else}} - {{/if}}</td>
+                        <td>M. Def: {{#if this.system.bonus.mdef}}+ {{this.system.bonus.mdef}} {{else}} - {{/if}}</td>
+                        <td>
+                            <div class="form-fields">
+                                <a
+                                    class="button" 
+                                    data-action="equipItem" 
+                                    data-uuid="{{this.uuid}}" 
+                                    data-tooltip="Equipaggia" 
+                                    {{#if (and this.system.martial (not @root.system.martial.shield))}}disabled{{/if}}
+                                >
+                                    <i class="fa fa-shield-halved"></i>
+                                </a>
+                                <a class="button" data-uuid="{{this.uuid}}" data-link>Apri</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {{/unless}}
+                {{/each}}
+            </tbody>
+        </table>
+
+        {{!-- Accessori --}}
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="2">Accessori</th>
+                    <th>Rarità</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each accessories}}
+                    {{#unless this.system.equipped}}
+                    <tr>
+                        <td style="width: 60px;"><img src="{{this.img}}" alt="{{this.name}}"></td>
+                        <td>{{this.name}}</td>
+                        <td>{{localize (concat "ULTIMA.rarities." this.system.rarity)}}</td>
+                        <td>
+                            <div class="form-fields">
+                                <a class="button" data-action="equipItem" data-uuid="{{this.uuid}}" data-tooltip="Equipaggia">
+                                    <i class="fa fa-shield-halved"></i>
+                                </a>
+                                <a class="button" data-uuid="{{this.uuid}}" data-link>Apri</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {{/unless}}
+                {{/each}}
+            </tbody>
+        </table>
+    </fieldset>
+</section>

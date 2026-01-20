@@ -47,7 +47,7 @@ Hooks.once('init', async () => {
 		armor: models.UltimaLegendsArmor,
 		basic: models.UltimaLegendsItemBase,
 		class: models.UltimaLegendsClass,
-		// consumable
+		consumable: models.UltimaLegendsConsumable,
 		// heroic
 		// project
 		// ritual
@@ -80,7 +80,7 @@ Hooks.once('init', async () => {
 	});
 	foundry.documents.collections.Items.registerSheet(SYSTEM, UltimaLegendsClassSheet, {
 		makeDefault: true,
-		types: ['class'],
+		types: ['class', 'skill'],
 	});
 
 	// Setup configuration settings
@@ -111,8 +111,19 @@ Handlebars.registerHelper('getItemByUUID', function( items, itemUUID ) {
 	return items.find( i => i.uuid === itemUUID );
 });
 
-Handlebars.registerHelper('getGlobalItemFromUltimaID', function( itemUltimaID ) {
-	return game.items.filter( i => i.system.ultimaID === itemUltimaID )[0];
+Handlebars.registerHelper('getItemByUltimaID', function( itemUltimaID, options = {} ) {
+	const { actor } = options.hash;
+	let items = [];
+
+	// Determine source of items
+	if ( actor ) items = actor.items;
+	else items = game.items;
+
+	return items.filter( i => i.system.ultimaID === itemUltimaID )[0];
+});
+
+Handlebars.registerHelper('percentage', function( a, b ) {
+	return ( ( a / b ) * 100 );
 });
 
 //#endregion

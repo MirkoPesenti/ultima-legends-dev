@@ -6,11 +6,11 @@
             <legend class="form-group">
                 {{class.name}}
                 <a class="button" data-uuid="{{class.uuid}}" data-link>Apri</a>
-                {{#unless (eq class.system.level.current class.system.level.max)}}
-                    <a class="button" data-action="levelUpClass" data-id="{{class.system.ultimaID}}" data-tooltip="Sali di livello">
+                {{#if (and (gte actor.system.level.exp 10) (not (eq class.system.level.current class.system.level.max)))}}
+                    <a class="button active" data-action="levelUpClass" data-id="{{class.system.ultimaID}}" data-tooltip="Sali di livello">
                         <i class="fa fa-regular fa-circle-up"></i>
                     </a>
-                {{/unless}}
+                {{/if}}
             </legend>
             <div class="form-group">
                 <span class="label">Livello:</span>
@@ -73,6 +73,20 @@
                     {{/if}}
                 </div>
             </div>
+
+            {{#if class.system.level.needLevelUp}}
+                <p class="notification warning">
+                    Attenzione: Devi scegliere un'abilità
+                </p>
+            {{/if}}
+            <div class="form-group">
+                <span class="label">Abilità</span>
+            </div>
+            {{#each ../skills as |skill|}}
+                {{#if (eq skill.system.origin class.system.ultimaID)}}
+                    {{> systems/ultima-legends/templates/actor/parts/class-skills.hbs item=skill actor=actor levelUp=class.system.level.needLevelUp}}
+                {{/if}}
+            {{/each}}
         </fieldset>
 
     {{/each}}

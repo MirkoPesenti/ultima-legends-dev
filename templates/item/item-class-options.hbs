@@ -16,51 +16,66 @@
                 {{selectOptions ULTIMA.sourceBooks selected=system.source localize=true}}
             </select>
         </div>
-    </fieldset>
-
-    <fieldset>
-        <legend>Benefici</legend>
-        <div class="form-group">
-            <span class="label">Attributi</span>
-            <div class="form-fields">
+        {{#if (eq item.type "skill")}}
+            <div class="form-group">
+                <label for="system.origin">Origine</label>
                 <div class="form-fields">
-                    <label for="system.grants.resources.hp">PV</label>
-                    <input type="checkbox" name="system.grants.resources.hp" id="system.grants.resources.hp" {{#if system.grants.resources.hp}}checked{{/if}} />
-                </div>
-                <div class="form-fields">
-                    <label for="system.grants.resources.mp">PM</label>
-                    <input type="checkbox" name="system.grants.resources.mp" id="system.grants.resources.mp" {{#if system.grants.resources.mp}}checked{{/if}} />
-                </div>
-                <div class="form-fields">
-                    <label for="system.grants.resources.ip">PI</label>
-                    <input type="checkbox" name="system.grants.resources.ip" id="system.grants.resources.ip" {{#if system.grants.resources.ip}}checked{{/if}} />
+                    <input type="text" name="system.origin" id="system.origin" value="{{system.origin}}" readonly />
+                    {{#if system.origin}}
+                        <a class="button" data-action="openItemByUltimaID" data-id="{{system.origin}}">
+                            Apri
+                        </a>
+                    {{/if}}
                 </div>
             </div>
-        </div>
+        {{/if}}
     </fieldset>
 
-    <fieldset>
-        <legend>Competenze marziali ( <span class="fu-martial"></span> )</legend>
-        <div class="form-group">
-            <div class="form-fields" style="flex-grow:3;">
-                <label for="system.grants.martial.melee">Mischia ( <span class="fu-melee"></span> )</label>
-                <input type="checkbox" name="system.grants.martial.melee" id="system.grants.martial.melee" {{#if system.grants.martial.melee}}checked{{/if}} />
+    {{#if (eq item.type "class")}}
+        <fieldset>
+            <legend>Benefici</legend>
+            <div class="form-group">
+                <span class="label">Attributi</span>
+                <div class="form-fields">
+                    <div class="form-fields">
+                        <label for="system.grants.resources.hp">PV</label>
+                        <input type="checkbox" name="system.grants.resources.hp" id="system.grants.resources.hp" {{#if system.grants.resources.hp}}checked{{/if}} />
+                    </div>
+                    <div class="form-fields">
+                        <label for="system.grants.resources.mp">PM</label>
+                        <input type="checkbox" name="system.grants.resources.mp" id="system.grants.resources.mp" {{#if system.grants.resources.mp}}checked{{/if}} />
+                    </div>
+                    <div class="form-fields">
+                        <label for="system.grants.resources.ip">PI</label>
+                        <input type="checkbox" name="system.grants.resources.ip" id="system.grants.resources.ip" {{#if system.grants.resources.ip}}checked{{/if}} />
+                    </div>
+                </div>
             </div>
+        </fieldset>
 
-            <div class="form-fields" style="flex-grow:3;">
-                <label for="system.grants.martial.ranged">A distanza ( <span class="fu-ranged"></span> )</label>
-                <input type="checkbox" name="system.grants.martial.ranged" id="system.grants.martial.ranged" {{#if system.grants.martial.ranged}}checked{{/if}} />
+        <fieldset>
+            <legend>Competenze marziali ( <span class="fu-martial"></span> )</legend>
+            <div class="form-group">
+                <div class="form-fields" style="flex-grow:3;">
+                    <label for="system.grants.martial.melee">Mischia ( <span class="fu-melee"></span> )</label>
+                    <input type="checkbox" name="system.grants.martial.melee" id="system.grants.martial.melee" {{#if system.grants.martial.melee}}checked{{/if}} />
+                </div>
+
+                <div class="form-fields" style="flex-grow:3;">
+                    <label for="system.grants.martial.ranged">A distanza ( <span class="fu-ranged"></span> )</label>
+                    <input type="checkbox" name="system.grants.martial.ranged" id="system.grants.martial.ranged" {{#if system.grants.martial.ranged}}checked{{/if}} />
+                </div>
+                
+                <div class="form-fields">
+                    <label for="system.grants.martial.armor">Armature</label>
+                    <input type="checkbox" name="system.grants.martial.armor" id="system.grants.martial.armor" {{#if system.grants.martial.armor}}checked{{/if}} />
+                </div>
+                
+                <div class="form-fields">
+                    <label for="system.grants.martial.shield">Scudi</label>
+                    <input type="checkbox" name="system.grants.martial.shield" id="system.grants.martial.shield" {{#if system.grants.martial.shield}}checked{{/if}} />
+                </div>
             </div>
-            
-            <div class="form-fields">
-                <label for="system.grants.martial.armor">Armature</label>
-                <input type="checkbox" name="system.grants.martial.armor" id="system.grants.martial.armor" {{#if system.grants.martial.armor}}checked{{/if}} />
-            </div>
-            
-            <div class="form-fields">
-                <label for="system.grants.martial.shield">Scudi</label>
-                <input type="checkbox" name="system.grants.martial.shield" id="system.grants.martial.shield" {{#if system.grants.martial.shield}}checked{{/if}} />
-            </div>
-        </div>
-    </fieldset>
+        </fieldset>
+    {{/if}}
 </section>

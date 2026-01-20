@@ -1,15 +1,27 @@
 <section class="tab {{tabs.item.id}} {{tabs.item.cssClass}} scrollable" id="item" data-tab="{{tabs.item.id}}" data-group="{{tabs.item.group}}">
     <fieldset>
-        <legend>Descrizione</legend>
-        <prose-mirror name="system.description" id="system.description" value="{{system.description}}" toggled>
-            {{{enrichedHTML.description}}}
-        </prose-mirror>
+        <div class="form-group">
+            <label for="system.level.current">Livello</label>
+            <input type="number" name="system.level.current" id="system.level.current" value="{{system.level.current}}" readonly />
+        </div>
+        <div class="form-group">
+            <label for="system.level.max">Livello massimo</label>
+            <input type="number" name="system.level.max" id="system.level.max" value="{{system.level.max}}" {{#if (eq item.type "class")}}readonly{{/if}} />
+        </div>
+        <div class="form-group stacked">
+            <label for="system.description">Descrizione</label>
+            <prose-mirror name="system.description" id="system.description" value="{{system.description}}" toggled>
+                {{{enrichedHTML.description}}}
+            </prose-mirror>
+        </div>
     </fieldset>
 
-    <fieldset class="dropzone">
-        <legend>Abilità</legend>
-        {{#each system.grants.skills as |skill index|}}
-            {{> systems/ultima-legends/templates/item/parts/class-skill.hbs item=(getGlobalItemFromUltimaID skill) index=index}}
-        {{/each}}
-    </fieldset>
+    {{#if (eq item.type "class")}}
+        <fieldset class="dropzone">
+            <legend>Abilità</legend>
+            {{#each system.grants.skills as |skill index|}}
+                {{> systems/ultima-legends/templates/item/parts/class-skill.hbs item=(getItemByUltimaID skill) index=index}}
+            {{/each}}
+        </fieldset>
+    {{/if}}
 </section>
