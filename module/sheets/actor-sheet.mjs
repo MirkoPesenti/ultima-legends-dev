@@ -1,6 +1,6 @@
-import { UltimaLegendsApp } from "../data/apps/base-app.mjs";
-import { UltimaLegendsItem } from "../documents/item.mjs";
 import { SYSTEM, SYSTEM_NAME, ULTIMA } from "../helpers/config.mjs";
+import { UltimaLegendsCharactermancerSheet } from "./apps/charactermancer-sheet.mjs";
+import { UltimaLegendsItem } from "../documents/item.mjs";
 import { enrichHTML } from "../utils/utilities.mjs";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -347,7 +347,9 @@ export class UltimaLegendsActorSheet extends HandlebarsApplicationMixin( ActorSh
 	static async #handleCharactermancer( event, target ) {
 		
 		event.preventDefault();
-		const charactermancerApp = new UltimaLegendsApp();
+		const charactermancerApp = new UltimaLegendsCharactermancerSheet({
+			actor: this.document
+		});
 		await charactermancerApp.render( true );
 
 	}

@@ -21,6 +21,38 @@
   },
   "esmodules": ["module/ultima-legends.mjs"],
   "styles": ["assets/css/ultima-legends.css"],
+  "packs": [
+    {
+      "label": "Classi",
+      "type": "Item",
+      "name": "classes",
+      "path": "packs/classes",
+      "system": "ultima-legends",
+      "ownership": {
+				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
+    },
+    {
+      "label": "Abilità",
+      "type": "Item",
+      "name": "skills",
+      "path": "packs/skills",
+      "system": "ultima-legends",
+      "ownership": {
+				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
+    }
+  ],
+  "packFolders": [
+    {
+      "name": "Premi Start",
+      "sorting": "m",
+      "color": "2F6A29",
+      "packs": ["classes", "skills"]
+    }
+  ],
   "languages": [
     {
       "lang": "it",
