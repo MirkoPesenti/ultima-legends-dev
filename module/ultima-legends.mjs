@@ -117,14 +117,15 @@ Handlebars.registerHelper('getItemByUUID', function( items, itemUUID ) {
 });
 
 Handlebars.registerHelper('getItemByUltimaID', function( itemUltimaID, options = {} ) {
-	const { actor } = options.hash;
-	let items = [];
+	const { actor, pack, items } = options.hash;
+	let searchItems = [];
 
 	// Determine source of items
-	if ( actor ) items = actor.items;
-	else items = game.items;
+	if ( items ) searchItems = items;
+	else if ( actor ) searchItems = actor.items;
+	else searchItems = game.items;
 
-	return items.filter( i => i.system.ultimaID === itemUltimaID )[0];
+	return searchItems.filter( i => i.system.ultimaID === itemUltimaID )[0];
 });
 
 Handlebars.registerHelper('percentage', function( a, b ) {

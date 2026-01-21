@@ -1,0 +1,14 @@
+{{#each gameClasses as |class|}}
+	<div class="form-group">
+		<label for="classes.{{class.system.ultimaID}}">{{class.name}}</label>
+		<input 
+			type="number" 
+			name="classes.{{class.system.ultimaID}}" 
+			id="classes.{{class.system.ultimaID}}" 
+			min="0" 
+			max="{{lookup ../classes.maxLevels class.system.ultimaID}}"
+			value="{{lookup ../classes.levels class.system.ultimaID}}"
+			{{#if (and (eq (lookup ../classes.levels class.system.ultimaID) 0) (or (eq ../classes.total 5) (eq ../classes.selected 3)))}} disabled {{/if}}
+		/>
+	</div>
+{{/each}}

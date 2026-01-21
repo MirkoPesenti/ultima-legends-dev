@@ -1,0 +1,14 @@
+{{#each formData.classes as |classLevel classID|}}
+	{{#if (gt classLevel 0)}}
+		<fieldset>
+			<legend>{{lookup (lookup ../gameClasses classID) "name"}} ( Livello: {{classLevel}} )</legend>
+
+			{{#each (lookup ../gameSkills classID) as |skill skillIndex|}}
+				<div class="form-group">
+					{{!-- TODO --}}
+				</div>
+			{{/each}}
+
+		</fieldset>
+	{{/if}}
+{{/each}}

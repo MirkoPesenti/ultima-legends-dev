@@ -104,6 +104,9 @@ export class UltimaLegendsItemSheet extends HandlebarsApplicationMixin( ItemShee
             description: await enrichHTML( this.document.system.description, this.document ),
         };
 
+        // Pre-load pack items for helpers
+        context.skillsPackItems = await game.packs.get(`${SYSTEM}.skills`)?.getDocuments() || [];
+
         console.log(`${SYSTEM_NAME} | Item Sheet Context:`, context);
 
         return context;
@@ -242,11 +245,29 @@ export class UltimaLegendsItemSheet extends HandlebarsApplicationMixin( ItemShee
 		if ( index >= 0 && index < skills.length ) {
 			const removed = skills.splice( index, 1 );
 			await this.document.update({ 'system.grants.skills': skills });
-            
+
             // Also clear the origin field on the removed skill item
-            const removedSkill = game.items.find( i => i.system.ultimaID === removed[0] );
-            if ( removedSkill ) {
-                await removedSkill.update({ 'system.origin': null });
+            let found = false;
+
+            // Search for the removed skill item in all packs
+            for ( const pack of game.packs ) {
+                if ( pack.documentName === 'Item' ) {
+                    const documents = await pack.getDocuments();
+                    const item = documents.find( i => i.system.ultimaID ===  removed[0] );
+                    if ( item ) {
+                        await item.update({ 'system.origin': null });
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            // If not found in packs, search in game items
+            if ( !found ) {
+                const removedSkill = game.items.find( i => i.system.ultimaID === removed[0] );
+                if ( removedSkill ) {
+                    await removedSkill.update({ 'system.origin': null });
+                }
             }
 
             // Check for level up after skill removal
@@ -256,10 +277,24 @@ export class UltimaLegendsItemSheet extends HandlebarsApplicationMixin( ItemShee
 	}
 
     // Handle opening item by Ultima ID
-    static #handleOpenItemByUltimaID( event, target ) {
+    static async #handleOpenItemByUltimaID( event, target ) {
 
         event.preventDefault();
         const ultimaID = target.dataset.id;
+        
+        // First, search in all packs
+        for ( const pack of game.packs ) {
+            if ( pack.documentName === 'Item' ) {
+                const documents = await pack.getDocuments();
+                const item = documents.find( i => i.system.ultimaID === ultimaID );
+                if ( item ) {
+                    item.sheet.render(true);
+                    return;
+                }
+            }
+        }
+        
+        // If not found in packs, search in game.items
         const item = game.items.find( i => i.system.ultimaID === ultimaID );
         if ( item ) {
             item.sheet.render(true);

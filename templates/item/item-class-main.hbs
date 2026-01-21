@@ -20,7 +20,7 @@
         <fieldset class="dropzone">
             <legend>Abilità</legend>
             {{#each system.grants.skills as |skill index|}}
-                {{> systems/ultima-legends/templates/item/parts/class-skill.hbs item=(getItemByUltimaID skill) index=index}}
+                {{> systems/ultima-legends/templates/item/parts/class-skill.hbs item=(getItemByUltimaID skill items=../skillsPackItems) index=index}}
             {{/each}}
         </fieldset>
     {{/if}}

@@ -60,6 +60,7 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
         const isFirst = this.#step === 1;
         const isLast = this.#step === this.#total;
 
+        // Add wizard navigation data
         context.wizard = {
             currentStep: this.#step,
             total: this.#total,
@@ -70,11 +71,59 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
             })),
         };
 
+        // Add actor and form data to context
         context.actor = this.#actor;
         context.formData = this.#data;
 
-        context.actorClasses = this.#actor ? this.#actor.items.filter( i => i.type === 'class' ) : [];
-        context.actorSkills = this.#actor ? this.#actor.items.filter( i => i.type === 'skill' ) : [];
+        // Add actor items
+        context.actorItems = {
+            classes: this.#actor ? this.#actor.items.filter( i => i.type === 'class' ) : [],
+            skills: this.#actor ? this.#actor.items.filter( i => i.type === 'skill' ) : [],
+        };
+
+        // Add game data from compendiums
+        const gameClassesDocs = await game.packs.get(`${SYSTEM}.classes`)?.getDocuments() || [];
+        context.gameClasses = gameClassesDocs.reduce( (acc, cls) => {
+            acc[cls.system.ultimaID] = cls;
+            return acc;
+        }, {} );
+
+        const gameSkillsDocs = await game.packs.get(`${SYSTEM}.skills`)?.getDocuments() || [];
+        context.gameSkills = gameSkillsDocs.reduce( (acc, skill) => {
+            const origin = skill.system.origin;
+            if ( !acc[origin] ) acc[origin] = [];
+            acc[origin].push( skill );
+            return acc;
+        }, {} );
+
+        // Calculate class data
+        const classLevels = Object.keys( context.gameClasses ).reduce( (acc, ultimaID) => {
+            if ( foundry.utils.hasProperty( context.formData?.classes ?? {}, ultimaID ) ) {
+                acc[ultimaID] = parseInt( context.formData?.classes[ultimaID] ?? 0 ) || 0;
+            } else {
+                acc[ultimaID] = 0;
+            }
+            return acc;
+        }, {} );
+
+        const totalClassLevels = Object.values( classLevels ).reduce( (sum, lvl) => sum + parseInt(lvl || 0), 0 );
+        const totalClassSelected = Object.values( classLevels ).filter( lvl => parseInt(lvl || 0) > 0 ).length;
+
+        const classMaxLevels = Object.keys( context.gameClasses ).reduce( (acc, ultimaID) => {
+            const currentLevel = classLevels[ultimaID] || 0;
+            const remainingLevels = 5 - totalClassLevels;
+            acc[ultimaID] = currentLevel + remainingLevels;
+            return acc;
+        }, {} );
+
+        // Add class calculation
+        context.classes = {
+            levels: classLevels,
+            maxLevels: classMaxLevels,
+            total: totalClassLevels,
+            selected: totalClassSelected,
+            isValid: totalClassLevels === 5 && totalClassSelected >= 2 && totalClassSelected <= 3,
+        };
 
         // Add buttons to context
         context.buttons = [
@@ -103,6 +152,7 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
                     type: 'button',
                     action: 'next',
                     icon: 'fa fa-arrow-right',
+                    disabled: context.wizard.currentStep === 2 && !context.classes.isValid,
                     // label: 'Successivo',
                 }
             ]),
@@ -111,6 +161,24 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
         console.log('Prepared context:', context);
         
         return context;
+    }
+
+    // Attach event listeners to form inputs
+    _attachPartListeners(partId, htmlElement, options) {
+        super._attachPartListeners(partId, htmlElement, options);
+
+        htmlElement.querySelectorAll('input, select, textarea').forEach(element => {
+            element.addEventListener('change', this.#handleInputChange.bind(this));
+        });
+    }
+
+    // Handle input change events
+    async #handleInputChange(event) {
+        
+        event.preventDefault();
+        this.#collectFormData();
+        await this.render({ parts: ['main', 'footer'] });
+
     }
 
     // Collect form data

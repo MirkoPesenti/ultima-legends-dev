@@ -1,22 +1,30 @@
 <section>
 
 	{{#if (eq wizard.currentStep 1)}}
-		<fieldset>
-			<legend>Informazioni personali</legend>
-			{{> systems/ultima-legends/templates/app/parts/charactermancer-identity.hbs }}
-		</fieldset>
+		<p>Benvenuto nel Charactermancer di Ultima Legends! Segui i passaggi per creare il tuo personaggio.</p>
+		<div class="scrollable">
+			<fieldset>
+				<legend>Informazioni personali</legend>
+				{{> systems/ultima-legends/templates/app/parts/charactermancer-identity.hbs }}
+			</fieldset>
+		</div>
 	{{/if}}
 
 	{{#if (eq wizard.currentStep 2)}}
-		<div class="form-group">
-			<label for="system.level.exp">Esperienza</label>
-			<input type="number" name="system.level.exp" id="system.level.exp" placeholder="Esperienza di partenza" />
+		<p>Scegli due o tre Classi e distribuisci tra loro i cinque livelli iniziali.</p>
+		<div class="scrollable">
+			<fieldset>
+				<legend>Classi</legend>
+				{{> systems/ultima-legends/templates/app/parts/charactermancer-classes.hbs }}
+			</fieldset>
 		</div>
 	{{/if}}
 
 	{{#if (eq wizard.currentStep 3)}}
-		<p>Esperienza: {{formData.system.level.exp}}</p>
-		<p>Classe: {{formData.system.class}}</p>
+		<p>Scegli le abilità per il tuo personaggio.</p>
+		<div class="scrollable">
+			{{> systems/ultima-legends/templates/app/parts/charactermancer-skills.hbs }}
+		</div>
 	{{/if}}
 
 </section>

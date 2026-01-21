@@ -86,7 +86,7 @@ export class UltimaLegendsItem extends Item {
 				break;
 		}
 
-		if ( image !== null ) {
+		if ( image !== null && !data.img ) {
 			data.img = image;
 		}
 
@@ -137,14 +137,30 @@ export class UltimaLegendsItem extends Item {
 		
 		// Get level data and granted skills
 		const levelData = this.system.level;
-		const skills = this.system.grants.skills.map( skillUltimaID => {
-			let items = [];
+		const skills = this.system.grants.skills.map( async skillUltimaID => {
+			let item = null;
 			if ( this.parent instanceof UltimaLegendsActor ) {
-				items = this.parent.items;
+				item = this.parent.items.find( i => i.type === 'skill' && i.system.ultimaID === skillUltimaID );
 			} else {
-				items = game.items;
+				// First, search in all packs
+				for ( const pack of game.packs ) {
+					if ( pack.documentName === 'Item' ) {
+						const documents = await pack.getDocuments();
+						const itemFound = documents.find( i => i.system.ultimaID === skillUltimaID );
+						if ( itemFound ) {
+							item = itemFound;
+							break;
+						}
+					}
+				}
+
+				// If not found in packs, search in game.items
+				if ( !item ) {
+					item = game.items.find( i => i.type === 'skill' && i.system.ultimaID === skillUltimaID );
+				}
+
 			}
-			return items.filter( i => i.type === 'skill' && i.system.ultimaID === skillUltimaID )[0];
+			return item;
 		});
 
 		// Update to specified new level or increment by 1
@@ -200,9 +216,55 @@ Hooks.on('preCreateItem', ( item, options, userId ) => {
 
 });
 
+Hooks.on( 'createItem', async ( item, options, userId ) => {
+
+	await onCreateClass( item );
+
+});
+
 //#endregion
 
 //#region Functions
+
+// Handle creation of Class items (async operations)
+async function onCreateClass( item ) {
+
+	// Validate item type and parent
+	if ( item.type !== 'class' ) return;
+	if ( item.parent == null ) return;
+	if ( item.parent.type !== 'character' ) return;
+
+	// Automatically add granted skills to the actor
+	const skillPromises = item.system.grants.skills.map( async skillId => {
+		// First, search in all packs
+        for ( const pack of game.packs ) {
+            if ( pack.documentName === 'Item' ) {
+                const documents = await pack.getDocuments();
+                const packItem = documents.find( i => i.system.ultimaID === skillId );
+                if ( packItem ) {
+					return await packItem.toObject();
+                }
+            }
+        }
+
+		// If not found in packs, search in game.items
+		const gameItem = game.items.find( i => i.type === 'skill' && i.system.ultimaID === skillId );
+		return await gameItem.toObject();
+	});
+	const skills = await Promise.all( skillPromises );
+	
+	for ( const skillItem of skills ) {
+		const existingSkill = item.parent.items.find( i => i.type === 'skill' && i.system.ultimaID === skillItem.system.ultimaID );
+		if ( existingSkill ) continue;
+
+		console.log('skill:', skillItem);
+		await item.parent.createEmbeddedDocuments( 'Item', [ skillItem ] );
+	}
+
+	// Check for level up
+	item.checkLevelUp( item.system.level.current, false );
+
+}
 
 // Handle pre-creation of Class items
 function onPreCreateClass( item ) {
@@ -255,20 +317,6 @@ function onPreCreateClass( item ) {
 		}).render(true);
 
 	}
-
-	// Automatically add granted skills to the actor
-	const skills = item.system.grants.skills.map( skillId => {
-		return game.items.filter( i => i.type === 'skill' && i.system.ultimaID === skillId )[0];
-	});
-	skills.forEach( async skillItem => {
-		const existingSkill = item.parent.items.find( i => i.type === 'skill' && i.system.ultimaID === skillItem.system.ultimaID );
-		if ( existingSkill ) return;
-
-		await item.parent.createEmbeddedDocuments( 'Item', [ skillItem.toObject() ] );
-	});
-
-	// Check for level up
-	item.checkLevelUp( item.system.level.current, false );
 
 	return true;
 
