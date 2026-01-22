@@ -1,6 +1,10 @@
 {{#each gameClasses as |class|}}
 	<div class="form-group">
-		<label for="classes.{{class.system.ultimaID}}">{{class.name}}</label>
+		<label class="form-fields" style="justify-content:flex-start;" for="classes.{{class.system.ultimaID}}">
+			<a class="button" data-uuid="{{class.uuid}}" data-link>
+				{{class.name}}
+			</a>
+		</label>
 		<input 
 			type="number" 
 			name="classes.{{class.system.ultimaID}}" 

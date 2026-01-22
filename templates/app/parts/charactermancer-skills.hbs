@@ -1,11 +1,28 @@
 {{#each formData.classes as |classLevel classID|}}
 	{{#if (gt classLevel 0)}}
 		<fieldset>
-			<legend>{{lookup (lookup ../gameClasses classID) "name"}} ( Livello: {{classLevel}} )</legend>
+			<legend>
+				{{lookup (lookup ../gameClasses classID) "name"}} 
+				Livelli distribuiti: {{lookup ../skills.totalByClass classID}} / {{classLevel}}
+			</legend>
 
 			{{#each (lookup ../gameSkills classID) as |skill skillIndex|}}
 				<div class="form-group">
-					{{!-- TODO --}}
+					<label class="form-fields" style="justify-content:flex-start;" for="skills.{{skill.system.ultimaID}}">
+						<a class="button" data-uuid="{{skill.uuid}}" data-link>{{skill.name}}</a>
+					</label>
+					<div class="form-fields">
+						<input 
+							type="number" 
+							name="skills.{{skill.system.ultimaID}}" 
+							id="skills.{{skill.system.ultimaID}}" 
+							min="0" 
+							max="{{lookup ../../skills.maxLevels skill.system.ultimaID}}"
+							value="{{lookup ../../skills.levels skill.system.ultimaID}}"
+							{{#if (and (eq (lookup ../../skills.levels skill.system.ultimaID) 0) (eq (lookup ../../skills.totalByClass classID) classLevel))}} disabled {{/if}}
+						/>
+						<span style="flex:0 0 30px">/ {{skill.system.level.max}}</span>
+					</div>
 				</div>
 			{{/each}}
 

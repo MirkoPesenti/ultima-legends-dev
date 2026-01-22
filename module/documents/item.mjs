@@ -257,7 +257,6 @@ async function onCreateClass( item ) {
 		const existingSkill = item.parent.items.find( i => i.type === 'skill' && i.system.ultimaID === skillItem.system.ultimaID );
 		if ( existingSkill ) continue;
 
-		console.log('skill:', skillItem);
 		await item.parent.createEmbeddedDocuments( 'Item', [ skillItem ] );
 	}
 

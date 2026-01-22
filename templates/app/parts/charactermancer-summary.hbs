@@ -1,0 +1,64 @@
+{{!-- Identity --}}
+<fieldset>
+	<legend>Informazioni personali</legend>
+	<div class="form-group">
+		<span class="label">Nome</span>
+		<p>{{formData.name}}</p>
+	</div>
+	<div class="form-group">
+		<span class="label">Genere</span>
+		<p>{{formData.system.features.pronouns}}</p>
+	</div>
+	<div class="form-group">
+		<span class="label">Identità</span>
+		<p>{{formData.system.features.identity}}</p>
+	</div>
+	<div class="form-group">
+		<span class="label">Tema</span>
+		<p>{{formData.system.features.theme}}</p>
+	</div>
+	<div class="form-group">
+		<span class="label">Origine</span>
+		<p>{{formData.system.features.origin}}</p>
+	</div>
+</fieldset>
+
+{{!-- Classes & Skills --}}
+<fieldset>
+	<legend>Classi e Abilità</legend>
+	{{#each gameClasses as |class ultimaID|}}
+		{{#if (gt (lookup ../formData.classes class.system.ultimaID) 0)}}
+			<div class="form-group stacked">
+				<span class="label">{{class.name}} - Livello {{lookup ../formData.classes class.system.ultimaID}}</span>
+				<ul>
+					{{#each (lookup ../gameSkills class.system.ultimaID) as |skill skillIndex|}}
+						{{#if (gt (lookup ../../formData.skills skill.system.ultimaID) 0)}}
+							<li>{{skill.name}} - Livello {{lookup ../../formData.skills skill.system.ultimaID}}</li>
+						{{/if}}
+					{{/each}}
+				</ul>
+			</div>
+		{{/if}}
+	{{/each}}
+</fieldset>
+
+{{!-- Attributes --}}
+<fieldset>
+	<legend>Caratteristiche</legend>
+	<div class="form-group">
+		<span class="label">Destrezza (DES)</span>
+		<p>d{{formData.system.attributes.dex.base}}</p>
+	</div>
+	<div class="form-group">
+		<span class="label">Intuito (INT)</span>
+		<p>d{{formData.system.attributes.ins.base}}</p>
+	</div>
+	<div class="form-group">
+		<span class="label">Vigore (VIG)</span>
+		<p>d{{formData.system.attributes.mig.base}}</p>
+	</div>
+	<div class="form-group">
+		<span class="label">Volontà (VOL)</span>
+		<p>d{{formData.system.attributes.wlp.base}}</p>
+	</div>
+</fieldset>

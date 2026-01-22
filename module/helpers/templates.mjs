@@ -39,6 +39,8 @@ export const preloadPartialTemplates = async function () {
 		`systems/${SYSTEM}/templates/app/parts/charactermancer-identity.hbs`,
 		`systems/${SYSTEM}/templates/app/parts/charactermancer-classes.hbs`,
 		`systems/${SYSTEM}/templates/app/parts/charactermancer-skills.hbs`,
+		`systems/${SYSTEM}/templates/app/parts/charactermancer-attributes.hbs`,
+		`systems/${SYSTEM}/templates/app/parts/charactermancer-summary.hbs`,
 
 	]);
 }

@@ -1,30 +1,41 @@
-<section>
+<section class="tab active scrollable">
 
 	{{#if (eq wizard.currentStep 1)}}
 		<p>Benvenuto nel Charactermancer di Ultima Legends! Segui i passaggi per creare il tuo personaggio.</p>
-		<div class="scrollable">
-			<fieldset>
-				<legend>Informazioni personali</legend>
-				{{> systems/ultima-legends/templates/app/parts/charactermancer-identity.hbs }}
-			</fieldset>
-		</div>
+		<fieldset>
+			<legend>Informazioni personali</legend>
+			{{> systems/ultima-legends/templates/app/parts/charactermancer-identity.hbs }}
+		</fieldset>
 	{{/if}}
 
 	{{#if (eq wizard.currentStep 2)}}
 		<p>Scegli due o tre Classi e distribuisci tra loro i cinque livelli iniziali.</p>
-		<div class="scrollable">
-			<fieldset>
-				<legend>Classi</legend>
-				{{> systems/ultima-legends/templates/app/parts/charactermancer-classes.hbs }}
-			</fieldset>
-		</div>
+		<fieldset>
+			<legend>Classi</legend>
+			{{> systems/ultima-legends/templates/app/parts/charactermancer-classes.hbs }}
+		</fieldset>
 	{{/if}}
 
 	{{#if (eq wizard.currentStep 3)}}
 		<p>Scegli le abilità per il tuo personaggio.</p>
-		<div class="scrollable">
-			{{> systems/ultima-legends/templates/app/parts/charactermancer-skills.hbs }}
-		</div>
+		{{> systems/ultima-legends/templates/app/parts/charactermancer-skills.hbs }}
+	{{/if}}
+
+	{{#if (eq wizard.currentStep 4)}}
+		<p>Determina la taglia di dado base delle quattro <strong>Caratteristiche</strong> del personaggio.</p>
+		<fieldset>
+			<legend>Caratteristiche</legend>
+			{{> systems/ultima-legends/templates/app/parts/charactermancer-attributes.hbs }}
+		</fieldset>
+	{{/if}}
+
+	{{#if (eq wizard.currentStep 5)}}
+		<p>TODO: Shop</p>
+	{{/if}}
+
+	{{#if (eq wizard.currentStep wizard.total)}}
+		<h3>Riepilogo</h3>
+		{{> systems/ultima-legends/templates/app/parts/charactermancer-summary.hbs }}
 	{{/if}}
 
 </section>
