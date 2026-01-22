@@ -74,17 +74,12 @@
                 </div>
             </div>
 
-            {{#if class.system.level.needLevelUp}}
-                <p class="notification warning">
-                    Attenzione: Devi scegliere un'abilità
-                </p>
-            {{/if}}
             <div class="form-group">
                 <span class="label">Abilità</span>
             </div>
             {{#each ../skills as |skill|}}
                 {{#if (eq skill.system.origin class.system.ultimaID)}}
-                    {{> systems/ultima-legends/templates/actor/parts/class-skills.hbs item=skill actor=actor levelUp=class.system.level.needLevelUp}}
+                    {{> systems/ultima-legends/templates/actor/parts/class-skills.hbs item=skill actor=actor}}
                 {{/if}}
             {{/each}}
         </fieldset>

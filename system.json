@@ -43,6 +43,17 @@
 				"PLAYER": "OBSERVER",
 				"ASSISTANT": "OWNER"
 			}
+    },
+    {
+      "label": "Equipaggiamento",
+      "type": "Item",
+      "name": "equipment",
+      "path": "packs/equipment",
+      "system": "ultima-legends",
+      "ownership": {
+				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
     }
   ],
   "packFolders": [
@@ -50,7 +61,7 @@
       "name": "Premi Start",
       "sorting": "m",
       "color": "2F6A29",
-      "packs": ["classes", "skills"]
+      "packs": ["classes", "skills", "equipment"]
     }
   ],
   "languages": [

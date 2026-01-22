@@ -170,19 +170,27 @@
                         <td>{{this.name}} {{#if this.system.martial}}<span class="fu-martial" data-tooltip="Marziale"></span>{{/if}}</td>
                         <td>{{localize (concat "ULTIMA.rarities." this.system.rarity)}}</td>
                         <td>
-                            {{#if (eq this.system.bonus.def 0)}}
-                            -
+                            {{#if this.system.bonus.fixed.def}}
+                                {{this.system.bonus.def}}
                             {{else}}
-                                {{localize (concat "ULTIMA.attributes." this.system.bonus.attributes.def ".short")}} 
-                                {{#if this.system.bonus.def}}+ {{/if}}{{this.system.bonus.def}}
+                                {{#if (eq this.system.bonus.def 0)}}
+                                -
+                                {{else}}
+                                    {{localize (concat "ULTIMA.attributes." this.system.bonus.attributes.def ".short")}} 
+                                    {{#if this.system.bonus.def}}+ {{/if}}{{this.system.bonus.def}}
+                                {{/if}}
                             {{/if}}
                         </td>
                         <td>
-                            {{#if (eq this.system.bonus.mdef 0)}}
-                            -
+                            {{#if this.system.bonus.fixed.mdef}}
+                                {{this.system.bonus.mdef}}
                             {{else}}
-                                {{localize (concat "ULTIMA.attributes." this.system.bonus.attributes.mdef ".short")}} 
-                                {{#if this.system.bonus.mdef}}+ {{/if}}{{this.system.bonus.mdef}}
+                                {{#if (eq this.system.bonus.mdef 0)}}
+                                -
+                                {{else}}
+                                    {{localize (concat "ULTIMA.attributes." this.system.bonus.attributes.mdef ".short")}} 
+                                    {{#if this.system.bonus.mdef}}+ {{/if}}{{this.system.bonus.mdef}}
+                                {{/if}}
                             {{/if}}
                         </td>
                         <td>{{#unless (eq this.system.bonus.init 0)}}{{this.system.bonus.init}} {{else}} - {{/unless}}</td>

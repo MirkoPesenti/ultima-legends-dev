@@ -1,0 +1,206 @@
+<fieldset>
+	<div class="form-fields">
+		<div class="form-fields">
+			<label for="system.resources.zenit">Budget:</label>
+			<input type="number" name="system.resources.zenit" id="system.resources.zenit" readonly value="{{shop.budget}}" />
+		</div>
+		<div class="form-fields">
+			<label for="shop.showRares">Oggetti Rari</label>
+			<input type="checkbox" name="shop.showRares" id="shop.showRares" {{#if shop.showRares}}checked{{/if}} />
+		</div>
+		<div class="form-fields">
+			<label for="shop.showMartials">Oggetti Marziali</label>
+			<input type="checkbox" name="shop.showMartials" id="shop.showMartials" {{#if shop.showMartials}}checked{{/if}} />
+		</div>
+	</div>
+</fieldset>
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">Armi</th>
+			<th>Costo</th>
+			<th>Precisione</th>
+			<th>Danno</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each shop.items.weapons as |group category|}}
+			<tr>
+				<th colspan="6" style="text-align: left;">{{localize (concat "ULTIMA.weapons." category)}}</th>
+			</tr>
+			{{#each group as |item|}}
+				{{#unless (or (and item.system.martial (not @root.shop.showMartials)) (and (eq item.system.rarity "rare") (not @root.shop.showRares)))}}
+					<tr>
+						<td colspan="2">
+							<div class="form-fields" style="justify-content: flex-start;">
+								<img src="{{item.img}}" alt="{{item.name}}" style="max-width: 30px;" />
+								<a class="button" data-uuid="{{item.uuid}}" data-link>
+									{{item.name}}
+									{{#if this.system.martial}}<span class="fu-martial" data-tooltip="Marziale"></span>{{/if}}
+								</a>
+							</div>
+						</td>
+						<td>{{item.system.cost}} z</td>
+						<td>
+							{{localize (concat "ULTIMA.attributes." item.system.accuracy.primary ".short")}} 
+							+
+							{{localize (concat "ULTIMA.attributes." item.system.accuracy.secondary ".short")}}
+							{{#unless (eq item.system.accuracy.bonus 0)}}
+								{{#if item.system.accuracy.bonus}}+ {{/if}}{{item.system.accuracy.bonus}} 
+							{{/unless}}
+						</td>
+						<td>
+							TM 
+							{{#unless (eq item.system.damage.value 0)}}
+								{{#if item.system.damage.value}}+ {{/if}}{{item.system.damage.value}}
+							{{/unless}}
+							{{localize (concat "ULTIMA.damageTypes." item.system.damage.type)}}
+						</td>
+						<td>
+							<input type="checkbox" name="shop.selected.{{item.system.ultimaID}}" value="{{item.system.cost}}" {{#if (lookup @root.shop.selected item.system.ultimaID)}}checked{{/if}} />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="6">
+							<div class="form-fields">
+								{{localize (concat "ULTIMA.rarities." item.system.rarity)}}
+								-
+								{{#if item.system.twoHanded}}Due mani{{else}}Una mano{{/if}}
+								-
+								{{localize (concat "ULTIMA.WeaponRanges." item.system.range)}}
+								-
+								{{{item.system.description}}}
+							</div>
+						</td>
+					</tr>
+				{{/unless}}
+			{{/each}}
+		{{/each}}
+	</tbody>
+</table>
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">Armature</th>
+			<th>Costo</th>
+			<th>Difesa</th>
+			<th>D. Magica</th>
+			<th>Init</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each shop.items.armors as |item|}}
+			{{#unless (or (and item.system.martial (not @root.shop.showMartials)) (and (eq item.system.rarity "rare") (not @root.shop.showRares)))}}
+				<tr>
+					<td colspan="2">
+						<div class="form-fields" style="justify-content: flex-start;">
+							<img src="{{item.img}}" alt="{{item.name}}" style="max-width: 30px;" />
+							<a class="button" data-uuid="{{item.uuid}}" data-link>
+								{{item.name}}
+								{{#if this.system.martial}}<span class="fu-martial" data-tooltip="Marziale"></span>{{/if}}
+							</a>
+						</div>
+					</td>
+					<td>{{item.system.cost}} z</td>
+					<td>
+						{{#if item.system.bonus.fixed.def}}
+							{{item.system.bonus.def}}
+						{{else}}
+							{{#if (eq item.system.bonus.def 0)}}
+							-
+							{{else}}
+								{{localize (concat "ULTIMA.attributes." item.system.bonus.attributes.def ".short")}} 
+								{{#if item.system.bonus.def}}+ {{/if}}{{item.system.bonus.def}}
+							{{/if}}
+						{{/if}}
+					</td>
+					<td>
+						{{#if item.system.bonus.fixed.mdef}}
+							{{item.system.bonus.mdef}}
+						{{else}}
+							{{#if (eq item.system.bonus.mdef 0)}}
+							-
+							{{else}}
+								{{localize (concat "ULTIMA.attributes." item.system.bonus.attributes.mdef ".short")}} 
+								{{#if item.system.bonus.mdef}}+ {{/if}}{{item.system.bonus.mdef}}
+							{{/if}}
+						{{/if}}
+					</td>
+					<td>{{#unless (eq this.system.bonus.init 0)}}{{this.system.bonus.init}} {{else}} - {{/unless}}</td>
+					<td>
+						<input type="checkbox" name="shop.selected.{{item.system.ultimaID}}" value="{{item.system.cost}}" {{#if (lookup @root.shop.selected item.system.ultimaID)}}checked{{/if}} />
+					</td>
+				</tr>
+				<tr>
+					<td colspan="7">
+						<div class="form-fields">
+							{{localize (concat "ULTIMA.rarities." item.system.rarity)}}
+							-
+							{{{item.system.description}}}
+						</div>
+					</td>
+				</tr>
+			{{/unless}}
+		{{/each}}
+	</tbody>
+</table>
+
+<table>
+	<thead>
+		<tr>
+			<th colspan="2">Scudi</th>
+			<th>Costo</th>
+			<th>Difesa</th>
+			<th>D. Magica</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each shop.items.shields as |item|}}
+			{{#unless (or (and item.system.martial (not @root.shop.showMartials)) (and (eq item.system.rarity "rare") (not @root.shop.showRares)))}}
+				<tr>
+					<td colspan="2">
+						<div class="form-fields" style="justify-content: flex-start;">
+							<img src="{{item.img}}" alt="{{item.name}}" style="max-width: 30px;" />
+							<a class="button" data-uuid="{{item.uuid}}" data-link>
+								{{item.name}}
+								{{#if this.system.martial}}<span class="fu-martial" data-tooltip="Marziale"></span>{{/if}}
+							</a>
+						</div>
+					</td>
+					<td>{{item.system.cost}} z</td>
+					<td>
+						{{#if this.system.bonus.def}}
+							+ {{this.system.bonus.def}}
+						{{else}}
+							-
+						{{/if}}
+					</td>
+					<td>
+						{{#if this.system.bonus.mdef}}
+							+ {{this.system.bonus.mdef}}
+						{{else}}
+							-
+						{{/if}}
+					</td>
+					<td>
+						<input type="checkbox" name="shop.selected.{{item.system.ultimaID}}" value="{{item.system.cost}}" {{#if (lookup @root.shop.selected item.system.ultimaID)}}checked{{/if}} />
+					</td>
+				</tr>
+				<tr>
+					<td colspan="6">
+						<div class="form-fields">
+							{{localize (concat "ULTIMA.rarities." item.system.rarity)}}
+							-
+							{{{item.system.description}}}
+						</div>
+					</td>
+				</tr>
+			{{/unless}}
+		{{/each}}
+	</tbody>
+</table>

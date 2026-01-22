@@ -9,7 +9,6 @@ export default class UltimaLegendsClass extends UltimaLegendsItemBase {
 
         schema.level = new fields.SchemaField({
             current: new fields.NumberField({ initial: 1, min: 1, integer: true, nullable: false }),
-            needLevelUp: new fields.BooleanField({ initial: false }),
         })
         schema.grants = new fields.SchemaField({
             resources: new fields.SchemaField({

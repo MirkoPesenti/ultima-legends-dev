@@ -130,68 +130,6 @@ export class UltimaLegendsItem extends Item {
 
 	}
 
-	// Check if class can level up based on granted skills
-	async checkLevelUp( newLevel = null, itemExists = true ) {
-
-		if ( this.type !== 'class' ) return;
-		
-		// Get level data and granted skills
-		const levelData = this.system.level;
-		const skills = this.system.grants.skills.map( async skillUltimaID => {
-			let item = null;
-			if ( this.parent instanceof UltimaLegendsActor ) {
-				item = this.parent.items.find( i => i.type === 'skill' && i.system.ultimaID === skillUltimaID );
-			} else {
-				// First, search in all packs
-				for ( const pack of game.packs ) {
-					if ( pack.documentName === 'Item' ) {
-						const documents = await pack.getDocuments();
-						const itemFound = documents.find( i => i.system.ultimaID === skillUltimaID );
-						if ( itemFound ) {
-							item = itemFound;
-							break;
-						}
-					}
-				}
-
-				// If not found in packs, search in game.items
-				if ( !item ) {
-					item = game.items.find( i => i.type === 'skill' && i.system.ultimaID === skillUltimaID );
-				}
-
-			}
-			return item;
-		});
-
-		// Update to specified new level or increment by 1
-		if ( typeof newLevel !== 'number' ) {
-			newLevel = levelData.current + 1;
-		}
-
-		// Calculate total skill levels
-		let skillsLeveled = 0;
-		for ( const skill of skills ) {
-			skillsLeveled += skill?.system?.level?.current ?? 0;
-		}
-
-		// If all skills are leveled, clear needLevelUp flag
-		let updates = {};
-		if ( skillsLeveled < newLevel ) {
-			updates = { 'system.level.needLevelUp': true };
-		} else if ( skillsLeveled == newLevel ) {
-			updates = { 'system.level.needLevelUp': false };
-		} else {
-			ui.notifications.error('Errore nel controllo del livello della classe: i livelli delle abilità superano il nuovo livello della classe.');
-		}
-
-		// Apply updates
-		if ( itemExists )
-			this.update( updates );
-		else
-			this.updateSource( updates );
-
-	}
-
 }
 
 //#region Hooks
@@ -259,9 +197,6 @@ async function onCreateClass( item ) {
 
 		await item.parent.createEmbeddedDocuments( 'Item', [ skillItem ] );
 	}
-
-	// Check for level up
-	item.checkLevelUp( item.system.level.current, false );
 
 }
 

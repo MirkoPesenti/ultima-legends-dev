@@ -18,14 +18,15 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
             icon: 'fa fa-dice-d20',
         },
         form: {
-            handler: UltimaLegendsCharactermancerSheet.#onSubmit,
+            handler: this.#onSubmit,
             closeOnSubmit: true,
         },
         actions: {
-            cancel: UltimaLegendsCharactermancerSheet.#handleCancel,
-            prev: UltimaLegendsCharactermancerSheet.#handlePrev,
-            next: UltimaLegendsCharactermancerSheet.#handleNext,
-            finish: UltimaLegendsCharactermancerSheet.#handleFinish,
+            cancel: this.#handleCancel,
+            prev: this.#handlePrev,
+            next: this.#handleNext,
+            finish: this.#handleFinish,
+            rollInitialSavings: this.#handleRollInitialSavings,
         },
     };
 
@@ -90,13 +91,17 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
             context.formData.system.attributes.ins = context.formData.system.attributes.ins ?? { base: actorAttributes.ins.base ?? 8 };
             context.formData.system.attributes.mig = context.formData.system.attributes.mig ?? { base: actorAttributes.mig.base ?? 8 };
             context.formData.system.attributes.wlp = context.formData.system.attributes.wlp ?? { base: actorAttributes.wlp.base ?? 8 };
-        }
 
-        // Add actor items
-        context.actorItems = {
-            classes: this.#actor ? this.#actor.items.filter( i => i.type === 'class' ) : [],
-            skills: this.#actor ? this.#actor.items.filter( i => i.type === 'skill' ) : [],
-        };
+            // Initialize resources if not set
+            context.formData.system.resources = context.formData.system.resources ?? {};
+            context.formData.system.resources.zenit = context.formData.system.resources.zenit ?? (this.#actor?.system?.resources?.zenit ?? 500);
+
+            // Add actor items
+            context.actorItems = {
+                classes: this.#actor ? this.#actor.items.filter( i => i.type === 'class' ) : [],
+                skills: this.#actor ? this.#actor.items.filter( i => i.type === 'skill' ) : [],
+            };
+        }
 
         // Add game data from compendiums
         const gameClassesDocs = await game.packs.get(`${SYSTEM}.classes`)?.getDocuments() || [];
@@ -110,6 +115,12 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
             const origin = skill.system.origin;
             if ( !acc[origin] ) acc[origin] = [];
             acc[origin].push( skill );
+            return acc;
+        }, {} );
+
+        const gameItemsDocs = await game.packs.get(`${SYSTEM}.equipment`)?.getDocuments() || [];
+        context.gameItems = gameItemsDocs.reduce( (acc, cls) => {
+            acc[cls.system.ultimaID] = cls;
             return acc;
         }, {} );
 
@@ -219,6 +230,30 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
             isValid: attributesValid,
         };
 
+        // Prepare shop data
+        const equipmentPack = await game.packs.get(`${SYSTEM}.equipment`)?.getDocuments() || [];
+        context.shop = {
+            items: {
+                weapons: equipmentPack.filter( item => item.type === 'weapon' && item.system.cost > 0 ).reduce( (acc, item) => {
+                    const category = item.system.category;
+                    if ( !acc[category] ) acc[category] = [];
+                    acc[category].push( item );
+                    return acc;
+                }, {}),
+                armors: equipmentPack.filter( item => item.type === 'armor' && item.system.cost > 0 ),
+                shields: equipmentPack.filter( item => item.type === 'shield' && item.system.cost > 0 ),
+            },
+            budget: 500,
+            showRares: context.formData?.shop?.showRares ?? false,
+            showMartials: context.formData?.shop?.showMartials ?? false,
+            selected: context.formData?.shop?.selected ?? {},
+        };
+
+        // Calculate shop budget and validity
+        const totalCost = Object.entries( context.shop.selected ).reduce( (sum, [itemID, cost]) => sum + parseInt(cost || 0), 0 );
+        context.shop.budget = context.shop.budget - totalCost;
+        context.shop.isValid = context.shop.budget >= 0;
+
         // Add buttons to context
         context.buttons = [
             {
@@ -246,7 +281,10 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
                     type: 'button',
                     action: 'next',
                     icon: 'fa fa-arrow-right',
-                    disabled: (context.wizard.currentStep === 2 && !context.classes.isValid) || (context.wizard.currentStep === 3 && !context.skills.isValid) || (context.wizard.currentStep === 4 && !context.attributes.isValid),
+                    disabled:   (context.wizard.currentStep === 2 && !context.classes.isValid) || 
+                                (context.wizard.currentStep === 3 && !context.skills.isValid) || 
+                                (context.wizard.currentStep === 4 && !context.attributes.isValid) ||
+                                (context.wizard.currentStep === 5 && !context.shop.isValid),
                     // label: 'Successivo',
                 }
             ]),
@@ -322,26 +360,29 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
 
         const classesIds = this.#data.classes || {};
         const skillsIds = this.#data.skills || {};
+        const itemsIds = this.#data.shop?.selected || {};
 
+        // Clean up data
         delete this.#data.classes;
         delete this.#data.skills;
+        delete this.#data.shop;
         
         if ( this.#actor ) {
 
-            const progressSteps = 1 + Object.keys( classesIds ).length + Object.keys( skillsIds ).length;
+            const progressSteps = 1 + Object.keys( classesIds ).length + Object.keys( skillsIds ).length + Object.keys( itemsIds ).length;
 
             // Show notification
             const notification = ui.notifications.info("Aggiornamento personaggio in corso...", {
-                ptc: 0,
+                pct: 0,
                 progress: true,
             });
 
             // Update Actor data
             await this.#actor.update( this.#data );
 
-            notification.update({
-                content: "Inizio aggiornamento classi e abilità...",
-                progress: 1 / progressSteps,
+            await notification.update({
+                message: "Inizio aggiornamento classi e abilità...",
+                pct: 1 / progressSteps,
             });
 
             // Update Classes
@@ -363,9 +404,9 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
                     }
                 }
 
-                notification.update({
-                    content: `Aggiornamento classi... (${classID})`,
-                    progress: (1 + Object.keys( classesIds ).indexOf(classID) + 1) / progressSteps,
+                await notification.update({
+                    message: `Aggiornamento classi... (${classID})`,
+                    pct: (1 + Object.keys( classesIds ).indexOf(classID) + 1) / progressSteps,
                 });
             }
 
@@ -388,17 +429,33 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
                     }
                 }
 
-                notification.update({
-                    content: `Aggiornamento abilità... (${skillID})`,
-                    progress: (1 + Object.keys( classesIds ).length + Object.keys( skillsIds ).indexOf(skillID) + 1) / progressSteps,
+                await notification.update({
+                    message: `Aggiornamento abilità... (${skillID})`,
+                    pct: (1 + Object.keys( classesIds ).length + Object.keys( skillsIds ).indexOf(skillID) +  + 1) / progressSteps,
                 });
             }
 
-            notification.update({
-                content: "Aggiornamento completato!",
-                progress: 1,
+            // Add Items from shop
+            for ( const [itemID, cost] of Object.entries( itemsIds ) ) {
+                if ( cost === null || cost <= 0 ) continue;
+
+                // Create item
+                const pack = await game.packs.get(`${SYSTEM}.equipment`).getDocuments();
+                const itemData = pack.find( i => i.system.ultimaID === itemID );
+                if ( itemData ) {
+                    await this.#actor.createEmbeddedDocuments( 'Item', [ itemData.toObject() ] );
+                }
+
+                await notification.update({
+                    message: `Aggiunta oggetti... (${itemID})`,
+                    pct: (1 + Object.keys( classesIds ).length + Object.keys( skillsIds ).length + Object.keys( itemsIds ).indexOf(itemID) + 1) / progressSteps,
+                });
+            }
+
+            await notification.update({
+                message: "Aggiornamento completato!",
+                pct: 1,
             });
-            setTimeout( () => notification.close(), 1000 );
         }
         
         await this.close();
@@ -410,6 +467,32 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
         
         event.preventDefault();
         await this.close();
+
+    }
+
+    /**
+    * Handle Roll Initial Savings action
+    * @this {UltimaLegendsCharactermancerSheet}
+    */
+    static async #handleRollInitialSavings( event, target ) {
+
+        event.preventDefault();
+
+        // Roll 2d6 * 10
+        const roll = new Roll("2d6 * 10");
+        await roll.evaluate();
+        ChatMessage.create({
+            speaker: ChatMessage.getSpeaker({ actor: this.#actor }),
+            rolls: [roll],
+            flavor: `Risparmi iniziali di ${this.#data.name}`
+        });
+        const total = roll.total;
+
+        // Update form data
+        this.#data.system = this.#data.system || {};
+        this.#data.system.resources = this.#data.system.resources || {};
+        this.#data.system.resources.zenit = (this.#data.system.resources.zenit || 0) + total;
+        await this.render({ parts: ['main', 'footer'] });
 
     }
 

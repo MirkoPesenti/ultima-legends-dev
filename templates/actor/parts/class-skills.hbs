@@ -12,13 +12,11 @@
 				<div style="position:absolute; top:0; bottom:0; left:0; background-color:var(--color-fieldset-border); width:{{percentage item.system.level.current item.system.level.max}}%;"></div>
 			</div>
 
-			{{#if (and levelUp (not (eq item.system.level.current item.system.level.max)))}}
-				<a class="button active" data-action="levelUpSkill" data-id="{{item.system.ultimaID}}">
-					<i class="fa fa-regular fa-circle-up"></i>
-				</a>
-			{{/if}}
+			{{!-- <a class="button active" data-action="levelUpSkill" data-id="{{item.system.ultimaID}}">
+				<i class="fa fa-regular fa-circle-up"></i>
+			</a> --}}
 			<a class="button" data-uuid="{{item.uuid}}" data-link>Apri</a>
 		</div>
 	</div>
-	<div>{{{item.system.description}}}</div>
+	<div style="opacity:var(--skill-opacity, 1);">{{{item.system.description}}}</div>
 </div>

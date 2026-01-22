@@ -269,9 +269,6 @@ export class UltimaLegendsItemSheet extends HandlebarsApplicationMixin( ItemShee
                     await removedSkill.update({ 'system.origin': null });
                 }
             }
-
-            // Check for level up after skill removal
-            this.document.checkLevelUp( this.document.system.level.current );
 		}
 
 	}

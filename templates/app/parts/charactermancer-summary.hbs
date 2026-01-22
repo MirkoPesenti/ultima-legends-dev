@@ -62,3 +62,23 @@
 		<p>d{{formData.system.attributes.wlp.base}}</p>
 	</div>
 </fieldset>
+
+{{!-- Items --}}
+<fieldset>
+	<legend>Equipaggiamento</legend>
+	{{#each gameItems as |item ultimaID|}}
+		{{#if (lookup ../formData.shop.selected item.system.ultimaID)}}
+			<div class="form-group">
+				<span class="label">{{item.name}} - Costo {{lookup ../formData.shop.selected item.system.ultimaID}} z</span>
+			</div>
+		{{/if}}
+	{{/each}}
+
+	<div class="form-group">
+		<label for="system.resources.zenit">Risparmi iniziali</label>
+		<div class="form-fields">
+			<a class="button" data-action="rollInitialSavings">Tira 2d6 x 10 zenit</a>
+			<input type="number" name="system.resources.zenit" id="system.resources.zenit" value="{{formData.system.resources.zenit}}" readonly />
+		</div>
+	</div>
+</fieldset>

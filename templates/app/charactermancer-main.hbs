@@ -30,7 +30,8 @@
 	{{/if}}
 
 	{{#if (eq wizard.currentStep 5)}}
-		<p>TODO: Shop</p>
+		<p>Usa un budget di <strong>500 zenit</strong> per acquistare l'<strong>equipaggiamento</strong>.</p>
+		{{> systems/ultima-legends/templates/app/parts/charactermancer-shop.hbs }}
 	{{/if}}
 
 	{{#if (eq wizard.currentStep wizard.total)}}

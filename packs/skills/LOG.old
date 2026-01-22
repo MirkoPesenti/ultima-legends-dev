@@ -1,4 +1,8 @@
-2026/01/21-19:54:48.840 5100 Log #4: 0 ops saved to Table #5 OK
-2026/01/21-19:54:48.840 5100 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\ultima-legends\packs\skills/000004.log: OK
-2026/01/21-19:54:48.843 5100 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\ultima-legends\packs\skills/MANIFEST-000002: OK
-2026/01/21-19:54:48.846 5100 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\ultima-legends\packs\skills; recovered 0 files; 0 bytes. Some data may have been lost. ****
+2026/01/22-20:47:49.768 27e8 Recovering log #8
+2026/01/22-20:47:49.775 27e8 Delete type=0 #8
+2026/01/22-20:47:49.775 27e8 Delete type=3 #6
+2026/01/22-21:18:29.862 1d48 Level-0 table #13: started
+2026/01/22-21:18:29.862 1d48 Level-0 table #13: 0 bytes OK
+2026/01/22-21:18:29.864 1d48 Delete type=0 #11
+2026/01/22-21:18:29.870 1d48 Manual compaction at level-0 from '!folders!1iNEOhP93QS8eCok' @ 72057594037927935 : 1 .. '!items!zps5ePofnSvLHLN4' @ 0 : 0; will stop at (end)
+2026/01/22-21:18:29.870 1d48 Manual compaction at level-1 from '!folders!1iNEOhP93QS8eCok' @ 72057594037927935 : 1 .. '!items!zps5ePofnSvLHLN4' @ 0 : 0; will stop at (end)

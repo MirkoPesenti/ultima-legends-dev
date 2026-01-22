@@ -149,10 +149,7 @@ export class UltimaLegendsActorSheet extends HandlebarsApplicationMixin( ActorSh
 				case 'accessory': accessories.push( i ); break;
 				case 'armor': armors.push( i ); break;
 				case 'basic': basics.push( i ); break;
-				case 'class': 
-					i.checkLevelUp( i.system.level.current );
-					classes.push( i ); 
-					break;
+				case 'class': classes.push( i ); break;
 				// case 'consumable': consumables.push( i ); break;
 				// case 'heroic': heroics.push( i ); break;
 				// case 'project': projects.push( i ); break;
@@ -257,9 +254,6 @@ export class UltimaLegendsActorSheet extends HandlebarsApplicationMixin( ActorSh
 		// Calculate new level
 		const newLevel = Math.min( classItem.system.level.current + 1, classItem.system.level.max );
 
-		// Check for level up prerequisites
-		classItem.checkLevelUp( newLevel );
-
 		// Update class level
 		await classItem.update({ 'system.level.current': newLevel });
 
@@ -311,12 +305,6 @@ export class UltimaLegendsActorSheet extends HandlebarsApplicationMixin( ActorSh
 
 		// Update class level
 		await skillItem.update({ 'system.level.current': newLevel });
-
-		// Check if origin class can level up
-		const originClass = this.document.items.find( i => i.type === 'class' && i.system.ultimaID === skillItem.system.origin );
-		if ( originClass ) {
-			originClass.checkLevelUp( originClass.system.level.current );
-		}
 
 	}
 
