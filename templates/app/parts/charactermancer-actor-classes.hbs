@@ -1,0 +1,33 @@
+{{#each gameClasses as |class|}}
+	<div class="form-group" style="{{#if (eq (lookup ../classes.levels class.system.ultimaID) (lookup ../classes.maxLevels class.system.ultimaID))}}opacity:.5;{{/if}}">
+		<label class="form-fields" style="justify-content:flex-start;" for="levelUp.class-{{class.system.ultimaID}}">
+			<a class="button" data-uuid="{{class.uuid}}" data-link>
+				{{class.name}}
+			</a>
+		</label>
+		<div class="form-fields">
+			<p>
+				Livello: 
+				{{#if (eq (lookup ../classes.levels class.system.ultimaID) (lookup ../classes.maxLevels class.system.ultimaID))}}
+					MAX
+				{{else}}
+					{{#if (lookup ../actorItems.classes class.system.ultimaID)}}
+						{{lookup ../classes.levels class.system.ultimaID}}
+					{{else}}
+						0
+					{{/if}}
+					<i class="fa fa-arrow-right"></i>
+					{{lookup ../classes.maxLevels class.system.ultimaID}}
+				{{/if}}
+			</p>
+			<input 
+				type="radio" 
+				name="levelUp.class" 
+				id="levelUp.class-{{class.system.ultimaID}}" 
+				value="{{class.system.ultimaID}}"
+				{{#if (eq ../formData.levelUp.class class.system.ultimaID)}}checked{{/if}}
+				{{#if (eq (lookup ../classes.levels class.system.ultimaID) (lookup ../classes.maxLevels class.system.ultimaID))}}disabled{{/if}}
+			/>
+		</div>
+	</div>
+{{/each}}

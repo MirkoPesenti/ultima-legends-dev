@@ -49,10 +49,23 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
     // Define constructor
     constructor( options = {} ) {
         super( options );
-
+        let totalSteps = 6;
+        
         this.#actor = options.actor ?? null;
-        this.#total = options.steps ?? 6;
+
+        // Determine if new character
+        const isNewCharacter = this.#actor ? this.#actor.system.level.current === 0 : true;
+        if ( isNewCharacter ) totalSteps = 3;
+
+        // Determine if attribute upgrade step is needed
+        const upgradeAttributes = this.#actor ? ( this.#actor.system.level.current + 1 ) % 20 === 0 : false;
+        if ( upgradeAttributes ) totalSteps += 1;
+
+        // Set total steps
+        this.#total = options.steps ?? totalSteps;
     }
+
+    //#region Context
 
     // Prepare context data for template rendering
 	async _prepareContext( options ) {
@@ -97,9 +110,17 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
             context.formData.system.resources.zenit = context.formData.system.resources.zenit ?? (this.#actor?.system?.resources?.zenit ?? 500);
 
             // Add actor items
+            const actorClasses = this.#actor.items.filter( i => i.type === 'class' ).reduce( (acc, cls) => {
+                acc[cls.system.ultimaID] = cls;
+                return acc;
+            }, {} );
+            const actorSkills = this.#actor.items.filter( i => i.type === 'skill' ).reduce( (acc, skill) => {
+                acc[skill.system.ultimaID] = skill;
+                return acc;
+            }, {} );
             context.actorItems = {
-                classes: this.#actor ? this.#actor.items.filter( i => i.type === 'class' ) : [],
-                skills: this.#actor ? this.#actor.items.filter( i => i.type === 'skill' ) : [],
+                classes: actorClasses,
+                skills: actorSkills,
             };
         }
 
@@ -129,18 +150,45 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
             if ( foundry.utils.hasProperty( context.formData?.classes ?? {}, ultimaID ) ) {
                 acc[ultimaID] = parseInt( context.formData?.classes[ultimaID] ?? 0 ) || 0;
             } else {
-                acc[ultimaID] = 0;
+                if ( context.actorItems.classes[ultimaID] ) {
+                    acc[ultimaID] = context.actorItems.classes[ultimaID].system.level?.current ?? 1;
+                } else {
+                    acc[ultimaID] = 0;
+                }
             }
             return acc;
         }, {} );
 
         const totalClassLevels = Object.values( classLevels ).reduce( (sum, lvl) => sum + parseInt(lvl || 0), 0 );
-        const totalClassSelected = Object.values( classLevels ).filter( lvl => parseInt(lvl || 0) > 0 ).length;
+        const totalClassSelected = Object.values( classLevels ).filter( lvl => parseInt(lvl || 0) > 0 && parseInt(lvl || 0) < 10 ).length;
 
+        const classMinLevels = Object.keys( context.gameClasses ).reduce( (acc, ultimaID) => {
+            // If actor already has the class, min is the class's current level
+            if ( context.actorItems.classes[ultimaID] ) {
+                acc[ultimaID] = context.actorItems.classes[ultimaID].system.level?.current ?? 1;
+                return acc;
+            }
+
+            acc[ultimaID] = 0;
+            return acc;
+        }, {} );
         const classMaxLevels = Object.keys( context.gameClasses ).reduce( (acc, ultimaID) => {
-            const currentLevel = classLevels[ultimaID] || 0;
-            const remainingLevels = 5 - totalClassLevels;
-            acc[ultimaID] = currentLevel + remainingLevels;
+            // If actor already has the class, max is the class's current level + 1
+            if ( context.actorItems.classes[ultimaID] ) {
+                acc[ultimaID] = (context.actorItems.classes[ultimaID].system.level?.current ?? 1) + ( context.actor.system.level.current + 1 ) - totalClassLevels;
+                acc[ultimaID] = Math.min( acc[ultimaID], context.gameClasses[ultimaID].system.level?.max ?? 10 );
+                return acc;
+            }
+
+            // For new classes, if actor level is 0, max is current level + remaining levels to reach 5 total
+            if ( context.actor.system.level.current === 0 ) {
+                const currentLevel = classLevels[ultimaID] || 0;
+                const remainingLevels = 5 - totalClassLevels;
+                acc[ultimaID] = currentLevel + remainingLevels;
+                acc[ultimaID] = Math.min( acc[ultimaID], context.gameClasses[ultimaID].system.level?.max ?? 10 );
+            } else {
+                acc[ultimaID] = ( context.actor.system.level.current + 1 ) - totalClassLevels;
+            }
             return acc;
         }, {} );
 
@@ -165,15 +213,23 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
                 const classSkills = context.gameSkills[classID] || [];
                 let totalSkillLevelsForClass = 0;
 
-                // First pass: collect current skill levels
+                // Collect current skill levels
                 classSkills.forEach( skill => {
                     const skillID = skill.system.ultimaID;
                     
                     // Get current skill level from form data
-                    if ( foundry.utils.hasProperty( context.formData?.skills ?? {}, skillID ) ) {
-                        skillLevels[skillID] = parseInt( context.formData?.skills[skillID] ?? 0 ) || 0;
+                    if ( context.actor.system.level.current === 0 ) {
+                        if ( foundry.utils.hasProperty( context.formData?.skills ?? {}, skillID ) ) {
+                            skillLevels[skillID] = parseInt( context.formData?.skills[skillID] ?? 0 ) || 0;
+                        } else {
+                            skillLevels[skillID] = 0;
+                        }
                     } else {
-                        skillLevels[skillID] = 0;
+                        if ( context.actorItems.skills[skillID] ) {
+                            skillLevels[skillID] = context.actorItems.skills[skillID].system.level?.current ?? 0;
+                        } else {
+                            skillLevels[skillID] = 0;
+                        }
                     }
 
                     // Accumulate total for this class
@@ -182,14 +238,18 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
 
                 skillTotalByClass[classID] = totalSkillLevelsForClass;
 
-                // Second pass: calculate max levels based on remaining points
+                // Calculate max levels based on remaining points
                 const remainingLevels = classLevel - totalSkillLevelsForClass;
                 classSkills.forEach( skill => {
                     const skillID = skill.system.ultimaID;
                     const currentLevel = skillLevels[skillID] || 0;
                     const skillMaxLevel = skill.system.level?.max ?? 999;
-                    // Max is the minimum between current + remaining and the skill's max level
-                    skillMaxLevels[skillID] = Math.min(currentLevel + remainingLevels, skillMaxLevel);
+
+                    if ( context.actor.system.level.current === 0 ) {
+                        skillMaxLevels[skillID] = Math.min(currentLevel + remainingLevels, skillMaxLevel);
+                    } else {
+                        skillMaxLevels[skillID] = Math.min(( currentLevel + 1 ), skillMaxLevel);
+                    }
                 });
 
                 // Validate: total skill levels for this class must equal class level
@@ -348,6 +408,10 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
 
     }
 
+    //#endregion
+
+    //#region Handle Finish action
+
     /**
     * Handle Finish action
     * @this {UltimaLegendsCharactermancerSheet}
@@ -503,5 +567,7 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
         await this.close();
         
     }
+
+    //#endregion
 
 }

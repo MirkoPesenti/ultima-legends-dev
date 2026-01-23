@@ -1,24 +1,28 @@
-<div class="form-group">
-	<label for="name">Nome</label>
-	<input 
-		type="text"
-		name="name"
-		id="name"
-		placeholder="Il nome del personaggio"
-		value="{{formData.name}}"
-	/>
-</div>
+{{#if (eq actor.system.level.current 0)}}
 
-<div class="form-group">
-	<label for="system.features.pronouns">Genere</label>
-	<input 
-		type="text"
-		name="system.features.pronouns"
-		id="system.features.pronouns"
-		placeholder="I pronomi con cui il personaggio si identifica"
-		value="{{formData.system.features.pronouns}}"
-	/>
-</div>
+	<div class="form-group">
+		<label for="name">Nome</label>
+		<input 
+			type="text"
+			name="name"
+			id="name"
+			placeholder="Il nome del personaggio"
+			value="{{formData.name}}"
+		/>
+	</div>
+
+	<div class="form-group">
+		<label for="system.features.pronouns">Genere</label>
+		<input 
+			type="text"
+			name="system.features.pronouns"
+			id="system.features.pronouns"
+			placeholder="I pronomi con cui il personaggio si identifica"
+			value="{{formData.system.features.pronouns}}"
+		/>
+	</div>
+
+{{/if}}
 
 <div class="form-group">
 	<label for="system.features.identity">Identità</label>
@@ -42,13 +46,17 @@
 	/>
 </div>
 
-<div class="form-group">
-	<label for="system.features.origin">Origine</label>
-	<input 
-		type="text"
-		name="system.features.origin"
-		id="system.features.origin"
-		placeholder="Da dove proviene il personaggio?"
-		value="{{formData.system.features.origin}}"
-	/>
-</div>
+{{#if (eq actor.system.level.current 0)}}
+
+	<div class="form-group">
+		<label for="system.features.origin">Origine</label>
+		<input 
+			type="text"
+			name="system.features.origin"
+			id="system.features.origin"
+			placeholder="Da dove proviene il personaggio?"
+			value="{{formData.system.features.origin}}"
+		/>
+	</div>
+
+{{/if}}
