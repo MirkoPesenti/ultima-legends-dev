@@ -1,0 +1,60 @@
+{{!-- Identity --}}
+<fieldset>
+	<legend>Informazioni personali</legend>
+	<div class="form-group">
+		<span class="label">Identità</span>
+		<p>{{formData.system.features.identity}}</p>
+	</div>
+	<div class="form-group">
+		<span class="label">Tema</span>
+		<p>{{formData.system.features.theme}}</p>
+	</div>
+</fieldset>
+
+{{!-- Classes & Skills --}}
+<fieldset>
+	<legend>Classi e Abilità</legend>
+	<div class="form-group">
+		<span class="label">{{lookup (lookup gameClasses formData.levelUp.class) "name"}}</span>
+		<p>
+			{{#if (eq (lookup classes.levels formData.levelUp.class) 0)}}
+				NUOVA CLASSE
+			{{else}}
+				Livello {{lookup classes.levels formData.levelUp.class}}
+				<i class="fa fa-arrow-right"></i>
+				{{lookup classes.maxLevels formData.levelUp.class}}
+			{{/if}}
+		</p>
+	</div>
+	<div class="form-group">
+		{{#each gameSkills as |groupedSkills classID|}}
+			{{#if (eq classID @root.formData.levelUp.class)}}
+				{{#each groupedSkills as |skill skillID|}}
+					{{#if (eq skill.system.ultimaID @root.formData.levelUp.skill)}}
+						<span class="label">{{skill.name}}</span>
+					{{/if}}
+				{{/each}}
+			{{/if}}
+		{{/each}}
+		<p>
+			Livello {{lookup skills.levels formData.levelUp.skill}}
+			<i class="fa fa-arrow-right"></i>
+			{{lookup skills.maxLevels formData.levelUp.skill}}
+		</p>
+	</div>
+</fieldset>
+
+{{#if formData.levelUp.attribute}}
+	{{!-- Attributes --}}
+	<fieldset>
+		<legend>Caratteristica migliorata</legend>
+		<div class="form-group">
+			<span class="label">{{formData.levelUp.attribute}}</span>
+			<p>
+				{{lookup (lookup actor.system.attributes formData.levelUp.attribute) "base"}}
+				<i class="fa fa-arrow-right"></i>
+				{{lookup actorAttributesUpgraded formData.levelUp.attribute}}
+			</p>
+		</div>
+	</fieldset>
+{{/if}}

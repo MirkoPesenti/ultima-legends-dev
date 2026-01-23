@@ -1,4 +1,4 @@
-import { UltimaLegendsActor } from "./actor.mjs";
+const { DialogV2 } = foundry.applications.api;
 
 export class UltimaLegendsItem extends Item {
 
@@ -172,6 +172,36 @@ async function onCreateClass( item ) {
 	if ( item.parent == null ) return;
 	if ( item.parent.type !== 'character' ) return;
 
+	// Handle benefit selection if needed
+	if ( item.flags?.['ultima-legends']?.needsBenefitSelection ) {
+		const hasBenefits = item.flags['ultima-legends'].availableBenefits;
+		
+		// Prompt user to choose one benefit and wait for response
+		const choice = await DialogV2.wait({
+			window: { title: 'Scegli il beneficio della classe' },
+			content: `<p>La classe <strong>${item.name}</strong> offre più benefici. Scegli quale desideri applicare:</p>
+				<select name="benefit" style="width: 100%; padding: 5px; margin-top: 10px;">
+					${hasBenefits.map(resource => `<option value="${resource}">${resource.toUpperCase()}</option>`).join('')}
+				</select>`,
+			buttons: [{
+				action: 'confirm',
+				label: 'Conferma',
+				default: true,
+				callback: (event, button, dialog) => button.form.elements.benefit.value
+			}],
+			rejectClose: false
+		});
+
+		if ( choice ) {
+			const updates = {
+				[`system.grants.resources.${choice}`]: true,
+				'flags.ultima-legends.-=needsBenefitSelection': null,
+				'flags.ultima-legends.-=availableBenefits': null
+			};
+			await item.update(updates);
+		}
+	}
+
 	// Automatically add granted skills to the actor
 	const skillPromises = item.system.grants.skills.map( async skillId => {
 		// First, search in all packs
@@ -222,34 +252,18 @@ function onPreCreateClass( item ) {
 		return false;
 	}
 
-	// Check for multiple resource benefits
+	// Check for multiple resource benefits and reset them if needed
 	const benefits = item.system.grants.resources;
 	const hasBenefits = Object.keys(benefits).filter(k => benefits[k]);
 	if ( hasBenefits.length > 1 ) {
-
-		// Reset all resource benefits
+		// Mark that this item needs benefit selection
 		item.updateSource({ 
 			'system.grants.resources.hp': false, 
 			'system.grants.resources.mp': false, 
-			'system.grants.resources.ip': false, 
+			'system.grants.resources.ip': false,
+			'flags.ultima-legends.needsBenefitSelection': true,
+			'flags.ultima-legends.availableBenefits': hasBenefits
 		});
-
-		// Prompt user to choose one benefit
-		new DialogV2({
-			window: { title: 'Scegli il beneficio della classe' },
-			content: `<p>La classe <strong>${item.name}</strong> offre più benefici. Scegli quale desideri applicare:</p>`,
-			buttons: hasBenefits.map(resource => ({
-				action: resource,
-				label: resource.toUpperCase(),
-				callback: async () => {
-					const updates = {};
-					updates[`system.grants.resources.${resource}`] = true;
-					await item.update(updates);
-				},
-			})),
-			default: hasBenefits[0]
-		}).render(true);
-
 	}
 
 	return true;

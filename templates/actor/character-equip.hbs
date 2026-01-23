@@ -102,7 +102,7 @@
             </thead>
             <tbody>
                 {{#each weapons}}
-                    {{#unless this.system.equipped}}
+                    {{#unless (or this.system.equipped (eq this.system.ultimaID ../ULTIMA.ItemsIDs.unarmedStrike))}}
                     <tr>
                         <td style="width: 60px;"><img src="{{this.img}}" alt="{{this.name}}"></td>
                         <td>

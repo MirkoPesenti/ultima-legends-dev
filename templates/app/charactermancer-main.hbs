@@ -26,6 +26,21 @@
 			{{> systems/ultima-legends/templates/app/parts/charactermancer-actor-skills.hbs }}
 		{{/if}}
 
+		{{!-- Step 4: Attributes --}}
+		{{#if (and (eq wizard.currentStep 4) (not (eq wizard.currentStep wizard.total)))}}
+			<p>Puoi incrementare la taglia di dado di una delle tue <strong>Caratteristiche</strong> (massimo <strong>d12</strong>).</p>
+			<fieldset>
+				<legend>Caratteristiche</legend>
+				{{> systems/ultima-legends/templates/app/parts/charactermancer-actor-attributes.hbs }}
+			</fieldset>
+		{{/if}}
+
+		{{!-- Step 6: Summary --}}
+		{{#if (eq wizard.currentStep wizard.total)}}
+			<h3>Riepilogo</h3>
+			{{> systems/ultima-legends/templates/app/parts/charactermancer-actor-summary.hbs }}
+		{{/if}}
+
 	{{else}}
 
 		{{!-- Step 1: Identity --}}

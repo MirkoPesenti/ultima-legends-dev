@@ -55,7 +55,7 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
 
         // Determine if new character
         const isNewCharacter = this.#actor ? this.#actor.system.level.current === 0 : true;
-        if ( isNewCharacter ) totalSteps = 3;
+        if ( !isNewCharacter ) totalSteps = 4;
 
         // Determine if attribute upgrade step is needed
         const upgradeAttributes = this.#actor ? ( this.#actor.system.level.current + 1 ) % 20 === 0 : false;
@@ -97,6 +97,13 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
 
             context.formData.system = context.formData.system ?? {};
             context.formData.system.attributes = context.formData.system.attributes ?? {};
+            context.formData.system.features = context.formData.system.features ?? {};
+
+            // Initialize features if not set
+            context.formData.system.features.pronouns = context.formData.system.features.pronouns ?? this.#actor.system?.features?.pronouns ?? '';
+            context.formData.system.features.identity = context.formData.system.features.identity ?? this.#actor.system?.features?.identity ?? '';
+            context.formData.system.features.theme = context.formData.system.features.theme ?? this.#actor.system?.features?.theme ?? '';
+            context.formData.system.features.origin = context.formData.system.features.origin ?? this.#actor.system?.features?.origin ?? '';
             
             // Initialize attributes if not set
             const actorAttributes = this.#actor.system?.attributes ?? {};
@@ -108,6 +115,15 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
             // Initialize resources if not set
             context.formData.system.resources = context.formData.system.resources ?? {};
             context.formData.system.resources.zenit = context.formData.system.resources.zenit ?? (this.#actor?.system?.resources?.zenit ?? 500);
+
+            if ( (context.actor.system.level.current + 1) % 20 === 0 ) {
+                context.actorAttributesUpgraded = {
+                    dex: Math.min( context.actor.system.attributes.dex.base + 2, 12 ),
+                    ins: Math.min( context.actor.system.attributes.ins.base + 2, 12 ),
+                    mig: Math.min( context.actor.system.attributes.mig.base + 2, 12 ),
+                    wlp: Math.min( context.actor.system.attributes.wlp.base + 2, 12 ),
+                };
+            }
 
             // Add actor items
             const actorClasses = this.#actor.items.filter( i => i.type === 'class' ).reduce( (acc, cls) => {
@@ -192,13 +208,24 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
             return acc;
         }, {} );
 
+        let classStepIsValid = false;
+        if ( context.actor.system.level.current === 0 ) {
+            classStepIsValid = (totalClassLevels === 5 && totalClassSelected >= 2 && totalClassSelected <= 3);
+        } else {
+            if ( context.formData?.levelUp?.class ) {
+                classStepIsValid = true;
+            } else {
+                classStepIsValid = false;
+            }
+        }
+        
         // Add class calculation
         context.classes = {
             levels: classLevels,
             maxLevels: classMaxLevels,
             total: totalClassLevels,
             selected: totalClassSelected,
-            isValid: totalClassLevels === 5 && totalClassSelected >= 2 && totalClassSelected <= 3,
+            isValid: classStepIsValid,
         };
 
         // Calculate skill data
@@ -209,7 +236,7 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
 
         // Iterate through selected classes
         Object.entries( classLevels ).forEach( ([classID, classLevel]) => {
-            if ( classLevel > 0 ) {
+            if ( classLevel > 0 || ( context.actor.system.level.current > 0 ) ) {
                 const classSkills = context.gameSkills[classID] || [];
                 let totalSkillLevelsForClass = 0;
 
@@ -259,6 +286,14 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
             }
         });
 
+        if ( context.actor.system.level.current > 0 ) {
+            if ( context.formData?.levelUp?.skill ) {
+                allSkillsValid = true;
+            } else {
+                allSkillsValid = false;
+            }
+        }
+
         // Add skill calculation
         context.skills = {
             levels: skillLevels,
@@ -281,9 +316,17 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
             [10, 10, 6, 6], // Specializzato
         ];
 
-        const attributesValid = validCombinations.some(combo => 
+        let attributesValid = validCombinations.some(combo => 
             combo.every((val, idx) => val === attributeValues[idx])
         );
+
+        if ( context.actor.system.level.current > 0 ) {
+            if ( context.formData?.levelUp?.attribute ) {
+                attributesValid = true;
+            } else {
+                attributesValid = false;
+            }
+        }
 
         // Add attributes calculation
         context.attributes = {
@@ -425,21 +468,39 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
         const classesIds = this.#data.classes || {};
         const skillsIds = this.#data.skills || {};
         const itemsIds = this.#data.shop?.selected || {};
+        const levelUp = this.#data?.levelUp || {};
 
         // Clean up data
         delete this.#data.classes;
         delete this.#data.skills;
         delete this.#data.shop;
+        delete this.#data.levelUp;
         
         if ( this.#actor ) {
 
-            const progressSteps = 1 + Object.keys( classesIds ).length + Object.keys( skillsIds ).length + Object.keys( itemsIds ).length;
+            let progressSteps = 1 + Object.keys( classesIds ).length + Object.keys( skillsIds ).length + Object.keys( itemsIds ).length;
 
             // Show notification
             const notification = ui.notifications.info("Aggiornamento personaggio in corso...", {
                 pct: 0,
                 progress: true,
             });
+
+            // Upgrade Attributes if needed
+            if ( this.#actor.system.level.current > 0 ) {
+                delete this.#data.system.attributes;
+                delete this.#data.system.resources;
+
+                progressSteps = 4;
+
+                if ( levelUp.attribute ) {
+                    this.#data.system.attributes = {
+                        [levelUp.attribute]: {
+                            base: Math.min( this.#actor.system.attributes[levelUp.attribute].base + 2, 12 ),
+                        }
+                    };
+                }
+            }
 
             // Update Actor data
             await this.#actor.update( this.#data );
@@ -449,77 +510,128 @@ export class UltimaLegendsCharactermancerSheet extends HandlebarsApplicationMixi
                 pct: 1 / progressSteps,
             });
 
-            // Update Classes
-            for ( const [classID, level] of Object.entries( classesIds ) ) {
-                if ( level <= 0 ) continue;
+            if ( this.#actor.system.level.current > 0 ) {
 
-                const actorClass = this.#actor.items.find( i => i.type === 'class' && i.system.ultimaID === classID );
-                if ( actorClass ) {
-                    if ( actorClass?.system?.level?.current === parseInt(level) ) continue;
-                    
-                    // Update existing class
-                    await actorClass.update({ 'system.level.current': parseInt(level) });
+                await notification.update({
+                    message: `Aggiornamento classi... (${levelUp.class})`,
+                    pct: 2 / progressSteps,
+                });
+
+                // Level up selected class
+                const existingClass = this.#actor.items.find( i => i.type === 'class' && i.system.ultimaID === levelUp.class );
+                if ( existingClass ) {
+                    await existingClass.update({ 'system.level.current': existingClass.system.level.current + 1 });
                 } else {
                     // Create class if not found
                     const pack = await game.packs.get(`${SYSTEM}.classes`).getDocuments();
-                    const itemClass = pack.find( i => i.system.ultimaID === classID );
+                    const itemClass = pack.find( i => i.system.ultimaID === levelUp.class );
                     if ( itemClass ) {
-                        await this.#actor.createEmbeddedDocuments( 'Item', [ foundry.utils.mergeObject( itemClass.toObject(), { 'system.level.current': parseInt(level) } ) ] );
+                        await this.#actor.createEmbeddedDocuments( 'Item', [ itemClass.toObject() ] );
                     }
                 }
 
                 await notification.update({
-                    message: `Aggiornamento classi... (${classID})`,
-                    pct: (1 + Object.keys( classesIds ).indexOf(classID) + 1) / progressSteps,
+                    message: `Aggiornamento abilità... (${levelUp.skill})`,
+                    pct: 3 / progressSteps,
                 });
-            }
 
-            // Update Skills
-            for ( const [skillID, level] of Object.entries( skillsIds ) ) {
-                if ( level <= 0 ) continue;
-                
-                const actorSkill = this.#actor.items.find( i => i.type === 'skill' && i.system.ultimaID === skillID );
-                if ( actorSkill ) {
-                    if ( actorSkill?.system?.level?.current === parseInt(level) ) continue;
-                    
-                    // Update existing skill
-                    await actorSkill.update({ 'system.level.current': parseInt(level) });
-                } else {
-                    // Create skill if not found
-                    const pack = await game.packs.get(`${SYSTEM}.skills`).getDocuments();
-                    const itemSkill = pack.find( i => i.system.ultimaID === skillID );
-                    if ( itemSkill ) {
-                        await this.#actor.createEmbeddedDocuments( 'Item', [ foundry.utils.mergeObject( itemSkill.toObject(), { 'system.level.current': parseInt(level) } ) ] );
+                setTimeout(async () => {
+
+                    // Level up selected skill
+                    const existingSkill = this.#actor.items.find( i => i.type === 'skill' && i.system.ultimaID === levelUp.skill );
+                    if ( existingSkill ) {
+                        await existingSkill.update({ 'system.level.current': existingSkill.system.level.current + 1 });
+                    } else {
+                        // Create skill if not found
+                        const pack = await game.packs.get(`${SYSTEM}.skills`).getDocuments();
+                        const itemSkill = pack.find( i => i.system.ultimaID === levelUp.skill );
+                        if ( itemSkill ) {
+                            await this.#actor.createEmbeddedDocuments( 'Item', [ foundry.utils.mergeObject( itemSkill.toObject(), { 'system.level.current': 1 } ) ] );
+                        }
                     }
+
+                }, 1000);
+
+            } else {
+
+                // Update Classes
+                for ( const [classID, level] of Object.entries( classesIds ) ) {
+                    if ( level <= 0 ) continue;
+
+                    const actorClass = this.#actor.items.find( i => i.type === 'class' && i.system.ultimaID === classID );
+                    if ( actorClass ) {
+                        if ( actorClass?.system?.level?.current === parseInt(level) ) continue;
+                        
+                        // Update existing class
+                        await actorClass.update({ 'system.level.current': parseInt(level) });
+                    } else {
+                        // Create class if not found
+                        const pack = await game.packs.get(`${SYSTEM}.classes`).getDocuments();
+                        const itemClass = pack.find( i => i.system.ultimaID === classID );
+                        if ( itemClass ) {
+                            await this.#actor.createEmbeddedDocuments( 'Item', [ foundry.utils.mergeObject( itemClass.toObject(), { 'system.level.current': parseInt(level) } ) ] );
+                        }
+                    }
+
+                    await notification.update({
+                        message: `Aggiornamento classi... (${classID})`,
+                        pct: (1 + Object.keys( classesIds ).indexOf(classID) + 1) / progressSteps,
+                    });
                 }
 
-                await notification.update({
-                    message: `Aggiornamento abilità... (${skillID})`,
-                    pct: (1 + Object.keys( classesIds ).length + Object.keys( skillsIds ).indexOf(skillID) +  + 1) / progressSteps,
-                });
+                setTimeout(async () => {
+
+                    // Update Skills
+                    for ( const [skillID, level] of Object.entries( skillsIds ) ) {
+                        if ( level <= 0 ) continue;
+                        
+                        const actorSkill = this.#actor.items.find( i => i.type === 'skill' && i.system.ultimaID === skillID );
+                        if ( actorSkill ) {
+                            if ( actorSkill?.system?.level?.current === parseInt(level) ) continue;
+                            
+                            // Update existing skill
+                            await actorSkill.update({ 'system.level.current': parseInt(level) });
+                        } else {
+                            // Create skill if not found
+                            const pack = await game.packs.get(`${SYSTEM}.skills`).getDocuments();
+                            const itemSkill = pack.find( i => i.system.ultimaID === skillID );
+                            if ( itemSkill ) {
+                                await this.#actor.createEmbeddedDocuments( 'Item', [ foundry.utils.mergeObject( itemSkill.toObject(), { 'system.level.current': parseInt(level) } ) ] );
+                            }
+                        }
+
+                        await notification.update({
+                            message: `Aggiornamento abilità... (${skillID})`,
+                            pct: (1 + Object.keys( classesIds ).length + Object.keys( skillsIds ).indexOf(skillID) +  + 1) / progressSteps,
+                        });
+                    }
+
+                    // Add Items from shop
+                    for ( const [itemID, cost] of Object.entries( itemsIds ) ) {
+                        if ( cost === null || cost <= 0 ) continue;
+
+                        // Create item
+                        const pack = await game.packs.get(`${SYSTEM}.equipment`).getDocuments();
+                        const itemData = pack.find( i => i.system.ultimaID === itemID );
+                        if ( itemData ) {
+                            await this.#actor.createEmbeddedDocuments( 'Item', [ itemData.toObject() ] );
+                        }
+
+                        await notification.update({
+                            message: `Aggiunta oggetti... (${itemID})`,
+                            pct: (1 + Object.keys( classesIds ).length + Object.keys( skillsIds ).length + Object.keys( itemsIds ).indexOf(itemID) + 1) / progressSteps,
+                        });
+                    }
+
+                }, 1000);
             }
 
-            // Add Items from shop
-            for ( const [itemID, cost] of Object.entries( itemsIds ) ) {
-                if ( cost === null || cost <= 0 ) continue;
-
-                // Create item
-                const pack = await game.packs.get(`${SYSTEM}.equipment`).getDocuments();
-                const itemData = pack.find( i => i.system.ultimaID === itemID );
-                if ( itemData ) {
-                    await this.#actor.createEmbeddedDocuments( 'Item', [ itemData.toObject() ] );
-                }
-
+            setTimeout(async () => {
                 await notification.update({
-                    message: `Aggiunta oggetti... (${itemID})`,
-                    pct: (1 + Object.keys( classesIds ).length + Object.keys( skillsIds ).length + Object.keys( itemsIds ).indexOf(itemID) + 1) / progressSteps,
+                    message: "Aggiornamento completato!",
+                    pct: 1,
                 });
-            }
-
-            await notification.update({
-                message: "Aggiornamento completato!",
-                pct: 1,
-            });
+            }, 1000);
         }
         
         await this.close();

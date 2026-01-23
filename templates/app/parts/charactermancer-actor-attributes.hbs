@@ -1,0 +1,75 @@
+<div class="form-group">
+	<label for="levelUp.attribute-dex">
+		Destrezza (DES) - 
+		{{actor.system.attributes.dex.base}}
+		{{#unless (eq actor.system.attributes.dex.base actorAttributesUpgraded.dex)}}
+			<i class="fa fa-arrow-right"></i>
+			{{actorAttributesUpgraded.dex}}
+		{{/unless}}
+	</label>
+	<input
+		type="radio"
+		name="levelUp.attribute"
+		id="levelUp.attribute-dex"
+		value="dex"
+		{{#if (eq actor.system.attributes.dex.base actorAttributesUpgraded.dex)}}disabled{{/if}}
+		{{#if (eq formData.levelUp.attribute "dex")}}checked{{/if}}
+	/>
+</div>
+
+<div class="form-group">
+	<label for="levelUp.attribute-ins">
+		Intuito (INT) - 
+		{{actor.system.attributes.ins.base}}
+		{{#unless (eq actor.system.attributes.ins.base actorAttributesUpgraded.ins)}}
+			<i class="fa fa-arrow-right"></i>
+			{{actorAttributesUpgraded.ins}}
+		{{/unless}}
+	</label>
+	<input
+		type="radio"
+		name="levelUp.attribute"
+		id="levelUp.attribute-ins"
+		value="ins"
+		{{#if (eq actor.system.attributes.ins.base actorAttributesUpgraded.ins)}}disabled{{/if}}
+		{{#if (eq formData.levelUp.attribute "ins")}}checked{{/if}}
+	/>
+</div>
+
+<div class="form-group">
+	<label for="levelUp.attribute-mig">
+		Vigore (VIG) - 
+		{{actor.system.attributes.mig.base}}
+		{{#unless (eq actor.system.attributes.mig.base actorAttributesUpgraded.mig)}}
+			<i class="fa fa-arrow-right"></i>
+			{{actorAttributesUpgraded.mig}}
+		{{/unless}}
+	</label>
+	<input
+		type="radio"
+		name="levelUp.attribute"
+		id="levelUp.attribute-mig"
+		value="mig"
+		{{#if (eq actor.system.attributes.mig.base actorAttributesUpgraded.mig)}}disabled{{/if}}
+		{{#if (eq formData.levelUp.attribute "mig")}}checked{{/if}}
+	/>
+</div>
+
+<div class="form-group">
+	<label for="levelUp.attribute-wlp">
+		Volontà (VOL) - 
+		{{actor.system.attributes.wlp.base}}
+		{{#unless (eq actor.system.attributes.wlp.base actorAttributesUpgraded.wlp)}}
+			<i class="fa fa-arrow-right"></i>
+			{{actorAttributesUpgraded.wlp}}
+		{{/unless}}
+	</label>
+	<input
+		type="radio"
+		name="levelUp.attribute"
+		id="levelUp.attribute-wlp"
+		value="wlp"
+		{{#if (eq actor.system.attributes.wlp.base actorAttributesUpgraded.wlp)}}disabled{{/if}}
+		{{#if (eq formData.levelUp.attribute "wlp")}}checked{{/if}}
+	/>
+</div>

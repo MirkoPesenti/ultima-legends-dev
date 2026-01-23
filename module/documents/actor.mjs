@@ -1,3 +1,5 @@
+import { SYSTEM, ULTIMA } from "../helpers/config.mjs";
+
 export class UltimaLegendsActor extends Actor {
 
 	// Default options for the Actor sheet
@@ -15,6 +17,31 @@ export class UltimaLegendsActor extends Actor {
 		const actorData = this;
 		const systemData = actorData.system;
 		const flags = actorData.flags.ultimaLegends || {};
+	}
+
+	async _onCreate( data, options, userId ) {
+		await super._onCreate( data, options, userId );
+
+		// Give unarmed strike to characters
+		if ( this.type === 'character' ) {
+			const pack = await game.packs.get(`${SYSTEM}.equipment`)?.getDocuments() ?? [];
+			if ( pack.length > 0 ) {
+				const unarmedStrike = pack.find( i => foundry.utils.getProperty( i, "system.ultimaID" ) === ULTIMA.ItemsIDs.unarmedStrike );
+				
+				// Check if the actor already has the unarmed strike
+				if ( unarmedStrike ) {
+					const existingItem = this.items.find( i => foundry.utils.getProperty( i, "system.ultimaID" ) === ULTIMA.ItemsIDs.unarmedStrike );
+					if ( !existingItem ) {
+						const createdItems = await this.createEmbeddedDocuments( "Item", [ foundry.utils.mergeObject( unarmedStrike.toObject(), { "system.equipped": true } ) ] );
+						
+						// Equip the unarmed strike in mainHand
+						if ( createdItems && createdItems.length > 0 ) {
+							await this.update({ "system.equip.mainHand": createdItems[0].uuid });
+						}
+					}
+				}
+			}
+		}
 	}
 
 	// Get all applicable effects, filtering out those that should not be transferred
@@ -126,7 +153,7 @@ export class UltimaLegendsActor extends Actor {
 			} else {
 
 				await this.update({ [`system.equip.${slot}`]: itemUuid });
-				if ( equippedItem.system?.twoHanded === true ) {
+				if ( equippedItem.system?.twoHanded === true || isTwoHanded ) {
 					let slot2Id = isTwoHanded ? itemUuid : null;
 					await this.update({ [`system.equip.${slot2}`]: slot2Id });
 				}
@@ -143,6 +170,15 @@ export class UltimaLegendsActor extends Actor {
 			}
 			await item.update({ 'system.equipped': true });
 
+		}
+
+		// Auto-equip unarmed strike if no weapon is equipped
+		if ( this.system.equip.mainHand == null ) {
+			const unarmedStrike = this.items.find( i => foundry.utils.getProperty( i, "system.ultimaID" ) === ULTIMA.ItemsIDs.unarmedStrike );
+			if ( unarmedStrike ) {
+				await this.update({ "system.equip.mainHand": unarmedStrike.uuid });
+				await unarmedStrike.update({ 'system.equipped': true });
+			}
 		}
 
 	}

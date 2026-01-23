@@ -4,6 +4,10 @@ export const SYSTEM = 'ultima-legends';
 export const SYSTEM_NAME = 'Ultima Legends';
 export const ULTIMA = {};
 
+ULTIMA.ItemsIDs = {
+	unarmedStrike: 'colpo-senz-armi',
+};
+
 ULTIMA.sourceBooks = {
 	base: 'ULTIMA.sourcebook.base',
 	atlasHighFantasy: 'ULTIMA.sourcebook.atlasHighFantasy',
