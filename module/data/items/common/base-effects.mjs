@@ -41,13 +41,8 @@ export default class UltimaLegendsEffectDataModel extends foundry.abstract.DataM
             this.usage.current = this.usage.max;
     }
 
-    async #renderMessage() {
-        return foundry.applications.handlebars.renderTemplate(`systems/${SYSTEM}/templates/chat/chat-effect.hbs`, {
-        });
-    }
-
     // Method to apply the effect to an actor
-    applyEffect( actor = null ) {
+    async renderEffectMessage( actor = null ) {
 
         if ( !actor ) {
             ui.notifications.error('Nessun attore specificato per l\'applicazione dell\'effetto.');
@@ -55,10 +50,14 @@ export default class UltimaLegendsEffectDataModel extends foundry.abstract.DataM
         }
 
         console.log(this);
-        const data = {};
+        const data = {
+            type: this.type,
+            target: this.target,
+            item: this.parent?.parent,
+        };
 
         // Determine cost based on whether the effect is from a consumable item or not
-        if ( this.parent instanceof UltimaLegendsConsumable ) {
+        if ( this.parent instanceof Item ) {
             data.cost = {
                 formula: this.parent.cost,
                 type: 'ip',
@@ -69,22 +68,17 @@ export default class UltimaLegendsEffectDataModel extends foundry.abstract.DataM
             data.usage = this.usage;
         }
 
-        if ( this.type === 'test' ) {
-        }
-        else if ( this.type === 'heal' ) {
-        }
-        else if ( this.type === 'damage' ) {
-        }
-        else if ( this.type === 'ritual' ) {
-        }
+        data[ this.type ] = this[ this.type ];
 
-        const contentPromise = this.#renderMessage();
-        Promise.all([contentPromise]).then(([content]) => {
-            ChatMessage.create({
-                speaker: ChatMessage.getSpeaker({ actor: actor }),
-                flavor: this.name,
-                content: content,
-            });
+        // Render the chat message using a Handlebars template
+        const content = await foundry.applications.handlebars.renderTemplate(`systems/${SYSTEM}/templates/chat/chat-effect.hbs`, { data });
+        ChatMessage.create({
+            speaker: ChatMessage.getSpeaker({ actor: actor }),
+            flavor: this.name,
+            content: content,
+            flags: {
+                [SYSTEM]: data,
+            }
         });
 
     }

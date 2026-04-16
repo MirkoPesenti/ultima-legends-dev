@@ -142,7 +142,7 @@ export class UltimaLegendsEffectActionSheet extends HandlebarsApplicationMixin( 
             return;
         }
 
-        selectedEffect.applyEffect( this.#actor );
+        await selectedEffect.renderEffectMessage( this.#actor );
         await this.close();
 
     }

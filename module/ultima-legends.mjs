@@ -9,6 +9,9 @@ import { UltimaLegendsEquippableSheet } from './sheets/item-equippable-sheet.mjs
 import { UltimaLegendsClassSheet } from './sheets/item-class-sheet.mjs';
 import { UltimaLegendsSpellSheet } from './sheets/item-spell-sheet.mjs';
 
+// Documents
+import UltimaLegendsChatMessage from './documents/chatMessage.mjs';
+
 // Import DataModels
 import * as models from './data/module.mjs';
 
@@ -59,6 +62,9 @@ Hooks.once('init', async () => {
 		spell: models.UltimaLegendsSpell,
 		weapon: models.UltimaLegendsWeapon,
 	};
+
+	// Define custom chat message class
+	CONFIG.ChatMessage.documentClass = UltimaLegendsChatMessage;
 
 	// Active Effects are never copied to the Actor,
 	// but will still apply to the Actor from within the Item

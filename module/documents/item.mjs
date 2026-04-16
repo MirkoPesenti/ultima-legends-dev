@@ -150,7 +150,7 @@ export class UltimaLegendsItem extends Item {
 			} else if ( this.system.effects.length === 1 ) {
 
 				const effect = this.system.effects[0];
-				effect.applyEffect( actor );
+				await effect.renderEffectMessage( actor );
 
 			} else {
 				ui.notifications.warn("Questo oggetto non ha effetti da applicare.");
