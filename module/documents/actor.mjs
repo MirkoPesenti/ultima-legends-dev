@@ -62,12 +62,12 @@ export class UltimaLegendsActor extends Actor {
 	}
 
 	// Apply Active Effects
-	applyActiveEffects() {
+	applyActiveEffects( phase ) {
 		if ( this.system.prepareEmbeddedData instanceof Function ) {
 			this.system.prepareEmbeddedData();
 		}
 
-		return super.applyActiveEffects();
+		return super.applyActiveEffects( phase );
 	}
 
 	// Get Roll Data

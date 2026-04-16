@@ -1,0 +1,32 @@
+{{#if (hasProp system "effects")}}
+    <fieldset style="gap:5px;">
+        <legend class="form-group">
+            Effetti
+            <div class="form-fields">
+                <a class="button" data-action="addEffect">
+                    <i class="fa fa-plus"></i>
+                </a>
+            </div>
+        </legend>
+        {{#each system.effects as |effect index|}}
+            <div class="form-group">
+                <span class="form-fields label" style="justify-content:flex-start;flex:3;">
+                    <img src="systems/ultima-legends/assets/icons/effects/effect-type-{{effect.type}}.svg" style="width:50px;flex:0 0 50px;border-radius:10px;margin-right:15px;padding:5px;border:1px solid #fff;" />
+                    {{#if effect.name}}
+                        {{effect.name}}
+                    {{else}}
+                        {{localize (concat "ULTIMA.effects." effect.type)}}
+                    {{/if}}
+                </span>
+                <div class="form-fields">
+                    <a class="button" data-action="editEffect" data-index="{{index}}">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                    <a class="button" data-action="deleteEffect" data-index="{{index}}">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </div>
+            </div>
+        {{/each}}
+    </fieldset>
+{{/if}}

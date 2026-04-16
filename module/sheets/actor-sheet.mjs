@@ -35,6 +35,7 @@ export class UltimaLegendsActorSheet extends HandlebarsApplicationMixin( ActorSh
 			levelUpSkill: this.#handleLevelUpSkill,
 			createItem: this.#handleCreateItem,
 			charactermancer: this.#handleCharactermancer,
+			useItem: this.#handleUseItem,
 		},
 	};
 
@@ -150,7 +151,7 @@ export class UltimaLegendsActorSheet extends HandlebarsApplicationMixin( ActorSh
 				case 'armor': armors.push( i ); break;
 				case 'basic': basics.push( i ); break;
 				case 'class': classes.push( i ); break;
-				// case 'consumable': consumables.push( i ); break;
+				case 'consumable': consumables.push( i ); break;
 				// case 'heroic': heroics.push( i ); break;
 				// case 'project': projects.push( i ); break;
 				// case 'ritual': rituals.push( i ); break;
@@ -167,7 +168,7 @@ export class UltimaLegendsActorSheet extends HandlebarsApplicationMixin( ActorSh
 			armors,
 			basics,
 			classes,
-			// consumables,
+			consumables,
 			// heroics,
 			// projects,
 			// rituals,
@@ -339,6 +340,18 @@ export class UltimaLegendsActorSheet extends HandlebarsApplicationMixin( ActorSh
 			actor: this.document
 		});
 		await charactermancerApp.render( true );
+
+	}
+
+	static async #handleUseItem( event, target ) {
+
+		event.preventDefault();
+		const uuid = target.dataset.uuid;
+		const item = await fromUuid( uuid );
+		const actor = this.document;
+		if ( !item || !actor ) return;
+
+		await item.useItem( actor );
 
 	}
 

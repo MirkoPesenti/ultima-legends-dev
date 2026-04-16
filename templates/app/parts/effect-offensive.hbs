@@ -1,0 +1,9 @@
+<fieldset>
+	<legend>Danno</legend>
+	<div class="form-group">
+		<input type="text" name="damage.formula" id="damage-formula" value="{{effect.damage.formula}}" placeholder="Formula" />
+		<select name="damage.type" id="damage.type">
+			{{selectOptions ULTIMA.damageTypes selected=effect.damage.type localize=true}}
+		</select>
+	</div>
+</fieldset>

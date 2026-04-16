@@ -12,6 +12,9 @@ export default class UltimaLegendsItemEquippable extends UltimaLegendsItemBase {
         schema.martial = new fields.BooleanField({ initial: false });
         schema.equipped = new fields.BooleanField({ initial: false });
         schema.cost = new fields.NumberField({ initial: 0, min: 0, integer: true });
+
+        // Remove effects field from base item schema
+        delete schema.effects;
         
         return schema;
     }

@@ -1,0 +1,11 @@
+<section class="tab {{tabs.main.id}} {{tabs.main.cssClass}} scrollable" id="main" data-tab="{{tabs.main.id}}" data-group="{{tabs.main.group}}">
+    
+    {{#if (eq effect.type "heal")}}
+        {{> systems/ultima-legends/templates/app/parts/effect-heal.hbs}}
+    {{/if}}
+
+    {{#if (eq effect.type "offensive")}}
+        {{> systems/ultima-legends/templates/app/parts/effect-offensive.hbs}}
+    {{/if}}
+    
+</section>

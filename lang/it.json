@@ -88,6 +88,12 @@
         "short": "VOL"
       }
     },
+    "effects": {
+      "test": "Test",
+      "offensive": "Offensivo",
+      "heal": "Cura",
+      "ritual": "Rituale"
+    },
     "fabulaID": {
       "regenerate": "Rigenera Fabula ID",
       "regenerateWarning": "Cambiare il Fabula ID di un Item potrebbe corrompere i riferimenti a quell'Item! Questa azione non può essere annullata.",
@@ -105,17 +111,17 @@
     "D8": "d8",
     "D10": "d10",
     "D12": "d12",
-    "HP": "Punti Vita",
+    "hp": "Punti Vita",
     "HPabbr": "PV",
-    "MP": "Punti Mente",
+    "mp": "Punti Mente",
     "MPabbr": "PM",
-    "IP": "Punti Inventario",
+    "ip": "Punti Inventario",
+    "IPabbr": "PI",
     "fp": "Punti Fabula",
     "up": "Punti Ultima",
     "exp": "Punti Esperienza",
     "defeated": "Sconfitto",
     "crisis": "Crisi",
-    "IPabbr": "PI",
     "Zenit": "Zenit",
     "ZenitPL": "Zenit",
     "ZenitAbbr": "z",
@@ -157,7 +163,10 @@
       "light": "Luce",
       "poison": "Veleno"
     },
-    "Status": {
+    "effectCostTypes": {
+      "usage": "Utilizzi"
+    },
+    "status": {
       "slow": "Lento",
       "dazed": "Confuso",
       "weak": "Debole",

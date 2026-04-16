@@ -27,6 +27,9 @@ export default class UltimaLegendsClass extends UltimaLegendsItemBase {
                 { initial: [] }
             ),
         });
+
+        // Remove effects field from base item schema
+        delete schema.effects;
         
         return schema;
     }

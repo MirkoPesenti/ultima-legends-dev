@@ -19,6 +19,15 @@ ULTIMA.sourceBooks = {
 	bonusArcaneWhispers: 'ULTIMA.sourcebook.bonusArcaneWhispers',
 }
 
+ULTIMA.statuses = {
+	slow: 'ULTIMA.status.slow',
+	dazed: 'ULTIMA.status.dazed',
+	weak: 'ULTIMA.status.weak',
+	shaken: 'ULTIMA.status.shaken',
+	enraged: 'ULTIMA.status.enraged',
+	poisoned: 'ULTIMA.status.poisoned',
+};
+
 ULTIMA.attributes = {
     dex: 'ULTIMA.attributes.dex.long',
     ins: 'ULTIMA.attributes.ins.long',
@@ -73,6 +82,21 @@ ULTIMA.npcRanks = {
 	soldier: 'ULTIMA.npcRanks.soldier',
 	elite: 'ULTIMA.npcRanks.elite',
 	champion: 'ULTIMA.npcRanks.champion',
+};
+
+ULTIMA.effectTypes = {
+	test: 'ULTIMA.effects.test',
+	heal: 'ULTIMA.effects.heal',
+	offensive: 'ULTIMA.effects.offensive',
+	ritual: 'ULTIMA.effects.ritual',
+};
+
+ULTIMA.effectCostTypes = {
+	usage: 'ULTIMA.effectCostTypes.usage',
+	hp: 'ULTIMA.hp',
+	mp: 'ULTIMA.mp',
+	ip: 'ULTIMA.ip',
+	fp: 'ULTIMA.fp',
 };
 
 ULTIMA.itemRarities = {

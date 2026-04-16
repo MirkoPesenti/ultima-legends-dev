@@ -8,6 +8,7 @@ export default class UltimaLegendsDamageDataModel extends foundry.abstract.DataM
         
         const schema = {
             value: new fields.NumberField({ initial: 0, integer: true, nullable: false }),
+            formula: new fields.StringField({ initial: null, nullable: true }),
             type: new fields.StringField({ initial: 'physical', nullable: false, choices: Object.keys(ULTIMA.damageTypes) }),
         }
         

@@ -17,6 +17,7 @@ import { ULTIMA, SYSTEM, SYSTEM_NAME } from './helpers/config.mjs';
 import { slugify } from './utils/utilities.mjs';
 import { setupConfiguration } from './helpers/configuration.mjs';
 import { preloadPartialTemplates } from './helpers/templates.mjs';
+import { statusEffects } from './helpers/statuses.mjs';
 
 //#region Init
 Hooks.once('init', async () => {
@@ -63,6 +64,8 @@ Hooks.once('init', async () => {
 	// but will still apply to the Actor from within the Item
 	// if the transfer property on the Active Effect is true.
 	CONFIG.ActiveEffect.legacyTransferral = false;
+	CONFIG.statusEffects = statusEffects;
+	CONFIG.specialStatusEffects.DEFEATED = 'defeated';
 
 	// Register Actor sheet application classes
 	foundry.documents.collections.Actors.unregisterSheet('core', foundry.appv1.sheets.ActorSheet);
@@ -130,6 +133,11 @@ Handlebars.registerHelper('getItemByUltimaID', function( itemUltimaID, options =
 
 Handlebars.registerHelper('percentage', function( a, b ) {
 	return ( ( a / b ) * 100 );
+});
+
+Handlebars.registerHelper('hasProp', function( obj, key ) {
+	if ( obj == null ) return false;
+	return Object.prototype.hasOwnProperty.call( obj, key );
 });
 
 //#endregion

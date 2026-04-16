@@ -1,0 +1,30 @@
+<fieldset>
+	<legend>Cura</legend>
+	<div class="form-group">
+		<label for="heal.resting">Riposo</label>
+		<input type="checkbox" name="heal.resting" id="heal.resting" {{#if effect.heal.resting}}checked{{/if}} />
+	</div>
+	
+	<div class="form-group">
+		<label for="heal.hp">PV</label>
+		<input type="text" name="heal.hp" id="heal.hp" value="{{effect.heal.hp}}" placeholder="Formula" {{#if effect.heal.resting}}disabled{{/if}} />
+	</div>
+
+	<div class="form-group">
+		<label for="heal.mp">PM</label>
+		<input type="text" name="heal.mp" id="heal.mp" value="{{effect.heal.mp}}" placeholder="Formula" {{#if effect.heal.resting}}disabled{{/if}} />
+	</div>
+
+	<div class="form-group">
+		<label for="heal.ip">PI</label>
+		<input type="text" name="heal.ip" id="heal.ip" value="{{effect.heal.ip}}" placeholder="Formula" {{#if effect.heal.resting}}disabled{{/if}} />
+	</div>
+
+	<div class="form-group">
+		<label for="heal.status">Status</label>
+		<select name="heal.status" id="heal.status" {{#if effect.heal.resting}}disabled{{/if}}>
+			<option value="" {{#unless effect.heal.status}}selected{{/unless}}>Nessuno</option>
+			{{selectOptions ULTIMA.statuses selected=effect.heal.status localize=true}}
+		</select>
+	</div>
+</fieldset>

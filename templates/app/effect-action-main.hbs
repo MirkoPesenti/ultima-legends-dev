@@ -1,0 +1,13 @@
+<section class="tab active scrollable">
+	
+	{{#each effects as |effect index|}}
+		<label class="form-fields" for="selectedEffect_{{index}}" style="justify-content:space-between;">
+			<span class="label form-fields" style="justify-content:flex-start;">
+				<img src="systems/ultima-legends/assets/icons/effects/effect-type-{{effect.type}}.svg" alt="{{effect.name}}" style="flex:0 0 40px;width:40px;" />
+				{{effect.name}}
+			</span>
+			<input type="radio" name="selectedEffect" id="selectedEffect_{{index}}" value="{{index}}" {{#if (eq index ../formData.selectedEffect)}}checked{{/if}} />
+		</label>
+	{{/each}}
+
+</section>

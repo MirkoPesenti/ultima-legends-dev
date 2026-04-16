@@ -64,10 +64,15 @@
             </div>
         </legend>
         <div class="form-fields" style="justify-content:flex-start;">
-            {{#each basics}}
-                <a style="flex:0 0 40px; padding:0.2rem; height:auto" class="button" data-uuid="{{this.uuid}}" data-tooltip="{{this.name}}" data-link>
-                    <img src="{{this.img}}" alt="{{this.name}}">
-                </a>
+            {{#each consumables}}
+                <div style="flex:0 0 40px;">
+                    <a style="padding:0.2rem; height:auto; border-bottom-left-radius:0; border-bottom-right-radius:0; border-bottom:0;" class="button" data-action="useItem" data-uuid="{{this.uuid}}" data-tooltip="Usa {{this.name}}">
+                        <img src="{{this.img}}" alt="{{this.name}}">
+                    </a>
+                    <a style="border-top-left-radius:0; border-top-right-radius:0;" class="button" data-uuid="{{this.uuid}}" data-tooltip="Apri {{this.name}}" data-link>
+                        <i class="fa fa-fw fa-eye"></i>
+                    </a>
+                </div>
             {{/each}}
         </div>
     </fieldset>

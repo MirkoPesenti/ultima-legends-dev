@@ -10,6 +10,8 @@ export default class UltimaLegendsSpell extends UltimaLegendsItemBase {
 		const schema = super.defineSchema();
 
         schema.discipline = new fields.StringField({ initial: 'arcanism', nullable: false, choices: Object.keys(ULTIMA.spellDisciplines) });
+
+        // TODO: Specie per magimimesi
         
         schema.offensive = new fields.BooleanField({ initial: false });
         schema.opportunity = new fields.StringField({ initial: null, nullable: true, blank: true });
@@ -21,6 +23,9 @@ export default class UltimaLegendsSpell extends UltimaLegendsItemBase {
             multi: new fields.BooleanField({ initial: false }),
         });
         schema.duration = new fields.StringField({ initial: 'instantaneous', nullable: false, choices: Object.keys(ULTIMA.spellDurations) });
+
+        // Remove effects field from base item schema
+        delete schema.effects;
         
         return schema;
     }

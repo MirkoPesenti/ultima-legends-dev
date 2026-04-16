@@ -1,0 +1,32 @@
+<section class="tab {{tabs.options.id}} {{tabs.options.cssClass}} scrollable" id="options" data-tab="{{tabs.options.id}}" data-group="{{tabs.options.group}}">
+    {{#unless (eq item.type "consumable")}}
+        <fieldset>
+            <legend>Costo</legend>
+            <div class="form-group">
+                <input type="text" name="cost.formula" id="cost.formula" value="{{effect.cost.formula}}" placeholder="Formula" />
+                <select name="cost.type" id="cost.type">
+                    <option value="" {{#unless effect.cost.type}}selected{{/unless}}>Tipologia</option>
+                    {{selectOptions ULTIMA.effectCostTypes selected=effect.cost.type localize=true}}
+                </select>
+            </div>
+        </fieldset>
+    {{/unless}}
+
+    <fieldset>
+        <legend>Bersaglio</legend>
+        <div class="form-group">
+            <label for="target.count">Numero di bersagli</label>
+            <input type="number" id="target.count" name="target.count" min="0" value="{{effect.target.count}}" />
+        </div>
+    </fieldset>
+
+    {{#unless (eq item.type "consumable")}}
+        <fieldset>
+            <legend>Utilizzi</legend>
+            <div class="form-group">
+                <input type="number" name="usage.current" id="usage.current" min="0" value="{{effect.usage.current}}" />
+                <input type="number" name="usage.max" id="usage.max" min="0" value="{{effect.usage.max}}" placeholder="Massimo" />
+            </div>
+        </fieldset>
+    {{/unless}}
+</section>

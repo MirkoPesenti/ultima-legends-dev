@@ -1,3 +1,4 @@
+import { UltimaLegendsEffectActionSheet } from "../sheets/apps/effect-action-sheet.mjs";
 const { DialogV2 } = foundry.applications.api;
 
 export class UltimaLegendsItem extends Item {
@@ -130,6 +131,34 @@ export class UltimaLegendsItem extends Item {
 
 	}
 
+	async useItem( actor ) {
+
+		if ( !actor ) {
+			ui.notifications.error("Nessun attore specificato per l'uso dell'oggetto.");
+			return;
+		}
+
+		if ( Object.prototype.hasOwnProperty.call(this.system, 'effects') ) {
+			if ( this.system.effects.length > 1 ) {
+				
+				const useSheet = new UltimaLegendsEffectActionSheet({
+					item: this,
+					actor: actor,
+				});
+				await useSheet.render( true );
+
+			} else if ( this.system.effects.length === 1 ) {
+
+				const effect = this.system.effects[0];
+				effect.applyEffect( actor );
+
+			} else {
+				ui.notifications.warn("Questo oggetto non ha effetti da applicare.");
+			}
+		}
+
+	}
+
 }
 
 //#region Hooks
@@ -149,8 +178,8 @@ Hooks.on('preCreateItem', ( item, options, userId ) => {
 	const checkClass = onPreCreateClass( item );
 	if ( !checkClass ) return false;
 
-	const checkConsumable = onPreCreateConsumable( item );
-	if ( !checkConsumable ) return false;
+	// const checkConsumable = onPreCreateConsumable( item );
+	// if ( !checkConsumable ) return false;
 
 });
 

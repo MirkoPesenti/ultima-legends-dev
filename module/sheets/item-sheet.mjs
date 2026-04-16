@@ -1,5 +1,6 @@
 import { SYSTEM, SYSTEM_NAME, ULTIMA } from "../helpers/config.mjs";
 import { enrichHTML } from "../utils/utilities.mjs";
+import { UltimaLegendsEffectSheet } from "./apps/effect-sheet.mjs";
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -29,6 +30,9 @@ export class UltimaLegendsItemSheet extends HandlebarsApplicationMixin( ItemShee
             regenerateUltimaID: this.#handleRegenerateUltimaID,
             removeGrantedSkill: this.#handleRemoveGrantedSkill,
             openItemByUltimaID: this.#handleOpenItemByUltimaID,
+            addEffect: this.#handleAddEffect,
+            editEffect: this.#handleEditEffect,
+            deleteEffect: this.#handleDeleteEffect,
         },
     };
 
@@ -298,6 +302,90 @@ export class UltimaLegendsItemSheet extends HandlebarsApplicationMixin( ItemShee
         } else {
             ui.notifications.warn( `Nessun oggetto trovato con Ultima ID: ${ultimaID}` );
         }
+
+    }
+
+    // handle adding a new effect
+    static async #handleAddEffect( event, target ) {
+
+        event.preventDefault();
+
+        // Open a dialog to select the effect type and name
+        const selected = await DialogV2.wait({
+            position: { width: 320 },
+            window: {
+                title: 'Crea Effetto',
+            },
+            content: `
+                <form>
+                    <div class="form-group">
+                        <label for="name">Nome</label>
+                        <input type="text" id="name" name="name" placeholder="Effetto">
+                    </div>
+                    <div class="form-group">
+                        <label for="type">Tipo</label>
+                        <select id="type" name="type">
+                            ${Object.entries(ULTIMA.effectTypes).map(([key, label]) => `<option value="${key}">${game.i18n.localize(label)}</option>`).join('')}
+                        </select>
+                    </div>
+                </form>
+            `,
+            buttons: [
+                {
+                    action: 'confirm',
+                    label: 'Crea effetto',
+                    icon: 'fa-solid fa-check',
+                    default: true,
+				    callback: (event, button, dialog) => {
+                        const selectedType = button.form.elements.type.value;
+                        const selectedName = button.form.elements.name.value.trim();
+                        return { type: selectedType, name: selectedName };
+                    }
+                },
+            ],
+			rejectClose: false
+        });
+
+        if ( !selected ) return;
+        
+        // Add the new effect to the item
+        const effects = this.document.system?.effects ?? [];
+        selected.name = selected.name || game.i18n.localize('ULTIMA.effects.' + selected.type);
+        effects.push( selected );
+
+        await this.document.update({ 'system.effects': effects });
+
+        // Open the effect sheet for the newly added effect
+        const effectApp = new UltimaLegendsEffectSheet({
+            item: this.document,
+            effectIndex: effects.length - 1
+        });
+        await effectApp.render( true );
+
+    }
+
+    static async #handleEditEffect( event, target ) {
+
+        event.preventDefault();
+        const effectApp = new UltimaLegendsEffectSheet({
+            item: this.document,
+            effectIndex: parseInt( target.dataset.index )
+        });
+        await effectApp.render( true );
+
+    }
+
+    // handle deleting an effect
+    static async #handleDeleteEffect( event, target ) {
+        
+        event.preventDefault();
+        const index = parseInt( target.dataset.index );
+		const effects = this.document.system.effects ?? [];
+		
+		if ( index >= 0 && index < effects.length ) {
+			effects.splice( index, 1 );
+			await this.document.update({ 'system.effects': effects });
+		}
 
     }
 

@@ -16,11 +16,32 @@
     }
   ],
   "compatibility": {
-    "minimum": "13",
-    "verified": "13"
+    "minimum": "14",
+    "verified": "14"
   },
   "esmodules": ["module/ultima-legends.mjs"],
   "styles": ["assets/css/ultima-legends.css"],
+  "documentTypes": {
+    "Actor": {
+      "character": {},
+      "npc": {}
+    },
+    "Item": {
+      "accessory": {},
+			"armor": {},
+			"basic": {},
+			"class": {},
+			"consumable": {},
+			"heroic": {},
+			"project": {},
+			"ritual": {},
+			"rule": {},
+			"shield": {},
+			"skill": {},
+			"spell": {},
+			"weapon": {}
+    }
+  },
   "packs": [
     {
       "label": "Classi",

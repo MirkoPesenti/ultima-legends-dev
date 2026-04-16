@@ -30,10 +30,15 @@ export const preloadPartialTemplates = async function () {
 
 		// Item Parts
 		`systems/${SYSTEM}/templates/item/parts/class-skill.hbs`,
+		`systems/${SYSTEM}/templates/item/parts/effects-list.hbs`,
 
 		// Apps
 		`systems/${SYSTEM}/templates/app/charactermancer-header.hbs`,
 		`systems/${SYSTEM}/templates/app/charactermancer-main.hbs`,
+		`systems/${SYSTEM}/templates/app/effect-header.hbs`,
+		`systems/${SYSTEM}/templates/app/effect-main.hbs`,
+		`systems/${SYSTEM}/templates/app/effect-options.hbs`,
+		`systems/${SYSTEM}/templates/app/effect-action-main.hbs`,
 
 		// Apps Parts
 		`systems/${SYSTEM}/templates/app/parts/charactermancer-identity.hbs`,
@@ -46,6 +51,11 @@ export const preloadPartialTemplates = async function () {
 		`systems/${SYSTEM}/templates/app/parts/charactermancer-shop.hbs`,
 		`systems/${SYSTEM}/templates/app/parts/charactermancer-summary.hbs`,
 		`systems/${SYSTEM}/templates/app/parts/charactermancer-actor-summary.hbs`,
+		`systems/${SYSTEM}/templates/app/parts/effect-heal.hbs`,
+		`systems/${SYSTEM}/templates/app/parts/effect-offensive.hbs`,
+
+		// Chat
+		`systems/${SYSTEM}/templates/chat/chat-effect.hbs`,
 
 	]);
 }
