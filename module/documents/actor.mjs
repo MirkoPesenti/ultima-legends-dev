@@ -44,6 +44,20 @@ export class UltimaLegendsActor extends Actor {
 		}
 	}
 
+	async _onUpdate ( changed, options, userId ) {
+		const { hp } = this.system.resources;
+
+		if ( hp && userId === game.userId ) {
+			// Check if Crisis should be applied
+			await this.applyCrisis();
+
+			// Check if Defeated should be applied
+			await this.applyDefeated();
+		}
+
+		super._onUpdate( changed, options, userId );
+	}
+
 	// Get all applicable effects, filtering out those that should not be transferred
 	*allApplicableEffects() {
 		for ( const effect of super.allApplicableEffects() ) {
@@ -181,6 +195,48 @@ export class UltimaLegendsActor extends Actor {
 			}
 		}
 
+	}
+
+	// Full rest: heal HP and MP to max and remove all status effects
+	async fullRest() {
+		const { hp, mp } = this.system.resources;
+
+		// Heal HP and MP to max
+		await this.update({
+			'system.resources.hp.current': hp.max,
+			'system.resources.mp.current': mp.max,
+		});
+
+		// Remove all status effects
+		if ( this.statuses.has( 'slow' ) === true ) this.toggleStatusEffect( 'slow' );
+		if ( this.statuses.has( 'dazed' ) === true ) this.toggleStatusEffect( 'dazed' );
+		if ( this.statuses.has( 'weak' ) === true ) this.toggleStatusEffect( 'weak' );
+		if ( this.statuses.has( 'shaken' ) === true ) this.toggleStatusEffect( 'shaken' );
+		if ( this.statuses.has( 'enraged' ) === true ) this.toggleStatusEffect( 'enraged' );
+		if ( this.statuses.has( 'poisoned' ) === true ) this.toggleStatusEffect( 'poisoned' );
+	}
+
+	// Apply Crisis status if HP is in crisis
+	async applyCrisis() {
+		const { hp } = this.system.resources;
+		if ( !hp ) return;
+
+		if ( hp.isCrisis !== this.statuses.has('crisis') ) {
+			await this.toggleStatusEffect('crisis');
+		}
+	}
+
+	// Apply Defeated status if HP is 0
+	async applyDefeated() {
+		const { hp } = this.system.resources;
+		if ( !hp ) return;
+
+		const isDefeated = hp.current === 0;
+		const hasDefeated = this.statuses.has('defeated');
+
+		if ( isDefeated !== hasDefeated ) {
+			await this.toggleStatusEffect('defeated');
+		}
 	}
 
 }

@@ -54,10 +54,11 @@ export default class UltimaLegendsEffectDataModel extends foundry.abstract.DataM
             type: this.type,
             target: this.target,
             item: this.parent?.parent,
+            [ this.type ]: this[ this.type ],
         };
 
         // Determine cost based on whether the effect is from a consumable item or not
-        if ( this.parent instanceof Item ) {
+        if ( this.parent && this.parent.parent && this.parent.parent.type === 'consumable' ) {
             data.cost = {
                 formula: this.parent.cost,
                 type: 'ip',
@@ -66,9 +67,25 @@ export default class UltimaLegendsEffectDataModel extends foundry.abstract.DataM
         } else {
             data.cost = this.cost;
             data.usage = this.usage;
+
+            // Update usage if it's a limited use effect
+            if ( data.cost.type === 'usage' ) {
+                const newUsage = Math.max( this.usage.current - 1, 0 );
+                await this.update({ 'usage.current': newUsage });
+            }
         }
 
-        data[ this.type ] = this[ this.type ];
+        if ( data.cost.type !== 'usage' ) {
+            const costResource = resources[ data.cost.type ];
+            if ( costResource && costResource.current >= Number(data.cost.formula) ) {
+                const newValue = Math.max( costResource.current - Number(data.cost.formula), 0 );
+                const updateKey = `system.resources.${data.cost.type}.current`;
+                await actor.update({ [updateKey]: newValue });
+            } else {
+                ui.notifications.error('Non hai abbastanza risorse per applicare questo effetto.');
+                return;
+            }
+        }
 
         // Render the chat message using a Handlebars template
         const content = await foundry.applications.handlebars.renderTemplate(`systems/${SYSTEM}/templates/chat/chat-effect.hbs`, { data });

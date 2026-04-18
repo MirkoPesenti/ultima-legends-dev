@@ -107,6 +107,15 @@ export default class UltimaLegendsActorBase extends UltimaLegendsDataModel {
 			}
 		});
 
+		// Define dynamic isCrisis value for HP
+		Object.defineProperty( this.resources.hp, 'isCrisis', {
+			configurable: true,
+			enumerable: true,
+			get() {
+				return this.current <= this.crisis;
+			},
+		});
+
 	}
 
 	// Prepare dynamic defence and magic defence totals

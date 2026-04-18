@@ -15,7 +15,9 @@ export default class UltimaLegendsCharacter extends UltimaLegendsActorBase {
 			current: new fields.NumberField({ initial: 6, min: 0, integer: true, nullable: false }),
 			bonus: new fields.NumberField({ initial: 0, integer: true, nullable: false }),
 		});
-		schema.resources.fields.fp = new fields.NumberField({ initial: 3, min: 0, integer: true, nullable: false });
+		schema.resources.fields.fp = new fields.SchemaField({
+			current: new fields.NumberField({ initial: 3, min: 0, integer: true, nullable: false }),
+		});
 		schema.resources.fields.zenit = new fields.NumberField({ initial: 500, min: 0, integer: true, nullable: false });
 
 		schema.bonds = new fields.ArrayField(

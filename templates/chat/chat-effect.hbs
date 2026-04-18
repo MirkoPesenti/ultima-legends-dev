@@ -1,6 +1,9 @@
 <div>
 	{{#if data.item.system.description}}
-		<p>{{data.item.system.description}}</p>
+		<div class="effect-description">
+			{{{data.item.system.description}}}
+		</div>
 	{{/if}}
+	<a class="button" data-action="refundCost">Ripristina costo</a>
 	<a class="button" data-action="applyEffect">Applicare Effetto</a>
 </div>

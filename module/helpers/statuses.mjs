@@ -7,7 +7,7 @@ export const statusEffects = [
 			{
 				key: 'system.attributes.dex.current',
 				mode: CONST.ACTIVE_EFFECT_CHANGE_TYPES.ADD,
-				value: '-2',
+				value: -2,
 			}
 		]
 	},
@@ -19,7 +19,7 @@ export const statusEffects = [
 			{
 				key: 'system.attributes.ins.current',
 				mode: CONST.ACTIVE_EFFECT_CHANGE_TYPES.ADD,
-				value: '-2',
+				value: -2,
 			}
 		]
 	},
@@ -31,7 +31,7 @@ export const statusEffects = [
 			{
 				key: 'system.attributes.mig.current',
 				mode: CONST.ACTIVE_EFFECT_CHANGE_TYPES.ADD,
-				value: '-2',
+				value: -2,
 			}
 		]
 	},
@@ -43,7 +43,7 @@ export const statusEffects = [
 			{
 				key: 'system.attributes.wlp.current',
 				mode: CONST.ACTIVE_EFFECT_CHANGE_TYPES.ADD,
-				value: '-2',
+				value: -2,
 			}
 		]
 	},
@@ -55,12 +55,12 @@ export const statusEffects = [
 			{
 				key: 'system.attributes.dex.current',
 				mode: CONST.ACTIVE_EFFECT_CHANGE_TYPES.ADD,
-				value: '-2',
+				value: -2,
 			},
 			{
 				key: 'system.attributes.ins.current',
 				mode: CONST.ACTIVE_EFFECT_CHANGE_TYPES.ADD,
-				value: '-2',
+				value: -2,
 			}
 		]
 	},
@@ -72,12 +72,12 @@ export const statusEffects = [
 			{
 				key: 'system.attributes.wlp.current',
 				mode: CONST.ACTIVE_EFFECT_CHANGE_TYPES.ADD,
-				value: '-2',
+				value: -2,
 			},
 			{
 				key: 'system.attributes.mig.current',
 				mode: CONST.ACTIVE_EFFECT_CHANGE_TYPES.ADD,
-				value: '-2',
+				value: -2,
 			}
 		]
 	},
@@ -99,7 +99,7 @@ export const statusEffects = [
 	// 		{
 	// 			key: 'system.attributes.dex.current',
 	// 			mode: CONST.ACTIVE_EFFECT_CHANGE_TYPES.ADD,
-	// 			value: '-2',
+	// 			value: -2,
 	// 		}
 	// 	]
 	// },
@@ -123,7 +123,7 @@ export const statusEffects = [
 	// 		{
 	// 			key: 'system.attributes.ins.current',
 	// 			mode: CONST.ACTIVE_EFFECT_CHANGE_TYPES.ADD,
-	// 			value: '-2',
+	// 			value: -2,
 	// 		}
 	// 	]
 	// },
@@ -147,7 +147,7 @@ export const statusEffects = [
 	// 		{
 	// 			key: 'system.attributes.mig.current',
 	// 			mode: CONST.ACTIVE_EFFECT_CHANGE_TYPES.ADD,
-	// 			value: '-2',
+	// 			value: -2,
 	// 		}
 	// 	]
 	// },
@@ -171,7 +171,7 @@ export const statusEffects = [
 	// 		{
 	// 			key: 'system.attributes.wlp.current',
 	// 			mode: CONST.ACTIVE_EFFECT_CHANGE_TYPES.ADD,
-	// 			value: '-2',
+	// 			value: -2,
 	// 		}
 	// 	]
 	// },
