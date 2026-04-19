@@ -76,7 +76,7 @@ export default class UltimaLegendsEffectDataModel extends foundry.abstract.DataM
         }
 
         if ( data.cost.type !== 'usage' ) {
-            const costResource = resources[ data.cost.type ];
+            const costResource = actor.system?.resources[ data.cost.type ];
             if ( costResource && costResource.current >= Number(data.cost.formula) ) {
                 const newValue = Math.max( costResource.current - Number(data.cost.formula), 0 );
                 const updateKey = `system.resources.${data.cost.type}.current`;

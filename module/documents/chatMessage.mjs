@@ -13,8 +13,12 @@ export default class UltimaLegendsChatMessage extends ChatMessage {
                 name: ''
             };
         
-        const html = await super.renderHTML({ actor: actorData, author: this.author });
+        const html = await super.renderHTML({
+            actor: actorData,
+            author: this.author,
+        });
 
+        this.editChatElements(html);
         this.addChatListeners( html );
 
         return html;
@@ -22,8 +26,34 @@ export default class UltimaLegendsChatMessage extends ChatMessage {
 
     // Prepare Data
 	prepareData() {
+        console.log(this);
 		super.prepareData();
 	}
+
+    editChatElements( html ) {
+
+        const data = foundry.utils.deepClone( this.flags[ SYSTEM ] );
+        const actor = game.actors.get(this.speaker.actor);
+        if ( !data || !actor ) return;
+        
+        // Hide buttons if user is not the author or an owner
+        if ( !actor.testUserPermission( game.user, 3 ) ) {
+            html.querySelectorAll('.owner-only').forEach( el => el.remove() );
+        }
+
+        // Disable buttons if effect already applied or refunded
+        if ( data?.ui?.effectApplied ) {
+            html.querySelector('[data-action="applyEffect"]')?.setAttribute('disabled', true);
+            html.querySelector('[data-action="refundCost"]')?.remove();
+        }
+
+        // Disable refund button if cost already refunded
+        if ( data?.ui?.effectRefunded ) {
+            html.querySelector('[data-action="refundCost"]')?.setAttribute('disabled', true);
+            html.querySelector('[data-action="applyEffect"]')?.remove();
+        }
+
+    }
 
     // Add listeners for chat message interactions
     addChatListeners( html ) {
@@ -38,12 +68,14 @@ export default class UltimaLegendsChatMessage extends ChatMessage {
 
     }
 
+    //#region Listeners
+
     // Handler for applying the effect
     async onApplyEffect( event ) {
 
         // TODO: Targeting
         event.preventDefault();
-        const data = this.flags[ SYSTEM ];
+        const data = foundry.utils.deepClone( this.flags[ SYSTEM ] );
         const actor = game.actors.get(this.speaker.actor);
         if ( !data || !actor ) {
             ui.notifications.error('No effect data or actor found for this message.');
@@ -88,12 +120,44 @@ export default class UltimaLegendsChatMessage extends ChatMessage {
 
         }
 
+        data.ui ??= {};
+        data.ui.effectApplied = true;
+
+        await this.update({ [`flags.${SYSTEM}`]: data });
+
     }
 
+    // Handler for refunding the cost
     async onRefundCost( event ) {
         event.preventDefault();
-        const data = this.flags[ SYSTEM ];
+        const data = foundry.utils.deepClone( this.flags[ SYSTEM ] );
         const actor = game.actors.get(this.speaker.actor);
+
+        if ( !data || !actor ) {
+            ui.notifications.error('No effect data or actor found for this message.');
+            return;
+        }
+
+        if ( data?.cost?.type === 'usage' ) {
+        } else {
+            const costResource = actor.system?.resources[ data.cost.type ];
+            if ( costResource ) {
+                const newValue = costResource.current + Number(data.cost.formula);
+                const updateKey = `system.resources.${data.cost.type}.current`;
+                await actor.update({ [updateKey]: newValue });
+                ui.notifications.info(`Rimborsati ${data.cost.formula} ${data.cost.type.toUpperCase()} a ${actor.name}.`);
+            } else {
+                ui.notifications.error('Cost resource not found for refund.');
+            }
+        }
+
+        data.ui ??= {};
+        data.ui.effectRefunded = true;
+
+        await this.update({ [`flags.${SYSTEM}`]: data });
+
     }
+
+    //#region 
 
 }
