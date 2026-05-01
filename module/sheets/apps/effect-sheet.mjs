@@ -81,7 +81,12 @@ export class UltimaLegendsEffectSheet extends HandlebarsApplicationMixin( Applic
             context.effect.heal.hp = null;
             context.effect.heal.mp = null;
             context.effect.heal.ip = null;
-            context.effect.heal.status = null;
+            context.effect.status = null;
+        }
+
+        // If opposed is true, reset DL field
+        if ( context.effect?.check?.opposed === true ) {
+            context.effect.check.dl = null;
         }
 
         console.log('Prepared context:', context);

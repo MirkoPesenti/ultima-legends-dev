@@ -9,15 +9,22 @@ export default class UltimaLegendsEffectDataModel extends foundry.abstract.DataM
         
         const schema = {
             name: new fields.StringField({ initial: '', nullable: false }),
-            type: new fields.StringField({ initial: 'test', nullable: false, choices: Object.keys(ULTIMA.effectTypes) }),
+            type: new fields.StringField({ initial: 'check', nullable: false, choices: Object.keys(ULTIMA.effectTypes) }),
             heal: new fields.SchemaField({
                 hp: new fields.StringField({ initial: null, nullable: true }),
                 mp: new fields.StringField({ initial: null, nullable: true }),
                 ip: new fields.StringField({ initial: null, nullable: true }),
-                status: new fields.StringField({ initial: null, blank: true, nullable: true, choices: Object.keys(ULTIMA.statuses) }),
                 resting: new fields.BooleanField({ initial: false, nullable: false }),
             }),
             damage: new fields.EmbeddedDataField(UltimaLegendsDamageDataModel, {}),
+            status: new fields.StringField({ initial: null, blank: true, nullable: true, choices: Object.keys(ULTIMA.statuses) }),
+            check: new fields.SchemaField({
+                primary: new fields.StringField({ initial: 'dex', nullable: false, choices: Object.keys(ULTIMA.attributes) }),
+                secondary: new fields.StringField({ initial: 'dex', nullable: false, choices: Object.keys(ULTIMA.attributes) }),
+                bonus: new fields.StringField({ initial: null, nullable: true }),
+                dl: new fields.NumberField({ initial: null, integer: true, nullable: true }),
+                opposed: new fields.BooleanField({ initial: false, nullable: false }),
+            }),
             cost: new fields.SchemaField({
                 formula: new fields.StringField({ initial: null, nullable: true }),
                 type: new fields.StringField({ initial: null, blank: true, nullable: true, choices: Object.keys(ULTIMA.effectCostTypes) }),
@@ -54,7 +61,7 @@ export default class UltimaLegendsEffectDataModel extends foundry.abstract.DataM
             type: this.type,
             target: this.target,
             item: this.parent?.parent,
-            [ this.type ]: this[ this.type ],
+            status: this.status,
         };
 
         // Determine cost based on whether the effect is from a consumable item or not
@@ -75,6 +82,12 @@ export default class UltimaLegendsEffectDataModel extends foundry.abstract.DataM
             }
         }
 
+        if ( this.type === 'offensive' ) {
+            data.damage = this.damage;
+        } else {
+            data[ this.type ] = this[ this.type ];
+        }
+
         if ( data.cost.type !== 'usage' ) {
             const costResource = actor.system?.resources[ data.cost.type ];
             if ( costResource && costResource.current >= Number(data.cost.formula) ) {
@@ -88,7 +101,7 @@ export default class UltimaLegendsEffectDataModel extends foundry.abstract.DataM
         }
 
         // Render the chat message using a Handlebars template
-        const content = await foundry.applications.handlebars.renderTemplate(`systems/${SYSTEM}/templates/chat/chat-effect.hbs`, { data });
+        const content = await foundry.applications.handlebars.renderTemplate(`systems/${SYSTEM}/templates/chat/chat-effect-${this.type}.hbs`, { data });
         ChatMessage.create({
             speaker: ChatMessage.getSpeaker({ actor: actor }),
             flavor: this.name,

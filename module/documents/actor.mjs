@@ -239,4 +239,44 @@ export class UltimaLegendsActor extends Actor {
 		}
 	}
 
+	// Apply damage to the actor, taking into account affinities
+	async applyDamage( damage, type = 'physical' ) {
+		const { hp } = this.system.resources;
+		const { affinity } = this.system;
+		if ( !hp || !affinity.hasOwnProperty(type) ) return;
+
+		// Calculate damage multiplier based on affinity
+		let multiplier = 1;
+		if ( affinity[type] === 'vulnerable' ) multiplier = 2;
+		else if ( affinity[type] === 'resistant' ) multiplier = 0.5;
+		else if ( affinity[type] === 'immune' ) multiplier = 0;
+		else if ( affinity[type] === 'absorbe' ) multiplier = -1;
+
+		// Apply damage and update HP
+		const newHP = Math.max( hp.current - Math.floor( damage * multiplier ), 0 );
+		await this.update({ 'system.resources.hp.current': newHP });
+	}
+
 }
+
+//#region Hooks
+
+// Check if actor is immune to status
+Hooks.on('preCreateActiveEffect', (effect, options, userId) => {
+	const actor = effect.parent;
+	if ( !actor || !actor.system || !actor.system.immunity ) return;
+
+	const statusID = CONFIG.statusEffects.find( (e) => effect.statuses.has( e.id ) )?.id;
+	if ( statusID ) {
+
+		const immunity = actor.system.immunity[statusID];
+		if ( immunity ) {
+			ui.notifications.info(`${actor.name} è immune allo status ${game.i18n.localize(`ULTIMa.status.${statusID}`)}`);
+			return false;		
+		}
+	}
+
+	return true;
+});
+
+//#endregion

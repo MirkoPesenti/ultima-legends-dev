@@ -21,10 +21,10 @@
 	</div>
 
 	<div class="form-group">
-		<label for="heal.status">Status</label>
-		<select name="heal.status" id="heal.status" {{#if effect.heal.resting}}disabled{{/if}}>
-			<option value="" {{#unless effect.heal.status}}selected{{/unless}}>Nessuno</option>
-			{{selectOptions ULTIMA.statuses selected=effect.heal.status localize=true}}
+		<label for="status">Status</label>
+		<select name="status" id="status" {{#if effect.heal.resting}}disabled{{/if}}>
+			<option value="" {{#unless effect.status}}selected{{/unless}}>Nessuno</option>
+			{{selectOptions ULTIMA.statuses selected=effect.status localize=true}}
 		</select>
 	</div>
 </fieldset>

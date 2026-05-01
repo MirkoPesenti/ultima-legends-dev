@@ -85,10 +85,10 @@ ULTIMA.npcRanks = {
 };
 
 ULTIMA.effectTypes = {
-	test: 'ULTIMA.effects.test',
+	check: 'ULTIMA.effects.check',
 	heal: 'ULTIMA.effects.heal',
 	offensive: 'ULTIMA.effects.offensive',
-	ritual: 'ULTIMA.effects.ritual',
+	// ritual: 'ULTIMA.effects.ritual',
 };
 
 ULTIMA.effectCostTypes = {

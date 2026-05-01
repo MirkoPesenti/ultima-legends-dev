@@ -6,4 +6,12 @@
 			{{selectOptions ULTIMA.damageTypes selected=effect.damage.type localize=true}}
 		</select>
 	</div>
+
+	<div class="form-group">
+		<label for="status">Status</label>
+		<select name="status" id="status" {{#if effect.resting}}disabled{{/if}}>
+			<option value="" {{#unless effect.status}}selected{{/unless}}>Nessuno</option>
+			{{selectOptions ULTIMA.statuses selected=effect.status localize=true}}
+		</select>
+	</div>
 </fieldset>

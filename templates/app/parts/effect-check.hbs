@@ -1,0 +1,27 @@
+<fieldset>
+	<legend>Test</legend>
+	<div class="form-group">
+		<select name="check.primary" id="check.primary">
+			{{selectOptions ULTIMA.attributes selected=effect.check.primary localize=true}}
+		</select>
+		<span style="flex:0 0 30px;text-align:center;">+</span>
+		<select name="check.secondary" id="check.secondary">
+			{{selectOptions ULTIMA.attributes selected=effect.check.secondary localize=true}}
+		</select>
+	</div>
+
+	<div class="form-group">
+		<label for="check.bonus">Bonus</label>
+		<input type="text" name="check.bonus" id="check.bonus" value="{{effect.check.bonus}}" placeholder="Modificatori" />
+	</div>
+
+	<div class="form-group">
+		<label for="check.opposed">Test contrapposto</label>
+		<input type="checkbox" name="check.opposed" id="check.opposed" {{#if effect.check.opposed}}checked{{/if}} />
+	</div>
+
+	<div class="form-group">
+		<label for="check.dl">Livello di difficoltà</label>
+		<input type="text" name="check.dl" id="check.dl" value="{{effect.check.dl}}" placeholder="Aperto" {{#if effect.check.opposed}}disabled{{/if}} />
+	</div>
+</fieldset>

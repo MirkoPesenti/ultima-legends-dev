@@ -1,0 +1,14 @@
+<div>
+	{{#if data.item.system.description}}
+		<div class="effect-description">
+			{{{data.item.system.description}}}
+		</div>
+	{{/if}}
+	
+	<a class="button owner-only" data-action="refundCost">Ripristina costo</a>
+	
+	<a class="button owner-interaction" data-action="rollCheck">Test</a>
+	{{#if data.check.opposed}}
+		<a class="button" data-action="rollCheck">Test contrapposto</a>
+	{{/if}}
+</div>

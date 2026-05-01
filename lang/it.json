@@ -89,7 +89,7 @@
       }
     },
     "effects": {
-      "test": "Test",
+      "check": "Test",
       "offensive": "Offensivo",
       "heal": "Cura",
       "ritual": "Rituale"
@@ -346,7 +346,7 @@
       "equip": "Equipaggia",
       "unequip": "Disequipaggia",
       "attack": "Effettua un attacco",
-      "test": "Effettua un test",
+      "check": "Effettua un test",
       "castSpell": "Lancia incantesimo",
       "castRitual": "Esegui il rituale",
       "toggleActive": "Attiva/Disattiva",
