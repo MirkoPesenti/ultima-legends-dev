@@ -6,6 +6,7 @@ export class UltimaLegendsRollSheet extends HandlebarsApplicationMixin( Applicat
     #item = null;
     #actor = null;
     #formula = "";
+    #dl = null;
 
     // Define default options
     static DEFAULT_OPTIONS = {
@@ -45,6 +46,7 @@ export class UltimaLegendsRollSheet extends HandlebarsApplicationMixin( Applicat
         this.#item = options.item ?? null;
         this.#actor = options.actor ?? null;
         this.#formula = options.formula ?? "";
+        this.#dl = options.dl ?? null;
     }
 
     // Prepare context data for template rendering
@@ -56,6 +58,7 @@ export class UltimaLegendsRollSheet extends HandlebarsApplicationMixin( Applicat
         context.item = this.#item;
         context.actor = this.#actor;
         context.formula = this.#formula;
+        context.dl = this.#dl;
         context.formData = this.#data;
 
         // Prepare roll data for calculations
@@ -130,10 +133,18 @@ export class UltimaLegendsRollSheet extends HandlebarsApplicationMixin( Applicat
         const finalRoll = new Roll( finalFormula, finalRollData );
         await finalRoll.evaluate();
         console.log('Final roll evaluated:', finalRollData);
+
+        let flavor = `Hai tirato ${finalRoll.total}`;
+        if ( this.#dl !== null ) {
+            flavor += ` contro una difficoltà di ${this.#dl}`;
+        }
+
         finalRoll.toMessage({
             speaker: ChatMessage.getSpeaker({ actor: this.#actor }),
-            flavor: 'Test',
-        });
+            flavor: flavor,
+        }, { messageMode: this.#data.mode });
+
+        await this.close();
 
     }
 

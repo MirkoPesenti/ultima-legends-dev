@@ -7,4 +7,23 @@
 		</div>
 	</fieldset>
 
+	<fieldset>
+		<legend>Opzioni</legend>
+		{{#if dl}}
+			<div class="form-group">
+				<span class="label" style="flex-grow:2;">Livello di difficoltà:</span>
+				<input type="text" style="flex-grow:1;" value="{{dl}}" readonly />
+			</div>
+		{{/if}}
+		<div class="form-group">
+			<label for="mode">Modalità</label>
+			<select name="mode" id="mode">
+				<option value="public" {{#if (eq formData.mode "public")}}selected{{/if}}>Public as User</option>
+				<option value="self" {{#if (eq formData.mode "self")}}selected{{/if}}>Self Only</option>
+				<option value="gm" {{#if (eq formData.mode "gm")}}selected{{/if}}>Private to GM</option>
+				<option value="blind" {{#if (eq formData.mode "blind")}}selected{{/if}}>Blind to GM</option>
+			</select>
+		</div>
+	</fieldset>
+
 </section>

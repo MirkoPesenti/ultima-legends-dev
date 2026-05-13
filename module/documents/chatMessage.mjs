@@ -227,6 +227,7 @@ export default class UltimaLegendsChatMessage extends ChatMessage {
             item: item,
             actor: actor,
             formula: formula,
+            dl: data.check.dl,
         });
         await rollApp.render( true );
 
